@@ -12,7 +12,7 @@
 
 ## ライセンス
 
-スクリプト自由に使ってね（Creative Commons CC0 1.0 Universal に準拠）。
+スクリプトは自由に使ってね（Creative Commons CC0 1.0 Universal に準拠）。\
 詳しくは [LICENSE](LICENSE) を参照。
 
 ダウンロードリンクのサーバー（`./download-server`下）はMIT Licenseに準拠しています。
