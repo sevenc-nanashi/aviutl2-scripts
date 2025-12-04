@@ -1,0 +1,25 @@
+{
+	"name": "aviutl2-scripts-download-server",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"cf-typegen": "wrangler types",
+		"lint": "biome check",
+		"lint:fix": "biome check --write"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.8",
+		"@cloudflare/vitest-pool-workers": "^0.8.19",
+		"typescript": "^5.5.2",
+		"vitest": "~3.2.0",
+		"wrangler": "^4.52.1"
+	},
+	"dependencies": {
+		"hono": "^4.10.7",
+		"pathcat": "^1.5.1"
+	}
+}

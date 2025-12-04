@@ -1,6 +1,18 @@
 --label:変形
 --information:https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 
+-- ================================================================================
+-- ニアレストネイバー法で拡大縮小・回転・中心移動を行うスクリプト。
+-- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
+-- ================================================================================
+
+
+
+
+
+
+
+
 --group:中心移動,true
 --track@center_x:中心X,-5000,5000,0,0.01
 --track@center_y:中心Y,-5000,5000,0,0.01
@@ -20,3 +32,5 @@ obj.rz = angle_deg
 
 obj.cx = center_x
 obj.cy = center_y
+
+-- vim: set ft=lua:
