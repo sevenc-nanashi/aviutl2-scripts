@@ -17,7 +17,7 @@ task :prepare_description do
 
       url = "https://aviutl2-scripts-download.sevenc7c.workers.dev/#{URI.encode_www_form_component(filename)}"
       unless content.gsub!(
-               /-- =+\n-- .+?\n-- .+?\n-- =+/,
+               /-- =+\n-- .+?\n-- .+?\n-- =+\n/,
                <<~LUA
                -- #{'=' * header_width}
                -- #{description}
@@ -27,7 +27,7 @@ task :prepare_description do
              )
         raise "Failed to find script marker in README.md"
       end
-      File.write(script, content)
+      File.write(script, content, mode: "wb")
       "- [#{filename}](#{url})：#{description}"
     end
   unless base.gsub!(
@@ -36,5 +36,5 @@ task :prepare_description do
          )
     raise "Failed to find script marker in README.md"
   end
-  File.write("README.md", base)
+  File.write("README.md", base, mode: "wb")
 end
