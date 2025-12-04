@@ -19,11 +19,11 @@ local rscale_x = scale_x / 100
 local rscale_y = scale_y / 100
 
 obj.setoption("sampler", "dot")
-obj.sx = rscale_x
-obj.sy = rscale_y
-obj.rz = angle_deg
+obj.sx = obj.sx * rscale_x
+obj.sy = obj.sy * rscale_y
+obj.rz = obj.rz + angle_deg
 
-obj.cx = center_x
-obj.cy = center_y
+obj.cx = obj.cx + center_x
+obj.cy = obj.cy + center_y
 
 -- vim: set ft=lua:
