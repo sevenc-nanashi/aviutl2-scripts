@@ -10,6 +10,15 @@
 - [ドット絵変形.anm2](https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2)：ニアレストネイバー法で拡大縮小・回転・中心移動を行うスクリプト。
 <!-- script-marker-end -->
 
+## PIについて
+
+[@sigma-axis氏](https://github.com/sigma-axis)のスクリプトと同様、スクリプトにはPI（Parameter Injection）を使用しています。
+各種パラメーターをLuaの数式で指定できます。
+PIによって設定された値はトラックバーによる指定より優先されます。
+
+基本的には使う必要はありませんが、PIを使うことでより柔軟な設定が可能になります。
+PIのテーブルのキーは各種スクリプトに記載されています。
+
 ## ライセンス
 
 スクリプトは自由に使ってね（Creative Commons CC0 1.0 Universal に準拠）。\
