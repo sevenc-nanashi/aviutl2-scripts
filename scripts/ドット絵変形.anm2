@@ -6,11 +6,12 @@
 -- 標準の回転と違い、回転でも中間色が発生しません。
 --
 -- PI:
--- - scale_x: X拡大率(1.0で等倍)
--- - scale_y: Y拡大率(1.0で等倍)
--- - center_x: 中心X(ピクセル単位)
--- - center_y: 中心Y(ピクセル単位)
--- - angle_deg: 回転(度)
+-- - scale_x: X拡大率（1.0で等倍）
+-- - scale_y: Y拡大率（1.0で等倍）
+-- - center_x: 中心X（ピクセル単位）
+-- - center_y: 中心Y（ピクセル単位）
+-- - angle_deg: 回転（度）
+-- - debug: デバッググリッドの表示（0で非表示、正の値でグリッドサイズ）
 --
 -- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 -- ================================================================================
@@ -23,14 +24,17 @@
 --track@scale_y:Y拡大率,1,10000,100,0.001
 --group:回転,true
 --track@angle_deg:回転(度),-360,360,0,0.1
---group
+--group:高度な設定,false
+--track@debug:透明グリッド,0,1000,0,1
 --value@PI:PI,{}
 
 --[[pixelshader@debug_grid:
 Texture2D tex0 : register(t0);
 SamplerState sampler0 : register(s0);
-
-static const float size = 10.0;
+cbuffer cb0 : register(b0)
+{
+    float size;
+};
 
 float4 debug_grid(float4 pos: SV_Position, float2 uv: TEXCOORD) : SV_Target
 {
@@ -99,7 +103,6 @@ float4 transform(float4 pos: SV_Position, float2 uv: TEXCOORD) : SV_Target
 }
 ]]
 
-local debug = false
 if type(PI.scale_x) == "number" then
   scale_x = PI.scale_x * 100
 end
@@ -116,6 +119,12 @@ if type(PI.angle_deg) == "number" then
   angle_deg = PI.angle_deg
 end
 if type(PI.debug) == "boolean" then
+  if PI.debug then
+    debug = 10
+  else
+    debug = 0
+  end
+elseif type(PI.debug) == "number" then
   debug = PI.debug
 end
 
@@ -132,8 +141,10 @@ local function rotate_point(x, y, angle_rad)
     return rx, ry
 end
 
-local first_cx = obj.cx
-local first_cy = obj.cy
+local original_cx = obj.cx
+local original_cy = obj.cy
+local original_sx = obj.sx
+local original_sy = obj.sy
 
 obj.setoption("sampler", "dot")
 
@@ -164,9 +175,9 @@ local min_y = math.min(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
 local max_y = math.max(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
 
 local transform_source
-if debug then
+if debug > 0 then
   obj.setoption("drawtarget", "tempbuffer", math.ceil(obj.w), math.ceil(obj.h))
-  obj.pixelshader("debug_grid", "tempbuffer", {})
+  obj.pixelshader("debug_grid", "tempbuffer", {}, {debug})
   obj.draw()
   obj.setoption("draw_state", false)
   obj.copybuffer("cache:debug_grid", "tempbuffer")
@@ -189,7 +200,7 @@ obj.pixelshader("transform", "tempbuffer", transform_source, {
 obj.load("tempbuffer")
 
 local new_cx, new_cy = rotate_point(center_x * rscale_x, center_y * rscale_y, angle_rad)
-obj.cx = first_cx + new_cx
-obj.cy = first_cy + new_cy
+obj.cx = original_cx + new_cx
+obj.cy = original_cy + new_cy
 
 -- vim: set ft=lua:
