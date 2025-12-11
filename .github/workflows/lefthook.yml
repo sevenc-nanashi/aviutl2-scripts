@@ -32,7 +32,7 @@ jobs:
       - name: Check for changes
         run: |
           git add .
-          git rm --cached -r .
+          git restore --staged .
           if [[ -n $(git status --porcelain) ]]; then
             echo "Build output is outdated. Please run 'rake' locally and update the PR."
             git status
