@@ -7,7 +7,9 @@ on:
 
 jobs:
   run:
-    runs-on: ubuntu-latest
+    # TODO: auluaが対応したらubuntu-latestで回す
+    # https://github.com/karoterra/aviutl2-aulua/issues/12
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
