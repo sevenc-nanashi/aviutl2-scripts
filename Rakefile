@@ -5,30 +5,27 @@ task default: [:prepare_description]
 task :prepare_description do
   require "uri"
 
-  header_width = 80
+  header_width = 120
 
   base = File.read("README.md")
-  scripts = Dir.glob("./scripts/*.*2")
+  scripts = { "ドット絵変形.anm2" => "./scripts/ドット絵変形/main.lua" }
   replacement =
-    scripts.map do |script|
-      filename = File.basename(script)
+    scripts.map do |name, script|
       content = File.read(script)
       description = content.match(/-- =+\n-- (.+?)\n/)[1].strip
 
-      url = "https://aviutl2-scripts-download.sevenc7c.workers.dev/#{URI.encode_www_form_component(filename)}"
-      unless content.gsub!(
-               /-- =+\n-- .+?\n-- .+?\n-- =+\n/,
-               <<~LUA
-               -- #{'=' * header_width}
-               -- #{description}
-               -- #{url}
-               -- #{'=' * header_width}
-               LUA
-             )
-        raise "Failed to find script marker in README.md"
-      end
+      url =
+        "https://aviutl2-scripts-download.sevenc7c.workers.dev/#{URI.encode_www_form_component(name)}"
+      maybe_replaced =
+        content.gsub!(/-- =+\n((?:--(?: .+?)?\n)*)-- .+?\n-- =+\n/) { <<~LUA }
+        -- #{"=" * header_width}
+        #{$1.rstrip}
+        -- #{url}
+        -- #{"=" * header_width}
+        LUA
+      raise "Failed to find script marker in #{script}" unless maybe_replaced
       File.write(script, content, mode: "wb")
-      "- [#{filename}](#{url})：#{description}"
+      "- [#{name}](#{url})：#{description}"
     end
   unless base.gsub!(
            /(?<=<!-- script-marker-start -->\n).*(?=\n<!-- script-marker-end -->)/m,
@@ -58,7 +55,9 @@ task :install_demo, [:script_dir] do |t, args|
     revs.each do |version, commit|
       content = `git show #{commit}:scripts/#{filename}`
       final_content << "@#{version}"
-      unless content.sub!(/--label:(.+)/) { "--label:[sevenc-nanashi/aviutl2-scripts]\\#{$1}\\#{filename}" }
+      unless content.sub!(/--label:(.+)/) {
+               "--label:[sevenc-nanashi/aviutl2-scripts]\\#{$1}\\#{filename}"
+             }
         content = "--label:#{filename}\n" + content
       end
       final_content << content
