@@ -32,6 +32,7 @@
 
 
 -- このスクリプトはcleanEdgeをベースに作成しました。
+-- cleanEdgeの作者であるtorcado様に感謝いたします。（Great Appreciation to torcado, the author of cleanEdge.）
 -- 以下はcleanEdgeのライセンス情報です。
 -- --------------------------------------------------------------------------------
 -- Copyright (c) 2022 torcado
