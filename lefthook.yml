@@ -1,4 +1,5 @@
 pre-push:
+  fail_on_changes: "always"
   jobs:
     - name: update build
       run: rake
