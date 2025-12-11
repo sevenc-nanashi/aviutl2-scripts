@@ -38,3 +38,34 @@ task :prepare_description do
   end
   File.write("README.md", base, mode: "wb")
 end
+
+desc "デモ用に過去のバージョンもインストールする"
+task :install_demo, [:script_dir] do |t, args|
+  require "fileutils"
+  script_dir = args[:script_dir] || "C:/ProgramData/aviutl2/Script"
+
+  install_root = File.join(script_dir, "sevenc-nanashi_aviutl2-scripts")
+  FileUtils.mkdir_p(install_root)
+  revisions = {
+    "ドット絵変形.anm2" => {
+      "v2.1": "d31c227",
+      "v2.0": "4f848b5",
+      "v1.0": "4a8d9bb"
+    }
+  }
+  revisions.each do |filename, revs|
+    final_content = []
+    revs.each do |version, commit|
+      content = `git show #{commit}:scripts/#{filename}`
+      final_content << "@#{version}"
+      unless content.sub!(/--label:(.+)/) { "--label:[sevenc-nanashi/aviutl2-scripts]\\#{$1}\\#{filename}" }
+        content = "--label:#{filename}\n" + content
+      end
+      final_content << content
+    end
+    new_filename = "@#{filename}"
+    script_path = File.join(install_root, new_filename)
+    puts "Writing #{script_path}"
+    File.write(script_path, final_content.join("\n"), mode: "wb")
+  end
+end
