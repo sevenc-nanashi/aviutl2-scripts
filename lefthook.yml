@@ -1,4 +1,4 @@
 pre-push:
   jobs:
     - name: update build
-      run: aulua build
+      run: rake

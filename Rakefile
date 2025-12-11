@@ -11,6 +11,7 @@ task :prepare_description do
   scripts = { "ドット絵変形.anm2" => "./scripts/ドット絵変形/main.lua" }
   replacement =
     scripts.map do |name, script|
+      puts "Processing #{script}..."
       content = File.read(script)
       description = content.match(/-- =+\n-- (.+?)\n/)[1].strip
 
@@ -34,6 +35,8 @@ task :prepare_description do
     raise "Failed to find script marker in README.md"
   end
   File.write("README.md", base, mode: "wb")
+
+  sh "aulua build"
 end
 
 desc "デモ用に過去のバージョンもインストールする"

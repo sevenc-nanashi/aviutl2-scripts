@@ -1,9 +1,20 @@
 --label:変形
 --information:https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 
--- ========================================================================================================================
--- ニアレストネイバー法で拡大縮小・回転・中心移動を行うスクリプト。
--- 標準の回転と違い、回転でも中間色が発生しません。
+-- ================================================================================
+-- cleanEdgeで拡大縮小・回転・中心移動を行うスクリプト。
+-- ドット絵変形と違い、これはドット絵でも綺麗に変形されます。
+--
+-- cleanEdgeについてはこれを参照してください：https://torcado.com/cleanEdge/
+--
+-- 一部パラメーターの説明：
+-- - 基準色：線の上書き判定に使う色。例えば#ffffffの場合は明るい色が優先されます。もしドット絵に外枠がある場合は、外枠を設定すると綺麗になります。
+--           cleanEdgeのHighest Colorに相当します。
+-- - 線の太さ：線の太さを指定します。ピクセルが何マス分に広がるかを指定します。45度の線を綺麗にしたい場合は0.707付近にしてください。
+--             cleanEdgeのLine Widthに相当します。
+-- - 傾斜モード：拡大時に傾斜を滑らかにするかどうかを指定します。
+--               cleanEdgeのSlopesに相当します。
+--
 --
 -- PI:
 -- - scale_x: X拡大率（1.0で等倍）
@@ -11,104 +22,95 @@
 -- - center_x: 中心X（ピクセル単位）
 -- - center_y: 中心Y（ピクセル単位）
 -- - angle_deg: 回転（度）
+-- - highest_color: 線の上書き判定に使う色。
+-- - line_width: 線の太さ。
+-- - slopes: 拡大時に傾斜を滑らかにするかどうか（0：しない、1：1:1のみ滑らかにする、2：1:1と1:2を滑らかにする）
 -- - debug: デバッググリッドの表示（0で非表示、正の値でグリッドサイズ）
 --
 -- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
--- ========================================================================================================================
+-- ================================================================================
+
+
+-- このスクリプトはcleanEdgeをベースに作成しました。
+-- 以下はcleanEdgeのライセンス情報です。
+-- --------------------------------------------------------------------------------
+-- Copyright (c) 2022 torcado
+-- Permission is hereby granted, free of charge, to any person
+-- obtaining a copy of this software and associated documentation
+-- files (the "Software"), to deal in the Software without
+-- restriction, including without limitation the rights to use,
+-- copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the
+-- Software is furnished to do so, subject to the following
+-- conditions:
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Software.
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+-- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+-- OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+-- NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+-- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+-- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+-- OTHER DEALINGS IN THE SOFTWARE.
+-- --------------------------------------------------------------------------------
 
 --group:中心移動,true
 
---track@center_x:中心X,-5000,5000,0,0.01
---track@center_y:中心Y,-5000,5000,0,0.01
+---$track:中心X
+---min=-5000
+---max=5000
+---default=0
+---step=0.01
+local center_x = 0
+---$track:中心Y
+---min=-5000
+---max=5000
+---default=0
+---step=0.01
+local center_y = 0
+
 --group:拡大縮小,true
 
---track@scale_x:X拡大率,1,10000,100,0.001
---track@scale_y:Y拡大率,1,10000,100,0.001
+---$track:X拡大率
+---min=1
+---max=10000
+---default=100
+---step=0.001
+local scale_x = 100
+
+---$track:Y拡大率
+---min=1
+---max=10000
+---default=100
+---step=0.001
+local scale_y = 100
+
 --group:回転,true
 
---track@angle_deg:回転（度）,-360,360,0,0.1
+---$track:回転（度）
+---min=-360
+---max=360
+---default=0
+---step=0.1
+local angle_deg = 0
+
 --group:高度な設定,false
---track@debug:透明グリッド,0,1000,0,1
---value@PI:PI,{}
+---$track:透明グリッド
+---min=0
+---max=1000
+---default=0
+---step=1
+local debug = 0
+
+---$value:PI
+local PI = {}
+
 --[[pixelshader@debug_grid:
-Texture2D tex0 : register(t0);
-SamplerState sampler0 : register(s0);
-cbuffer cb0 : register(b0)
-{
-    float size;
-};
-
-float4 debug_grid(float4 pos: SV_Position, float2 uv: TEXCOORD) : SV_Target
-{
-  float checker = fmod(floor(pos.x / size) + floor(pos.y / size), 2.0);
-
-  if (checker < 1.0)
-  {
-    return float4(0.25, 0.25, 0.25, 1);
-  }
-  else
-  {
-    return float4(0, 0, 0, 1);
-  }
-}
-
-// vim: set ft=hlsl ts=4 sts=4 sw=4 noet:
-
+---$include "./debug_grid.hlsl"
 ]]
 --[[pixelshader@transform:
-Texture2D tex0 : register(t0);
-SamplerState sampler0 : register(s0);
-
-cbuffer cb0 : register(b0)
-{
-    float min_x;
-    float min_y;
-    float base_w;
-    float base_h;
-    float center_x;
-    float center_y;
-    float scale_x;
-    float scale_y;
-    float angle;
-};
-
-float2 rotate_point(float x, float y, float angle)
-{
-    float cos_a = cos(angle);
-    float sin_a = sin(angle);
-    float rx = cos_a * x - sin_a * y;
-    float ry = sin_a * x + cos_a * y;
-    return float2(rx, ry);
-}
-
-float4 transform(float4 pos: SV_Position, float2 uv: TEXCOORD) : SV_Target
-{
-    float new_x = min_x + pos.x;
-    float new_y = min_y + pos.y;
-
-    float rel_x = new_x - center_x;
-    float rel_y = new_y - center_y;
-
-    float2 rotated = rotate_point(rel_x, rel_y, -angle);
-    float2 scaled = float2(rotated.x / scale_x, rotated.y / scale_y);
-
-    float sample_x = scaled.x + center_x;
-    float sample_y = scaled.y + center_y;
-
-    if (sample_x < 0 || sample_x >= base_w || sample_y < 0 || sample_y >= base_h)
-    {
-        // NOTE: sampler = "dot"は範囲外を透明にするという仕様になっているけど一応明示的に透明にする
-        return float4(0, 0, 0, 0);
-    }
-    else
-    {
-        float2 sample_uv = float2(sample_x / base_w, sample_y / base_h);
-        return tex0.Sample(sampler0, sample_uv);
-    }
-}
-
-// vim: set ft=hlsl ts=4 sts=4 sw=4 noet:
-
+---$include "./transform.hlsl"
 ]]
 
 if type(PI.scale_x) == "number" then
@@ -210,4 +212,3 @@ obj.load("tempbuffer")
 local new_cx, new_cy = rotate_point(center_x * rscale_x, center_y * rscale_y, angle_rad)
 obj.cx = original_cx + new_cx
 obj.cy = original_cy + new_cy
-
