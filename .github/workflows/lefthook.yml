@@ -31,6 +31,8 @@ jobs:
 
       - name: Check for changes
         run: |
+          # CRLF/LFの違いで差分が出るのを防ぐため、一旦すべてステージングしてから戻す
+          # TODO: もっといい方法があればそちらに変更する
           git add .
           git restore --staged .
           if [[ -n $(git status --porcelain) ]]; then
