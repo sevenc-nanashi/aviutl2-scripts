@@ -23,8 +23,10 @@ jobs:
         with:
           install: true
 
-      - name: Prepare mise shims
-        run: mise activate --shims
+      - name: Prepare mise shims path
+        run: |
+          echo "$LOCALAPPDATA/mise/shims" >> $GITHUB_PATH
+          mise reshim
 
       - name: Run lefthook pre-push
         run: lefthook run pre-push
