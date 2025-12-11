@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: lefthook
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up mise
+        uses: jdx/mise-action@v2
+        with:
+          install: true
+
+      - name: Run lefthook pre-push
+        run: lefthook run pre-push
