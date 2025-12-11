@@ -12,8 +12,8 @@
 --           cleanEdgeのHighest Colorに相当します。
 -- - 線の太さ：線の太さを指定します。ピクセルが何マス分に広がるかを指定します。45度の線を綺麗にしたい場合は0.707付近にしてください。
 --             cleanEdgeのLine Widthに相当します。
--- - 傾斜モード：拡大時に傾斜を滑らかにするかどうかを指定します。
---               cleanEdgeのSlopesに相当します。
+-- - 斜め補間：拡大時に傾斜を滑らかにするかどうかを指定します。
+--             cleanEdgeのSlopesに相当します。
 --
 --
 -- PI:
@@ -86,6 +86,12 @@ local scale_x = 100
 ---step=0.001
 local scale_y = 100
 
+---$select:斜め補間
+---しない=0
+---1:1のみ=1
+---1:1と1:2=2
+local slopes = 0
+
 --group:回転,true
 
 ---$track:回転（度）
@@ -94,6 +100,18 @@ local scale_y = 100
 ---default=0
 ---step=0.1
 local angle_deg = 0
+
+--group:補間設定,true
+
+---$track:線の太さ
+---min=0
+---max=4
+---default=1
+---step=0.01
+local line_width = 1
+
+---$color:基準色
+local highest_color = 0xffffff
 
 --group:高度な設定,false
 ---$track:透明グリッド
@@ -113,20 +131,29 @@ local PI = {}
 ---$include "./transform.hlsl"
 ]]
 
-if type(PI.scale_x) == "number" then
-  scale_x = PI.scale_x * 100
-end
-if type(PI.scale_y) == "number" then
-  scale_y = PI.scale_y * 100
-end
 if type(PI.center_x) == "number" then
   center_x = PI.center_x
 end
 if type(PI.center_y) == "number" then
   center_y = PI.center_y
 end
+if type(PI.scale_x) == "number" then
+  scale_x = PI.scale_x * 100
+end
+if type(PI.scale_y) == "number" then
+  scale_y = PI.scale_y * 100
+end
+if type(PI.slopes) == "number" then
+  slopes = PI.slopes
+end
 if type(PI.angle_deg) == "number" then
   angle_deg = PI.angle_deg
+end
+if type(PI.highest_color) == "number" then
+  highest_color = PI.highest_color
+end
+if type(PI.line_width) == "number" then
+  line_width = PI.line_width
 end
 if type(PI.debug) == "boolean" then
   if PI.debug then
