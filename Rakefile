@@ -8,7 +8,10 @@ task :prepare_description do
   header_width = 120
 
   base = File.read("README.md")
-  scripts = { "ドット絵変形.anm2" => "./scripts/ドット絵変形/main.lua" }
+  scripts = {
+    "ドット絵変形.anm2" => "./scripts/ドット絵変形/main.lua",
+    "滑らかドット絵変形.anm2" => "./scripts/滑らかドット絵変形/main.lua"
+  }
   replacement =
     scripts.map do |name, script|
       puts "Processing #{script}..."
