@@ -4,11 +4,11 @@
 -- ========================================================================================================================
 -- ドット絵の拡大縮小・回転を行うスクリプト。
 -- 標準描画と違い、これはドット絵でも綺麗に変形されます。
--- また、cleanEdgeを使った高度な補間も可能です。
+-- また、発展補間オプションを有効にするとcleanEdge風の補間が行われ、より綺麗に変形されます。
 --
 -- cleanEdgeについてはこれを参照してください：https://torcado.com/cleanEdge/
 --
--- 高度補間時のパラメーターの説明：
+-- 発展補間時のパラメータ：
 -- - 基準色：線の上書き判定に使う色。例えば#ffffffの場合は明るい色が優先されます。もしドット絵に外枠がある場合は、外枠を設定すると綺麗になります。
 --           cleanEdgeのHighest Colorに相当します。
 -- - 線の太さ：線の太さを指定します。ピクセルが何マス分に広がるかを指定します。45度の線を綺麗にしたい場合は0.707付近にしてください。
@@ -27,12 +27,13 @@
 -- - center_x: 中心X（ピクセル単位）
 -- - center_y: 中心Y（ピクセル単位）
 -- - angle_deg: 回転（度）
--- - enable_cleanedge: 高度補間
+-- - enable_cleanedge: 発展補間
 -- - highest_color: 基準色
 -- - line_width: 線の太さ
--- - slopes: 斜め補間（0 = 1:1のみ、1 = 1:1と1:2、2 = 1:1と1:2（補正有り））
+-- - slopes: 斜め補間（0 = 1:1のみ、1 = 1:1 + 1:2、2 = 1:1 + 1:2（補正有り））
 -- - similar_threshold: 補間閾値
 -- - debug: 透明グリッド
+-- - snap_to_pixel: ピクセルスナップ
 --
 -- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 -- ========================================================================================================================
@@ -74,15 +75,16 @@
 --group:回転,true
 
 --track@angle_deg:回転（度）,-360,360,0,0.1
---group:高度補間設定,true
+--group:発展補間設定,true
 
---check@enable_cleanedge:高度補間,false
+--check@enable_cleanedge:発展補間,false
 --track@line_width:線の太さ,0,4,1,0.01
---select@slopes:斜め補間=2,1:1のみ=0,1:1と1:2=1,1:1と1:2（補正有り）=2
+--select@slopes:斜め補間=2,1:1のみ=0,1:1 + 1:2=1,1:1 + 1:2（補正）=2
 --color@highest_color:基準色,0xffffff
 --track@similar_threshold:補間閾値,0,255,16,1
 --group:高度な設定,false
 --track@debug:透明グリッド,0,1000,0,1
+--check@snap_to_pixel:ピクセルスナップ,true
 --value@PI:PI,{}
 --[[pixelshader@debug_grid:
 Texture2D tex0 : register(t0);
@@ -287,16 +289,17 @@ float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir,
                  float4 ub, float4 u, float4 uf, float4 uff, float4 b, float4 c,
                  float4 f, float4 ff, float4 db, float4 d, float4 df,
                  float4 dff, float4 ddb, float4 dd, float4 ddf) {
-  float min_width;
-  float max_width;
-#ifdef ENABLE_SLOPE
-  min_width = 0.45;
-  max_width = 1.142;
-#else
-  min_width = 0.0;
-  max_width = 1.4;
-#endif
-  float local_line_width = max(min_width, min(max_width, line_width));
+  // float min_width;
+  // float max_width;
+  // #ifdef ENABLE_SLOPE
+  // min_width = 0.45;
+  // max_width = 1.142;
+  // #else
+  // min_width = 0.0;
+  // max_width = 1.4;
+  // #endif
+  // float local_line_width = clamp(line_width, min_width, max_width);
+  float local_line_width = line_width;
   base_point = main_dir * (base_point - 0.5) + 0.5; // flip point by main_dir
 
   // edge detection
@@ -509,10 +512,10 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
   float sample_y = scaled.y + center_y;
   float2 sample_coord = float2(sample_x, sample_y);
 
-  float2 sample_px = sample_coord / new_size * (new_size + 0.0001);
+  float2 sample_px = sample_coord / base_size * (base_size + 0.0001);
   float2 sample_local = frac(sample_px);
   sample_px = floor(sample_px);
-  float2 point_dir = round(sample_local) * 2.0 - 1.0;
+  float2 point_dir = step(0.5, sample_local) * 2.0 - 1.0;
 
   // NOTE: back / present / front
   // NOTE: up / center / down
@@ -559,10 +562,10 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
 
   if (c_col.r >= 0.0)
     col = c_col;
-  if (u_col.r >= 0.0)
-    col = u_col;
   if (b_col.r >= 0.0)
     col = b_col;
+  if (u_col.r >= 0.0)
+    col = u_col;
 
   return col;
 }
@@ -694,16 +697,17 @@ float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir,
                  float4 ub, float4 u, float4 uf, float4 uff, float4 b, float4 c,
                  float4 f, float4 ff, float4 db, float4 d, float4 df,
                  float4 dff, float4 ddb, float4 dd, float4 ddf) {
-  float min_width;
-  float max_width;
-#ifdef ENABLE_SLOPE
-  min_width = 0.45;
-  max_width = 1.142;
-#else
-  min_width = 0.0;
-  max_width = 1.4;
-#endif
-  float local_line_width = max(min_width, min(max_width, line_width));
+  // float min_width;
+  // float max_width;
+  // #ifdef ENABLE_SLOPE
+  // min_width = 0.45;
+  // max_width = 1.142;
+  // #else
+  // min_width = 0.0;
+  // max_width = 1.4;
+  // #endif
+  // float local_line_width = clamp(line_width, min_width, max_width);
+  float local_line_width = line_width;
   base_point = main_dir * (base_point - 0.5) + 0.5; // flip point by main_dir
 
   // edge detection
@@ -916,10 +920,10 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
   float sample_y = scaled.y + center_y;
   float2 sample_coord = float2(sample_x, sample_y);
 
-  float2 sample_px = sample_coord / new_size * (new_size + 0.0001);
+  float2 sample_px = sample_coord / base_size * (base_size + 0.0001);
   float2 sample_local = frac(sample_px);
   sample_px = floor(sample_px);
-  float2 point_dir = round(sample_local) * 2.0 - 1.0;
+  float2 point_dir = step(0.5, sample_local) * 2.0 - 1.0;
 
   // NOTE: back / present / front
   // NOTE: up / center / down
@@ -966,10 +970,10 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
 
   if (c_col.r >= 0.0)
     col = c_col;
-  if (u_col.r >= 0.0)
-    col = u_col;
   if (b_col.r >= 0.0)
     col = b_col;
+  if (u_col.r >= 0.0)
+    col = u_col;
 
   return col;
 }
@@ -1102,16 +1106,17 @@ float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir,
                  float4 ub, float4 u, float4 uf, float4 uff, float4 b, float4 c,
                  float4 f, float4 ff, float4 db, float4 d, float4 df,
                  float4 dff, float4 ddb, float4 dd, float4 ddf) {
-  float min_width;
-  float max_width;
-#ifdef ENABLE_SLOPE
-  min_width = 0.45;
-  max_width = 1.142;
-#else
-  min_width = 0.0;
-  max_width = 1.4;
-#endif
-  float local_line_width = max(min_width, min(max_width, line_width));
+  // float min_width;
+  // float max_width;
+  // #ifdef ENABLE_SLOPE
+  // min_width = 0.45;
+  // max_width = 1.142;
+  // #else
+  // min_width = 0.0;
+  // max_width = 1.4;
+  // #endif
+  // float local_line_width = clamp(line_width, min_width, max_width);
+  float local_line_width = line_width;
   base_point = main_dir * (base_point - 0.5) + 0.5; // flip point by main_dir
 
   // edge detection
@@ -1324,10 +1329,10 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
   float sample_y = scaled.y + center_y;
   float2 sample_coord = float2(sample_x, sample_y);
 
-  float2 sample_px = sample_coord / new_size * (new_size + 0.0001);
+  float2 sample_px = sample_coord / base_size * (base_size + 0.0001);
   float2 sample_local = frac(sample_px);
   sample_px = floor(sample_px);
-  float2 point_dir = round(sample_local) * 2.0 - 1.0;
+  float2 point_dir = step(0.5, sample_local) * 2.0 - 1.0;
 
   // NOTE: back / present / front
   // NOTE: up / center / down
@@ -1374,10 +1379,10 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
 
   if (c_col.r >= 0.0)
     col = c_col;
-  if (u_col.r >= 0.0)
-    col = u_col;
   if (b_col.r >= 0.0)
     col = b_col;
+  if (u_col.r >= 0.0)
+    col = u_col;
 
   return col;
 }
@@ -1401,6 +1406,9 @@ end
 if type(PI.angle_deg) == "number" then
   angle_deg = PI.angle_deg
 end
+if type(PI.enable_cleanedge) == "boolean" then
+  enable_cleanedge = PI.enable_cleanedge
+end
 if type(PI.line_width) == "number" then
   line_width = PI.line_width
 end
@@ -1412,6 +1420,9 @@ if type(PI.highest_color) == "number" then
 end
 if type(PI.similar_threshold) == "number" then
   similar_threshold = PI.similar_threshold
+end
+if type(PI.snap_to_pixel) == "boolean" then
+  snap_to_pixel = PI.snap_to_pixel
 end
 if type(PI.debug) == "boolean" then
   if PI.debug then
@@ -1440,8 +1451,6 @@ local original_cx = obj.cx
 local original_cy = obj.cy
 local original_sx = obj.sx
 local original_sy = obj.sy
-
-obj.setoption("sampler", "dot")
 
 local vanilla_cx = obj.w / 2
 local vanilla_cy = obj.h / 2
@@ -1532,4 +1541,13 @@ obj.load("tempbuffer")
 local new_cx, new_cy = rotate_point(center_x * rscale_x, center_y * rscale_y, angle_rad)
 obj.cx = original_cx + new_cx
 obj.cy = original_cy + new_cy
+
+if snap_to_pixel then
+  if new_w % 2 ~= obj.screen_w % 2 then
+    obj.cx = math.floor(obj.cx) + 0.5
+  end
+  if new_h % 2 ~= obj.screen_h % 2 then
+    obj.cy = math.floor(obj.cy) + 0.5
+  end
+end
 

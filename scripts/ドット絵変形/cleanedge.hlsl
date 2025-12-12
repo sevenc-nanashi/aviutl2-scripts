@@ -118,16 +118,17 @@ float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir,
                  float4 ub, float4 u, float4 uf, float4 uff, float4 b, float4 c,
                  float4 f, float4 ff, float4 db, float4 d, float4 df,
                  float4 dff, float4 ddb, float4 dd, float4 ddf) {
-  float min_width;
-  float max_width;
-#ifdef ENABLE_SLOPE
-  min_width = 0.45;
-  max_width = 1.142;
-#else
-  min_width = 0.0;
-  max_width = 1.4;
-#endif
-  float local_line_width = max(min_width, min(max_width, line_width));
+  // float min_width;
+  // float max_width;
+  // #ifdef ENABLE_SLOPE
+  // min_width = 0.45;
+  // max_width = 1.142;
+  // #else
+  // min_width = 0.0;
+  // max_width = 1.4;
+  // #endif
+  // float local_line_width = clamp(line_width, min_width, max_width);
+  float local_line_width = line_width;
   base_point = main_dir * (base_point - 0.5) + 0.5; // flip point by main_dir
 
   // edge detection
@@ -340,10 +341,10 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
   float sample_y = scaled.y + center_y;
   float2 sample_coord = float2(sample_x, sample_y);
 
-  float2 sample_px = sample_coord / new_size * (new_size + 0.0001);
+  float2 sample_px = sample_coord / base_size * (base_size + 0.0001);
   float2 sample_local = frac(sample_px);
   sample_px = floor(sample_px);
-  float2 point_dir = round(sample_local) * 2.0 - 1.0;
+  float2 point_dir = step(0.5, sample_local) * 2.0 - 1.0;
 
   // NOTE: back / present / front
   // NOTE: up / center / down
@@ -390,10 +391,10 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
 
   if (c_col.r >= 0.0)
     col = c_col;
-  if (u_col.r >= 0.0)
-    col = u_col;
   if (b_col.r >= 0.0)
     col = b_col;
+  if (u_col.r >= 0.0)
+    col = u_col;
 
   return col;
 }

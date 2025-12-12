@@ -4,11 +4,11 @@
 -- ========================================================================================================================
 -- ドット絵の拡大縮小・回転を行うスクリプト。
 -- 標準描画と違い、これはドット絵でも綺麗に変形されます。
--- また、cleanEdgeを使った高度な補間も可能です。
+-- また、発展補間オプションを有効にするとcleanEdge風の補間が行われ、より綺麗に変形されます。
 --
 -- cleanEdgeについてはこれを参照してください：https://torcado.com/cleanEdge/
 --
--- 高度補間時のパラメーターの説明：
+-- 発展補間時のパラメータ：
 -- - 基準色：線の上書き判定に使う色。例えば#ffffffの場合は明るい色が優先されます。もしドット絵に外枠がある場合は、外枠を設定すると綺麗になります。
 --           cleanEdgeのHighest Colorに相当します。
 -- - 線の太さ：線の太さを指定します。ピクセルが何マス分に広がるかを指定します。45度の線を綺麗にしたい場合は0.707付近にしてください。
@@ -27,12 +27,13 @@
 -- - center_x: 中心X（ピクセル単位）
 -- - center_y: 中心Y（ピクセル単位）
 -- - angle_deg: 回転（度）
--- - enable_cleanedge: 高度補間
+-- - enable_cleanedge: 発展補間
 -- - highest_color: 基準色
 -- - line_width: 線の太さ
--- - slopes: 斜め補間（0 = 1:1のみ、1 = 1:1と1:2、2 = 1:1と1:2（補正有り））
+-- - slopes: 斜め補間（0 = 1:1のみ、1 = 1:1 + 1:2、2 = 1:1 + 1:2（補正有り））
 -- - similar_threshold: 補間閾値
 -- - debug: 透明グリッド
+-- - snap_to_pixel: ピクセルスナップ
 --
 -- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 -- ========================================================================================================================
@@ -68,13 +69,11 @@
 ---$track:中心X
 ---min=-5000
 ---max=5000
----default=0
 ---step=0.01
 local center_x = 0
 ---$track:中心Y
 ---min=-5000
 ---max=5000
----default=0
 ---step=0.01
 local center_y = 0
 
@@ -83,14 +82,12 @@ local center_y = 0
 ---$track:X拡大率
 ---min=1
 ---max=10000
----default=100
 ---step=0.001
 local scale_x = 100
 
 ---$track:Y拡大率
 ---min=1
 ---max=10000
----default=100
 ---step=0.001
 local scale_y = 100
 
@@ -99,26 +96,24 @@ local scale_y = 100
 ---$track:回転（度）
 ---min=-360
 ---max=360
----default=0
 ---step=0.1
 local angle_deg = 0
 
---group:高度補間設定,true
+--group:発展補間設定,true
 
----$check:高度補間
+---$check:発展補間
 local enable_cleanedge = false
 
 ---$track:線の太さ
 ---min=0
 ---max=4
----default=1
 ---step=0.01
 local line_width = 1
 
 ---$select:斜め補間
 ---1:1のみ=0
----1:1と1:2=1
----1:1と1:2（補正有り）=2
+---1:1 + 1:2=1
+---1:1 + 1:2（補正）=2
 local slopes = 2
 
 ---$color:基準色
@@ -127,7 +122,6 @@ local highest_color = 0xffffff
 ---$track:補間閾値
 ---min=0
 ---max=255
----default=16
 ---step=1
 local similar_threshold = 16
 
@@ -135,9 +129,11 @@ local similar_threshold = 16
 ---$track:透明グリッド
 ---min=0
 ---max=1000
----default=0
 ---step=1
 local debug = 0
+
+---$check:ピクセルスナップ
+local snap_to_pixel = true
 
 ---$value:PI
 local PI = {}
@@ -182,6 +178,9 @@ end
 if type(PI.angle_deg) == "number" then
   angle_deg = PI.angle_deg
 end
+if type(PI.enable_cleanedge) == "boolean" then
+  enable_cleanedge = PI.enable_cleanedge
+end
 if type(PI.line_width) == "number" then
   line_width = PI.line_width
 end
@@ -193,6 +192,9 @@ if type(PI.highest_color) == "number" then
 end
 if type(PI.similar_threshold) == "number" then
   similar_threshold = PI.similar_threshold
+end
+if type(PI.snap_to_pixel) == "boolean" then
+  snap_to_pixel = PI.snap_to_pixel
 end
 if type(PI.debug) == "boolean" then
   if PI.debug then
@@ -221,8 +223,6 @@ local original_cx = obj.cx
 local original_cy = obj.cy
 local original_sx = obj.sx
 local original_sy = obj.sy
-
-obj.setoption("sampler", "dot")
 
 local vanilla_cx = obj.w / 2
 local vanilla_cy = obj.h / 2
@@ -313,3 +313,12 @@ obj.load("tempbuffer")
 local new_cx, new_cy = rotate_point(center_x * rscale_x, center_y * rscale_y, angle_rad)
 obj.cx = original_cx + new_cx
 obj.cy = original_cy + new_cy
+
+if snap_to_pixel then
+  if new_w % 2 ~= obj.screen_w % 2 then
+    obj.cx = math.floor(obj.cx) + 0.5
+  end
+  if new_h % 2 ~= obj.screen_h % 2 then
+    obj.cy = math.floor(obj.cy) + 0.5
+  end
+end
