@@ -13,6 +13,3 @@ scripts:
   - name: ドット絵変形.anm2
     sources:
       - path: scripts/ドット絵変形/main.lua
-  - name: 滑らかドット絵変形.anm2
-    sources:
-      - path: scripts/滑らかドット絵変形/main.lua

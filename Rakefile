@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-task default: [:prepare_description]
+task default: [:prepare_description, :build]
 
 task :prepare_description do
   require "uri"
@@ -37,6 +37,10 @@ task :prepare_description do
   end
   File.write("README.md", base, mode: "wb")
   puts "Done."
+end
+
+task :build do
+  sh "aulua build"
 end
 
 desc "デモ用に過去のバージョンもインストールする"

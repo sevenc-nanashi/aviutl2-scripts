@@ -4,6 +4,4 @@
 ruby = "latest"
 
 [hooks]
-postinstall = [
-  "lefthook install"
-]
+postinstall = ["lefthook install"]

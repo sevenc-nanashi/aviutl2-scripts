@@ -7,8 +7,7 @@
 ファイル名をクリックするとダウンロードできます。
 
 <!-- script-marker-start -->
-- [ドット絵変形.anm2](https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2)：ニアレストネイバー法で拡大縮小・回転・中心移動を行うスクリプト。
-- [滑らかドット絵変形.anm2](https://aviutl2-scripts-download.sevenc7c.workers.dev/%E6%BB%91%E3%82%89%E3%81%8B%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2)：cleanEdgeで拡大縮小・回転・中心移動を行うスクリプト。
+- [ドット絵変形.anm2](https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2)：ドット絵の拡大縮小・回転を行うスクリプト。
 <!-- script-marker-end -->
 
 ## PIについて
