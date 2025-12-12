@@ -150,17 +150,20 @@ local PI = {}
 ]]
 --[[pixelshader@cleanedge_vanilla:
 #define DEFINE_THIS_MACRO_IN_MAIN_LUA
+#define ENTRYPOINT cleanedge_vanilla
 ---$include "./cleanedge.hlsl"
 ]]
 --[[pixelshader@cleanedge_slope:
 #define DEFINE_THIS_MACRO_IN_MAIN_LUA
 #define ENABLE_SLOPE
+#define ENTRYPOINT cleanedge_slope
 ---$include "./cleanedge.hlsl"
 ]]
 --[[pixelshader@cleanedge_slope_cleanup:
 #define DEFINE_THIS_MACRO_IN_MAIN_LUA
 #define ENABLE_SLOPE
 #define ENABLE_CLEANUP
+#define ENTRYPOINT cleanedge_slope_cleanup
 ---$include "./cleanedge.hlsl"
 ]]
 
@@ -258,7 +261,10 @@ if debug > 0 then
 else
   transform_source = "object"
 end
-obj.setoption("drawtarget", "tempbuffer", math.ceil(max_x) - math.floor(min_x), math.ceil(max_y) - math.floor(min_y))
+
+local new_w = math.ceil(max_x) - math.floor(min_x)
+local new_h = math.ceil(max_y) - math.floor(min_y)
+obj.setoption("drawtarget", "tempbuffer", new_w, new_h)
 
 if enable_cleanedge then
   highest_r, highest_g, highest_b = RGB(highest_color)
@@ -272,6 +278,8 @@ if enable_cleanedge then
     rscale_x,
     rscale_y,
     angle_rad,
+    new_w,
+    new_h,
     highest_r / 255,
     highest_g / 255,
     highest_b / 255,
@@ -286,7 +294,7 @@ if enable_cleanedge then
   else
     shader_name = "cleanedge_slope_cleanup"
   end
-  obj.pixelshader(shader_name, transform_source, "object", args, {}, "tempbuffer", "dot")
+  obj.pixelshader(shader_name, "tempbuffer", transform_source, args, "copy", "clip")
 else
   obj.pixelshader("transform", "tempbuffer", transform_source, {
     math.floor(min_x),
