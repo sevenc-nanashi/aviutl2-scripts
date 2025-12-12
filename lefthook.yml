@@ -1,4 +1,7 @@
 pre-push:
+  fail_on_changes: "always"
+  only:
+    - main
   jobs:
     - name: update build
-      run: aulua build
+      run: rake
