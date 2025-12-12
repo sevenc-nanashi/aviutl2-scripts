@@ -58,6 +58,7 @@ task :install_demo, [:script_dir] do |t, args|
   FileUtils.mkdir_p(install_root)
   revisions = {
     "ドット絵変形.anm2" => {
+      "v3.0": "2dc44cd",
       "v2.1": "d31c227",
       "v2.0": "4f848b5",
       "v1.0": "4a8d9bb"
