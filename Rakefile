@@ -4,17 +4,15 @@ task default: [:prepare_description]
 
 task :prepare_description do
   require "uri"
+  puts "Preparing script descriptions in README.md and script files..."
 
   header_width = 120
 
   base = File.read("README.md")
-  scripts = {
-    "ドット絵変形.anm2" => "./scripts/ドット絵変形/main.lua",
-    "滑らかドット絵変形.anm2" => "./scripts/滑らかドット絵変形/main.lua"
-  }
+  scripts = { "ドット絵変形.anm2" => "./scripts/ドット絵変形/main.lua" }
   replacement =
     scripts.map do |name, script|
-      puts "Processing #{script}..."
+      puts "Processing #{name}..."
       content = File.read(script)
       description = content.match(/-- =+\n-- (.+?)\n/)[1].strip
 
@@ -38,8 +36,7 @@ task :prepare_description do
     raise "Failed to find script marker in README.md"
   end
   File.write("README.md", base, mode: "wb")
-
-  sh "aulua build"
+  puts "Done."
 end
 
 desc "デモ用に過去のバージョンもインストールする"

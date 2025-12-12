@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: lefthook
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run:
+    # TODO: auluaが対応したらubuntu-latestで回す
+    # https://github.com/karoterra/aviutl2-aulua/issues/12
+    runs-on: windows-latest
+    steps:
+      - name: Prevent auto line ending conversion
+        run: git config --global core.autocrlf false
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up mise
+        uses: jdx/mise-action@v3
+        with:
+          install: true
+
+      - name: Run rake
+        run: rake
+
+      - name: Check for changes
+        run: |
+          # CRLF/LFの違いで差分が出るのを防ぐため、一旦すべてステージングしてから戻す
+          # TODO: もっといい方法があればそちらに変更する
+          git add .
+          git restore --staged .
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Build output is outdated. Please run 'rake' locally and update the PR."
+            git status
+            exit 1
+          else
+            echo "Build output is up to date."
+          fi
