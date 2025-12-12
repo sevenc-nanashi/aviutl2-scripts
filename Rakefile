@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-task default: [:prepare_description]
+task default: [:prepare_description, :build]
 
 task :prepare_description do
   require "uri"
@@ -14,6 +14,7 @@ task :prepare_description do
     scripts.map do |name, script|
       puts "Processing #{name}..."
       content = File.read(script)
+      original_content = content.dup
       description = content.match(/-- =+\n-- (.+?)\n/)[1].strip
 
       url =
@@ -26,7 +27,12 @@ task :prepare_description do
         -- #{"=" * header_width}
         LUA
       raise "Failed to find script marker in #{script}" unless maybe_replaced
-      File.write(script, content, mode: "wb")
+      if content == original_content
+        puts "No changes made to #{script}."
+      else
+        puts "Updating script file #{script} with download URL..."
+        File.write(script, content, mode: "wb")
+      end
       "- [#{name}](#{url})：#{description}"
     end
   unless base.gsub!(
@@ -37,6 +43,10 @@ task :prepare_description do
   end
   File.write("README.md", base, mode: "wb")
   puts "Done."
+end
+
+task :build do
+  sh "aulua build"
 end
 
 desc "デモ用に過去のバージョンもインストールする"

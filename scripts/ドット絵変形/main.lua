@@ -2,8 +2,25 @@
 --information:https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 
 -- ========================================================================================================================
--- ニアレストネイバー法で拡大縮小・回転・中心移動を行うスクリプト。
--- 標準の回転と違い、回転でも中間色が発生しません。
+-- ドット絵の拡大縮小・回転を行うスクリプト。
+-- 標準描画と違い、これはドット絵でも綺麗に変形されます。
+-- また、発展補間オプションを有効にするとcleanEdge風の補間が行われ、より綺麗に変形されます。
+-- （発展補間はまだ実験的機能です！バージョンの更新により動作が変わる可能性があります。）
+--
+-- cleanEdgeについてはこれを参照してください：https://torcado.com/cleanEdge/
+--
+-- 発展補間時のパラメータ：
+-- - 基準色：線の上書き判定に使う色。例えば#ffffffの場合は明るい色が優先されます。もしドット絵に外枠がある場合は、外枠を設定すると綺麗になります。
+--           cleanEdgeのHighest Colorに相当します。
+-- - 線の太さ：線の太さを指定します。ピクセルが何マス分に広がるかを指定します。45度の線を綺麗にしたい場合は0.707付近にしてください。
+--             cleanEdgeのLine Widthに相当します。
+-- - 斜め補間：拡大時に傾斜を滑らかにするかどうかを指定します。
+--             cleanEdgeのSlopesに相当します。
+-- - 補間閾値：斜め補間をするときに、どのくらい似ている色を同じ色として扱うかを指定します。
+--             高めると似ている色の間が滑らかに補間されるようになりますが、高すぎると乱れが発生します。
+--             可能な限り低く設定することをお勧めします。
+--             cleanEdgeのSimilar Thresholdに相当します。
+--
 --
 -- PI:
 -- - scale_x: X拡大率（1.0で等倍）
@@ -11,23 +28,53 @@
 -- - center_x: 中心X（ピクセル単位）
 -- - center_y: 中心Y（ピクセル単位）
 -- - angle_deg: 回転（度）
--- - debug: デバッググリッドの表示（0で非表示、正の値でグリッドサイズ）
+-- - enable_cleanedge: 発展補間
+-- - highest_color: 基準色
+-- - line_width: 線の太さ
+-- - slopes: 斜め補間（0 = 1:1のみ、1 = 1:1 + 1:2、2 = 1:1 + 1:2（補正有り））
+-- - similar_threshold: 補間閾値
+-- - debug: 透明グリッド
+-- - snap_to_pixel: ピクセルスナップ
 --
 -- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 -- ========================================================================================================================
+
+
+-- このスクリプトはcleanEdgeをベースに作成しました。
+-- cleanEdgeの作者であるtorcado様に感謝いたします。（Great Appreciation to torcado, the author of cleanEdge.）
+-- 以下はcleanEdgeのライセンス情報です。
+-- --------------------------------------------------------------------------------
+-- Copyright (c) 2022 torcado
+-- Permission is hereby granted, free of charge, to any person
+-- obtaining a copy of this software and associated documentation
+-- files (the "Software"), to deal in the Software without
+-- restriction, including without limitation the rights to use,
+-- copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the
+-- Software is furnished to do so, subject to the following
+-- conditions:
+-- The above copyright notice and this permission notice shall be
+-- included in all copies or substantial portions of the Software.
+-- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+-- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+-- OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+-- NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+-- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+-- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+-- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+-- OTHER DEALINGS IN THE SOFTWARE.
+-- --------------------------------------------------------------------------------
 
 --group:中心移動,true
 
 ---$track:中心X
 ---min=-5000
 ---max=5000
----default=0
 ---step=0.01
 local center_x = 0
 ---$track:中心Y
 ---min=-5000
 ---max=5000
----default=0
 ---step=0.01
 local center_y = 0
 
@@ -36,14 +83,12 @@ local center_y = 0
 ---$track:X拡大率
 ---min=1
 ---max=10000
----default=100
 ---step=0.001
 local scale_x = 100
 
 ---$track:Y拡大率
 ---min=1
 ---max=10000
----default=100
 ---step=0.001
 local scale_y = 100
 
@@ -52,17 +97,44 @@ local scale_y = 100
 ---$track:回転（度）
 ---min=-360
 ---max=360
----default=0
 ---step=0.1
 local angle_deg = 0
+
+--group:発展補間設定,true
+
+---$check:発展補間
+local enable_cleanedge = false
+
+---$track:線の太さ
+---min=0
+---max=4
+---step=0.01
+local line_width = 1
+
+---$select:斜め補間
+---1:1のみ=0
+---1:1 + 1:2=1
+---1:1 + 1:2（補正）=2
+local slopes = 2
+
+---$color:基準色
+local highest_color = 0xffffff
+
+---$track:補間閾値
+---min=0
+---max=255
+---step=1
+local similar_threshold = 16
 
 --group:高度な設定,false
 ---$track:透明グリッド
 ---min=0
 ---max=1000
----default=0
 ---step=1
 local debug = 0
+
+---$check:ピクセルスナップ
+local snap_to_pixel = true
 
 ---$value:PI
 local PI = {}
@@ -73,21 +145,57 @@ local PI = {}
 --[[pixelshader@transform:
 ---$include "./transform.hlsl"
 ]]
+--[[pixelshader@cleanedge_vanilla:
+#define DEFINE_THIS_MACRO_IN_MAIN_LUA
+#define ENTRYPOINT cleanedge_vanilla
+---$include "./cleanedge.hlsl"
+]]
+--[[pixelshader@cleanedge_slope:
+#define DEFINE_THIS_MACRO_IN_MAIN_LUA
+#define ENABLE_SLOPE
+#define ENTRYPOINT cleanedge_slope
+---$include "./cleanedge.hlsl"
+]]
+--[[pixelshader@cleanedge_slope_cleanup:
+#define DEFINE_THIS_MACRO_IN_MAIN_LUA
+#define ENABLE_SLOPE
+#define ENABLE_CLEANUP
+#define ENTRYPOINT cleanedge_slope_cleanup
+---$include "./cleanedge.hlsl"
+]]
 
-if type(PI.scale_x) == "number" then
-  scale_x = PI.scale_x * 100
-end
-if type(PI.scale_y) == "number" then
-  scale_y = PI.scale_y * 100
-end
 if type(PI.center_x) == "number" then
   center_x = PI.center_x
 end
 if type(PI.center_y) == "number" then
   center_y = PI.center_y
 end
+if type(PI.scale_x) == "number" then
+  scale_x = PI.scale_x * 100
+end
+if type(PI.scale_y) == "number" then
+  scale_y = PI.scale_y * 100
+end
 if type(PI.angle_deg) == "number" then
   angle_deg = PI.angle_deg
+end
+if type(PI.enable_cleanedge) == "boolean" then
+  enable_cleanedge = PI.enable_cleanedge
+end
+if type(PI.line_width) == "number" then
+  line_width = PI.line_width
+end
+if type(PI.slopes) == "number" then
+  slopes = PI.slopes
+end
+if type(PI.highest_color) == "number" then
+  highest_color = PI.highest_color
+end
+if type(PI.similar_threshold) == "number" then
+  similar_threshold = PI.similar_threshold
+end
+if type(PI.snap_to_pixel) == "boolean" then
+  snap_to_pixel = PI.snap_to_pixel
 end
 if type(PI.debug) == "boolean" then
   if PI.debug then
@@ -116,8 +224,6 @@ local original_cx = obj.cx
 local original_cy = obj.cy
 local original_sx = obj.sx
 local original_sy = obj.sy
-
-obj.setoption("sampler", "dot")
 
 local vanilla_cx = obj.w / 2
 local vanilla_cy = obj.h / 2
@@ -156,20 +262,64 @@ if debug > 0 then
 else
   transform_source = "object"
 end
-obj.setoption("drawtarget", "tempbuffer", math.ceil(max_x) - math.floor(min_x), math.ceil(max_y) - math.floor(min_y))
-obj.pixelshader("transform", "tempbuffer", transform_source, {
-  math.floor(min_x),
-  math.floor(min_y),
-  obj.w,
-  obj.h,
-  cx,
-  cy,
-  rscale_x,
-  rscale_y,
-  angle_rad
-}, "copy", "dot")
+
+local new_w = math.ceil(max_x) - math.floor(min_x)
+local new_h = math.ceil(max_y) - math.floor(min_y)
+obj.setoption("drawtarget", "tempbuffer", new_w, new_h)
+
+if enable_cleanedge then
+  highest_r, highest_g, highest_b = RGB(highest_color)
+  local args = {
+    math.floor(min_x),
+    math.floor(min_y),
+    obj.w,
+    obj.h,
+    cx,
+    cy,
+    rscale_x,
+    rscale_y,
+    angle_rad,
+    new_w,
+    new_h,
+    highest_r / 255,
+    highest_g / 255,
+    highest_b / 255,
+    similar_threshold / 255,
+    line_width,
+  }
+  local shader_name
+  if slopes == 0 then
+    shader_name = "cleanedge_vanilla"
+  elseif slopes == 1 then
+    shader_name = "cleanedge_slope"
+  else
+    shader_name = "cleanedge_slope_cleanup"
+  end
+  obj.pixelshader(shader_name, "tempbuffer", transform_source, args, "copy", "clip")
+else
+  obj.pixelshader("transform", "tempbuffer", transform_source, {
+    math.floor(min_x),
+    math.floor(min_y),
+    obj.w,
+    obj.h,
+    cx,
+    cy,
+    rscale_x,
+    rscale_y,
+    angle_rad
+  }, "copy", "dot")
+end
 obj.load("tempbuffer")
 
 local new_cx, new_cy = rotate_point(center_x * rscale_x, center_y * rscale_y, angle_rad)
 obj.cx = original_cx + new_cx
 obj.cy = original_cy + new_cy
+
+if snap_to_pixel then
+  if new_w % 2 ~= obj.screen_w % 2 then
+    obj.cx = math.floor(obj.cx) + 0.5
+  end
+  if new_h % 2 ~= obj.screen_h % 2 then
+    obj.cy = math.floor(obj.cy) + 0.5
+  end
+end
