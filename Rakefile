@@ -171,13 +171,15 @@ task :aulua_build do
 end
 
 task "aulua_build:dry" do
-  original = Dir.glob("./scripts/*.*").to_h do |path|
-    [path, File.read(path, mode: "rb")]
-  end
+  original =
+    Dir
+      .glob("./scripts/*.*")
+      .to_h { |path| [path, File.read(path, mode: "rb")] }
   Rake::Task[:aulua_build].invoke
-  updated = Dir.glob("./scripts/*.*").to_h do |path|
-    [path, File.read(path, mode: "rb")]
-  end
+  updated =
+    Dir
+      .glob("./scripts/*.*")
+      .to_h { |path| [path, File.read(path, mode: "rb")] }
   updated.each do |path, content|
     if original[path] != content
       puts "File #{path} needs to be updated"
