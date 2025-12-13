@@ -9,7 +9,8 @@ $check_mode = false
 
 task "build:dry" do
   $check_mode = :not_updated
-  Rake::Task[:build].invoke
+  Rake::Task[:prepare_description].invoke
+  Rake::Task["aulua_build:dry"].invoke
   if $check_mode == :not_updated
     puts "All files are up to date."
   else
@@ -167,6 +168,25 @@ end
 
 task :aulua_build do
   sh "aulua build"
+end
+
+task "aulua_build:dry" do
+  original = Dir.glob("./scripts/*.*").to_h do |path|
+    [path, File.read(path, mode: "rb")]
+  end
+  Rake::Task[:aulua_build].invoke
+  updated = Dir.glob("./scripts/*.*").to_h do |path|
+    [path, File.read(path, mode: "rb")]
+  end
+  updated.each do |path, content|
+    if original[path] != content
+      puts "File #{path} needs to be updated"
+      $check_mode = :updated
+      File.write(path, original[path], mode: "wb")
+    else
+      puts "No changes for #{path}"
+    end
+  end
 end
 
 desc "デモ用に過去のバージョンもインストールする"
