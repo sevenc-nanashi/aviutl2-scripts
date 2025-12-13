@@ -110,8 +110,8 @@ task :prepare_description do
           current_level = level.size - 1
           description_lines << "#{"  " * (current_level - 1)}[ #{text.strip} ]"
           skip_empty = true
-        elsif line == "----"
-          current_level = level
+        elsif line.start_with?("----")
+          current_level = 0
         else
           next if skip_empty && line.strip.empty?
           if line.start_with?("> ")
@@ -193,7 +193,7 @@ task :install_demo, [:script_dir] do |t, args|
       partial_versions.each do |version, commit|
         if commit
           puts "  Using override commit #{commit} for version #{version}"
-          next commit
+          next
         end
 
         version_commit =
