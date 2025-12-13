@@ -286,7 +286,7 @@ task "clang_format" do
   sh "clang-format -i -- #{clang_format_files.join(" ")}"
 end
 task "clang_format:dry" do
-  sh "clang-format --fail-on-incomplete-format -- #{clang_format_files.join(" ")}"
+  sh "clang-format -i --dry-run --fail-on-incomplete-format -Werror -- #{clang_format_files.join(" ")}"
 end
 
 configure = ->(task) { task.source_files = FileList[%w[Rakefile]] }

@@ -27,7 +27,7 @@ description = "Format code"
 run = [
   "stylua .",
   "rumdl fmt .",
-  "clang-format -i --fail-on-incomplete-format -- ./**/*.hlsl",
+  "rake clang_format",
   "rake stree:write",
 ]
 
@@ -36,7 +36,7 @@ description = "Lint code"
 run = [
   "stylua -c .",
   "rumdl check .",
-  "clang-format -i -- ./**/*.hlsl",
+  "rake clang_format:dry",
   "rake stree:check",
 ]
 
