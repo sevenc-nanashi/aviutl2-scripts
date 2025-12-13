@@ -26,6 +26,8 @@ def text_width(text)
   end
 end
 
+script_dirs = Dir.glob("scripts/*").select { |f| File.directory?(f) }
+
 task :prepare_description do
   require "uri"
   puts "Preparing script descriptions in README.md and script files..."
@@ -34,7 +36,6 @@ task :prepare_description do
   quote_header_width = nil
 
   base = File.read("README.md")
-  script_dirs = Dir.glob("scripts/*").select { |f| File.directory?(f) }
   replacement =
     script_dirs.sort.map do |script_dir|
       readme_path = File.join(script_dir, "README.md")
@@ -147,30 +148,80 @@ task :install_demo, [:script_dir] do |t, args|
 
   install_root = File.join(script_dir, "sevenc-nanashi_aviutl2-scripts")
   FileUtils.mkdir_p(install_root)
-  revisions = {
-    "ドット絵変形.anm2" => {
-      "v3.1": "bcd3998",
-      "v3.0": "2dc44cd",
-      "v2.1": "d31c227",
-      "v2.0": "4f848b5",
-      "v1.0": "4a8d9bb"
-    }
-  }
-  revisions.each do |filename, revs|
+  script_dirs.each do |script_dir|
+    puts "Processing #{script_dir}..."
     final_content = []
-    revs.each do |version, commit|
-      content = `git show #{commit}:scripts/#{filename}`
-      final_content << "@#{version}"
-      unless content.sub!(/--label:(.+)/) {
-               "--label:[sevenc-nanashi/aviutl2-scripts]\\#{$1}\\#{filename}"
-             }
-        content = "--label:#{filename}\n" + content
+    readme_commits = [
+      *`git log --pretty="%H" -- #{script_dir}/README.md`.lines
+        .map(&:chomp)
+        .reverse,
+      :current_tree
+    ]
+    partial_versions =
+      parse_changelog_headers(File.read("#{script_dir}/README.md"))
+    filename =
+      File.read("#{script_dir}/README.md").lines.first.sub(/\A#+\s*/, "").strip
+    versions =
+      partial_versions.each do |version, commit|
+        if commit
+          puts "  Using override commit #{commit} for version #{version}"
+          next commit
+        end
+
+        version_commit =
+          readme_commits.bsearch do |c|
+            if c == :current_tree
+              true
+            else
+              versions_in_commit =
+                parse_changelog_headers(`git show #{c}:#{script_dir}/README.md`)
+              versions_in_commit.key?(version)
+            end
+          end
+        unless version_commit
+          raise "Could not find commit for version #{version} in #{script_dir}"
+        end
+        puts "  Found commit #{version_commit} for version #{version}"
+        version_commit
       end
-      final_content << content
-    end
+    [%i[current_tree current_tree]].chain(versions)
+      .each do |version, commit|
+        content =
+          if commit == :current_tree
+            File.read("scripts/#{filename}")
+          else
+            `git show #{commit}:scripts/#{filename}`
+          end
+        final_content << if version == :current_tree
+          "@current"
+        else
+          "@v#{version}"
+        end
+        unless content.sub!(/--label:(.+)/) {
+                 "--label:[sevenc-nanashi/aviutl2-scripts]\\#{$1}\\#{filename}"
+               }
+          content = "--label:#{filename}\n" + content
+        end
+        final_content << content
+      end
     new_filename = "@#{filename}"
     script_path = File.join(install_root, new_filename)
     puts "Writing #{script_path}"
     File.write(script_path, final_content.join("\n"), mode: "wb")
   end
+end
+
+def parse_changelog_headers(content)
+  headers = {}
+  content
+    .lines
+    .drop_while { |line| line.chomp != "# 更新履歴" }
+    .each do |line|
+      if line.match(/^## v(?<version>[0-9\.]+)/) in { version: }
+        override =
+          line.match(/<!-- commit-override: (?<commit>[0-9a-f]{7,40}) -->/)
+        headers[version] = override ? override[:commit] : nil
+      end
+    end
+  headers
 end
