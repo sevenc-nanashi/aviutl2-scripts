@@ -4,25 +4,46 @@
 -- ========================================================================================================================
 -- ドット絵の拡大縮小・回転を行うスクリプト。
 -- 標準描画と違い、これはドット絵でも綺麗に変形されます。
--- また、発展補間オプションを有効にするとcleanEdge風の補間が行われ、より綺麗に変形されます。
+-- また、発展補間オプションを有効にすると線がより綺麗に補間されます。
 -- （発展補間はまだ実験的機能です！バージョンの更新により動作が変わる可能性があります。）
 --
--- cleanEdgeについてはこれを参照してください：https://torcado.com/cleanEdge/
+-- ピクセル補正について：
+--   ドット絵を変形するとき、変形後の画像の位置がピクセルグリッドに乗らずにぼやけてしまうことがあります。
+--   （シーンの左上から見た画像の左上の位置が(1.3, 2.7)のように小数点になる場合）
+--   ピクセル補正を有効にすると、変形後の画像がピクセルグリッドに乗るように調整され、ぼやけを防止します。
 --
--- 発展補間時のパラメータ：
--- - 基準色：線の上書き判定に使う色。例えば#ffffffの場合は明るい色が優先されます。もしドット絵に外枠がある場合は、外枠を設定すると綺麗になります。
---           cleanEdgeのHighest Colorに相当します。
--- - 線の太さ：線の太さを指定します。ピクセルが何マス分に広がるかを指定します。45度の線を綺麗にしたい場合は0.707付近にしてください。
---             cleanEdgeのLine Widthに相当します。
--- - 斜め補間：拡大時に傾斜を滑らかにするかどうかを指定します。
---             cleanEdgeのSlopesに相当します。
--- - 補間閾値：斜め補間をするときに、どのくらい似ている色を同じ色として扱うかを指定します。
---             高めると似ている色の間が滑らかに補間されるようになりますが、高すぎると乱れが発生します。
---             可能な限り低く設定することをお勧めします。
---             cleanEdgeのSimilar Thresholdに相当します。
+--   Tips：
+--     sigma-axis氏のaviutl2_script_PixelSnap_Sも同様の動作を行います。 https://github.com/sigma-axis/aviutl2_script_PixelSnap_S
+--
+--   モード：
+--     - 中心移動式：画像の左上がピクセルグリッドに乗るように中心点が調整されます。
+--     - 描画移動式：画像の左上がピクセルグリッドに乗るように描画位置が調整されます。
+--     - サンプラー式：AviUtl2のピクセル補間モードを変更します。
+--                     このエフェクトの後にエフェクトを追加するとピクセル補正が無効になるかもしれません。
+--     - オフ：ピクセル補正を行いません。
+--
+-- 発展補間：
+--   有効にすると、ドット絵の線が塗りの上に描画されるように補間され、線が消えにくくなります。
+--   また、拡大時に斜めの線がより綺麗に補間されます。
+--   この機能はcleanEdgeをベースにしています。cleanEdgeについてはこのページを参照してください： https://torcado.com/cleanEdge/
+--
+--   パラメータ：
+--     - 基準色：線の上書き判定に使う色。例えば#ffffffの場合は明るい色が優先されます。もしドット絵に外枠がある場合は、外枠を設定すると綺麗になります。
+--               cleanEdgeのHighest Colorに相当します。
+--     - 線の太さ：線の太さを指定します。ピクセルが何マス分に広がるかを指定します。45度の線を綺麗にしたい場合は0.707付近にしてください。
+--                 cleanEdgeのLine Widthに相当します。
+--     - 斜め補間：拡大時に補間する傾斜を指定します。
+--                 - 1:1：45度の線のみ補間します。
+--                 - 1:1 + 1:2：45度と26.565度（1:2の傾き）の線を補間します。
+--                 - 1:1 + 1:2（補正）：45度と26.565度（1:2の傾き）の線を補間し、さらに1:2の線をより綺麗に補間します。
+--                 cleanEdgeのSlopesに相当します。
+--     - 補間閾値：斜め補間をするときに、どのくらい似ている色を同じ色として扱うかを指定します。
+--                 高めると似ている色の間が滑らかに補間されるようになりますが、高すぎると乱れが発生します。
+--                 可能な限り低く設定することをお勧めします。
+--                 cleanEdgeのSimilar Thresholdに相当します。
 --
 --
--- PI:
+-- PI：
 -- - scale_x: X拡大率（1.0で等倍）
 -- - scale_y: Y拡大率（1.0で等倍）
 -- - center_x: 中心X（ピクセル単位）
@@ -31,10 +52,11 @@
 -- - enable_cleanedge: 発展補間
 -- - highest_color: 基準色
 -- - line_width: 線の太さ
--- - slopes: 斜め補間（0 = 1:1のみ、1 = 1:1 + 1:2、2 = 1:1 + 1:2（補正有り））
+-- - slopes: 斜め補間（0 = 「1:1のみ」、1 = 「1:1 + 1:2」、2 = 「1:1 + 1:2（補正）」）
 -- - similar_threshold: 補間閾値
--- - debug: 透明グリッド
--- - snap_to_pixel: ピクセルスナップ
+-- - alpha_grid: 透明グリッド
+-- - pixelsnap: ピクセル補正（1 = 中心移動式、2 = 描画移動式、3 = サンプラー式、0 = オフ）
+-- - debug: デバッグモード
 --
 -- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 -- ========================================================================================================================
@@ -131,16 +153,23 @@ local similar_threshold = 16
 ---min=0
 ---max=1000
 ---step=1
-local debug = 0
+local alpha_grid = 0
 
----$check:ピクセルスナップ
-local snap_to_pixel = true
+---$select:ピクセル補正
+---中心移動式=1
+---描画移動式=2
+---サンプラー式=3
+---オフ=0
+local pixelsnap = 1
+
+---$check:デバッグモード
+local debug = false
 
 ---$value:PI
 local PI = {}
 
---[[pixelshader@debug_grid:
----$include "./debug_grid.hlsl"
+--[[pixelshader@alpha_grid:
+---$include "./alpha_grid.hlsl"
 ]]
 --[[pixelshader@transform:
 ---$include "./transform.hlsl"
@@ -194,17 +223,68 @@ end
 if type(PI.similar_threshold) == "number" then
   similar_threshold = PI.similar_threshold
 end
-if type(PI.snap_to_pixel) == "boolean" then
-  snap_to_pixel = PI.snap_to_pixel
+if type(PI.pixelsnap) == "number" then
+  pixelsnap = PI.pixelsnap
 end
 if type(PI.debug) == "boolean" then
-  if PI.debug then
-    debug = 10
-  else
-    debug = 0
-  end
-elseif type(PI.debug) == "number" then
   debug = PI.debug
+end
+if type(PI.alpha_grid) == "boolean" then
+  if PI.alpha_grid then
+    alpha_grid = 10
+  else
+    alpha_grid = 0
+  end
+elseif type(PI.alpha_grid) == "number" then
+  alpha_grid = PI.alpha_grid
+end
+
+local function debug_dump_internal(o)
+  if type(o) == 'table' then
+    local s = '{ '
+    local keys = {}
+    local is_array = true
+    local max_index = 0
+    for k, v in pairs(o) do
+      table.insert(keys, k)
+      if type(k) ~= 'number' or k < 1 or math.floor(k) ~= k then
+        is_array = false
+      else
+        if k > max_index then
+          max_index = k
+        end
+      end
+    end
+    if is_array then
+      table.sort(keys, function(a, b) return a < b end)
+    else
+      table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
+    end
+    for i, k in ipairs(keys) do
+      local v = o[k]
+      if i > 1 then
+        s = s .. ', '
+      end
+      if is_array then
+        s = s .. debug_dump_internal(v)
+      else
+        s = s .. tostring(k) .. ' = ' .. debug_dump_internal(v)
+      end
+    end
+
+    return s .. ' }'
+  else
+    return tostring(o)
+  end
+end
+local function debug_dump(m, o)
+  if debug then
+    if o == nil then
+      debug_print(m)
+    else
+      debug_print(m .. ": " .. debug_dump_internal(o))
+    end
+  end
 end
 
 local rscale_x = scale_x / 100
@@ -219,11 +299,6 @@ local function rotate_point(x, y, angle_rad)
     local ry = sin_a * x + cos_a * y
     return rx, ry
 end
-
-local original_cx = obj.cx
-local original_cy = obj.cy
-local original_sx = obj.sx
-local original_sy = obj.sy
 
 local vanilla_cx = obj.w / 2
 local vanilla_cy = obj.h / 2
@@ -245,6 +320,12 @@ left_bottom_x = left_bottom_x + cx
 left_bottom_y = left_bottom_y + cy
 right_bottom_x = right_bottom_x + cx
 right_bottom_y = right_bottom_y + cy
+debug_dump("coords", {
+  left_top = {x = left_top_x, y = left_top_y},
+  right_top = {x = right_top_x, y = right_top_y},
+  left_bottom = {x = left_bottom_x, y = left_bottom_y},
+  right_bottom = {x = right_bottom_x, y = right_bottom_y},
+})
 
 local min_x = math.min(left_top_x, right_top_x, left_bottom_x, right_bottom_x)
 local max_x = math.max(left_top_x, right_top_x, left_bottom_x, right_bottom_x)
@@ -252,13 +333,13 @@ local min_y = math.min(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
 local max_y = math.max(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
 
 local transform_source
-if debug > 0 then
+if alpha_grid > 0 then
   obj.setoption("drawtarget", "tempbuffer", math.ceil(obj.w), math.ceil(obj.h))
-  obj.pixelshader("debug_grid", "tempbuffer", {}, {debug})
+  obj.pixelshader("alpha_grid", "tempbuffer", {}, {alpha_grid})
   obj.draw()
   obj.setoption("draw_state", false)
-  obj.copybuffer("cache:debug_grid", "tempbuffer")
-  transform_source = "cache:debug_grid"
+  obj.copybuffer("cache:alpha_grid", "tempbuffer")
+  transform_source = "cache:alpha_grid"
 else
   transform_source = "object"
 end
@@ -295,9 +376,11 @@ if enable_cleanedge then
   else
     shader_name = "cleanedge_slope_cleanup"
   end
-  obj.pixelshader(shader_name, "tempbuffer", transform_source, args, "copy", "clip")
+  debug_dump("shader_name", shader_name)
+  debug_dump("cleanedge args", args)
+  obj.pixelshader(shader_name, "tempbuffer", transform_source, args, "copy", "dot")
 else
-  obj.pixelshader("transform", "tempbuffer", transform_source, {
+  local args = {
     math.floor(min_x),
     math.floor(min_y),
     obj.w,
@@ -307,19 +390,39 @@ else
     rscale_x,
     rscale_y,
     angle_rad
-  }, "copy", "dot")
+  }
+  debug_dump("transform args", args)
+  obj.pixelshader("transform", "tempbuffer", transform_source, args, "copy", "dot")
 end
+
+local original_obj = {}
+for k, v in pairs(obj) do
+  original_obj[k] = v
+end
+
 obj.load("tempbuffer")
 
 local new_cx, new_cy = rotate_point(center_x * rscale_x, center_y * rscale_y, angle_rad)
-obj.cx = original_cx + new_cx
-obj.cy = original_cy + new_cy
+obj.ox = original_obj.ox
+obj.oy = original_obj.oy
+obj.cx = original_obj.cx + new_cx
+obj.cy = original_obj.cy + new_cy
 
-if snap_to_pixel then
-  if new_w % 2 ~= obj.screen_w % 2 then
-    obj.cx = math.floor(obj.cx) + 0.5
+if pixelsnap == 1 or pixelsnap == 2 then
+  local left_top_x = original_obj.screen_w / 2 + original_obj.x + original_obj.ox - (new_w / 2 + obj.cx)
+  local left_top_y = original_obj.screen_h / 2 + original_obj.y + original_obj.oy - (new_h / 2 + obj.cy)
+  local snapped_left_top_x = math.floor(left_top_x + 0.5)
+  local snapped_left_top_y = math.floor(left_top_y + 0.5)
+
+  debug_dump(("left_top_x: %.2f -> %d"):format(left_top_x, snapped_left_top_x))
+  debug_dump(("left_top_y: %.2f -> %d"):format(left_top_y, snapped_left_top_y))
+  if pixelsnap == 1 then
+    obj.cx = obj.cx - (snapped_left_top_x - left_top_x)
+    obj.cy = obj.cy - (snapped_left_top_y - left_top_y)
+  elseif pixelsnap == 2 then
+    obj.ox = obj.ox + (snapped_left_top_x - left_top_x)
+    obj.oy = obj.oy + (snapped_left_top_y - left_top_y)
   end
-  if new_h % 2 ~= obj.screen_h % 2 then
-    obj.cy = math.floor(obj.cy) + 0.5
-  end
+elseif pixelsnap == 3 then
+  obj.setoption("sampler", "dot")
 end

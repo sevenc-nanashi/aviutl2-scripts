@@ -5,7 +5,7 @@ cbuffer cb0 : register(b0)
     float size;
 };
 
-float4 debug_grid(float4 pos: SV_Position, float2 uv: TEXCOORD) : SV_Target
+float4 alpha_grid(float4 pos: SV_Position, float2 uv: TEXCOORD) : SV_Target
 {
   float checker = fmod(floor(pos.x / size) + floor(pos.y / size), 2.0);
 
