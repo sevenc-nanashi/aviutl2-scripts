@@ -187,7 +187,7 @@ local function debug_dump_internal(o)
     local keys = {}
     local is_array = true
     local max_index = 0
-    for k, v in pairs(o) do
+    for k, _ in pairs(o) do
       table.insert(keys, k)
       if type(k) ~= 'number' or k < 1 or math.floor(k) ~= k then
         is_array = false
@@ -233,13 +233,13 @@ local rscale_x = scale_x / 100
 local rscale_y = scale_y / 100
 
 local function rotate_point(x, y, angle_rad)
-    -- ( cos theta, -sin theta ) ( x )
-    -- ( sin theta,  cos theta ) ( y )
-    local cos_a = math.cos(angle_rad)
-    local sin_a = math.sin(angle_rad)
-    local rx = cos_a * x - sin_a * y
-    local ry = sin_a * x + cos_a * y
-    return rx, ry
+  -- ( cos theta, -sin theta ) ( x )
+  -- ( sin theta,  cos theta ) ( y )
+  local cos_a = math.cos(angle_rad)
+  local sin_a = math.sin(angle_rad)
+  local rx = cos_a * x - sin_a * y
+  local ry = sin_a * x + cos_a * y
+  return rx, ry
 end
 
 local vanilla_cx = obj.w / 2
@@ -263,10 +263,10 @@ left_bottom_y = left_bottom_y + cy
 right_bottom_x = right_bottom_x + cx
 right_bottom_y = right_bottom_y + cy
 debug_dump("coords", {
-  left_top = {x = left_top_x, y = left_top_y},
-  right_top = {x = right_top_x, y = right_top_y},
-  left_bottom = {x = left_bottom_x, y = left_bottom_y},
-  right_bottom = {x = right_bottom_x, y = right_bottom_y},
+  left_top = { x = left_top_x, y = left_top_y },
+  right_top = { x = right_top_x, y = right_top_y },
+  left_bottom = { x = left_bottom_x, y = left_bottom_y },
+  right_bottom = { x = right_bottom_x, y = right_bottom_y },
 })
 
 local min_x = math.min(left_top_x, right_top_x, left_bottom_x, right_bottom_x)
@@ -277,10 +277,13 @@ local max_y = math.max(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
 local transform_source
 if alpha_grid > 0 then
   obj.setoption("drawtarget", "tempbuffer", math.ceil(obj.w), math.ceil(obj.h))
-  obj.pixelshader("alpha_grid", "tempbuffer", {}, {alpha_grid})
+  obj.pixelshader("alpha_grid", "tempbuffer", {}, { alpha_grid })
   obj.draw()
   obj.setoption("draw_state", false)
-  obj.copybuffer("cache:alpha_grid", "tempbuffer")
+  if not obj.copybuffer("cache:alpha_grid", "tempbuffer") then
+    error("Failed to create alpha grid cache.")
+    return
+  end
   transform_source = "cache:alpha_grid"
 else
   transform_source = "object"
@@ -291,7 +294,7 @@ local new_h = math.ceil(max_y) - math.floor(min_y)
 obj.setoption("drawtarget", "tempbuffer", new_w, new_h)
 
 if enable_cleanedge then
-  highest_r, highest_g, highest_b = RGB(highest_color)
+  local highest_r, highest_g, highest_b = RGB(highest_color)
   local args = {
     math.floor(min_x),
     math.floor(min_y),
@@ -320,6 +323,8 @@ if enable_cleanedge then
   end
   debug_dump("shader_name", shader_name)
   debug_dump("cleanedge args", args)
+  -- transform_sourceに`"cache:xxx"`を指定すると型エラーになるため警告を無視する
+  ---@diagnostic disable-next-line: param-type-mismatch
   obj.pixelshader(shader_name, "tempbuffer", transform_source, args, "copy", "dot")
 else
   local args = {
@@ -334,6 +339,7 @@ else
     angle_rad
   }
   debug_dump("transform args", args)
+  ---@diagnostic disable-next-line: param-type-mismatch
   obj.pixelshader("transform", "tempbuffer", transform_source, args, "copy", "dot")
 end
 
@@ -351,20 +357,22 @@ obj.cx = original_obj.cx + new_cx
 obj.cy = original_obj.cy + new_cy
 
 if pixelsnap == 1 or pixelsnap == 2 then
-  local left_top_x = original_obj.screen_w / 2 + original_obj.x + original_obj.ox - (new_w / 2 + obj.cx)
-  local left_top_y = original_obj.screen_h / 2 + original_obj.y + original_obj.oy - (new_h / 2 + obj.cy)
-  local snapped_left_top_x = math.floor(left_top_x + 0.5)
-  local snapped_left_top_y = math.floor(left_top_y + 0.5)
+  local final_left_top_x = original_obj.screen_w / 2 + original_obj.x + original_obj.ox - (new_w / 2 + obj.cx)
+  local final_left_top_y = original_obj.screen_h / 2 + original_obj.y + original_obj.oy - (new_h / 2 + obj.cy)
+  local snapped_left_top_x = math.floor(final_left_top_x + 0.5)
+  local snapped_left_top_y = math.floor(final_left_top_y + 0.5)
 
-  debug_dump(("left_top_x: %.2f -> %d"):format(left_top_x, snapped_left_top_x))
-  debug_dump(("left_top_y: %.2f -> %d"):format(left_top_y, snapped_left_top_y))
+  debug_dump(("left_top_x: %.2f -> %d"):format(final_left_top_x, snapped_left_top_x))
+  debug_dump(("left_top_y: %.2f -> %d"):format(final_left_top_y, snapped_left_top_y))
   if pixelsnap == 1 then
-    obj.cx = obj.cx - (snapped_left_top_x - left_top_x)
-    obj.cy = obj.cy - (snapped_left_top_y - left_top_y)
+    obj.cx = obj.cx - (snapped_left_top_x - final_left_top_x)
+    obj.cy = obj.cy - (snapped_left_top_y - final_left_top_y)
   elseif pixelsnap == 2 then
-    obj.ox = obj.ox + (snapped_left_top_x - left_top_x)
-    obj.oy = obj.oy + (snapped_left_top_y - left_top_y)
+    obj.ox = obj.ox + (snapped_left_top_x - final_left_top_x)
+    obj.oy = obj.oy + (snapped_left_top_y - final_left_top_y)
   end
 elseif pixelsnap == 3 then
+  --aviutl2.luaの定義が古い
+  ---@diagnostic disable-next-line: param-type-mismatch
   obj.setoption("sampler", "dot")
 end
