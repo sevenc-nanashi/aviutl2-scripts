@@ -46,15 +46,23 @@ task :prepare_description do
       title = title_line.sub(/\A#+\s*/, "").strip
       url =
         "https://aviutl2-scripts-download.sevenc7c.workers.dev/#{URI.encode_www_form_component(title)}"
+      readme_url =
+        "https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/#{
+          URI.encode_www_form_component(File.basename(script_dir))
+        }/README.md"
 
-      description_lines = ["━" * (header_width / 2)]
+      description_lines = []
+      description_lines << "━" * (header_width / 2)
+      description_lines << "最新版をダウンロード：#{url}"
+      description_lines << "説明書をブラウザで読む：#{readme_url}"
+      description_lines << ""
       skip_empty = true
       current_level = 0
       description = nil
       lines.each do |line|
         indent = "  " * current_level
         if !line.start_with?("> ") && quote_header_width
-          description_lines << "#{indent}└#{'─' * (quote_header_width / 2 + 1)}"
+          description_lines << "#{indent}└#{"─" * (quote_header_width / 2 + 1)}"
           quote_header_width = nil
         end
         if line.start_with?("#")
@@ -97,8 +105,6 @@ task :prepare_description do
           end
         end
       end
-      description_lines << ""
-      description_lines << "最新版をダウンロード：#{url}"
       description_lines << "━" * (header_width / 2)
 
       readme_lua_path = File.join(script_dir, "readme.lua")
@@ -106,7 +112,7 @@ task :prepare_description do
         description_lines.map { |l| "-- #{l}".strip }.join("\n")
       update_file(readme_lua_path, readme_lua_content)
 
-      "- [#{title}](#{url})：#{description}"
+      "- [#{title}](#{url})（[説明書](#{readme_url})）：#{description}"
     end
   unless base.gsub!(
            /(?<=<!-- script-marker-start -->\n).*(?=\n<!-- script-marker-end -->)/m,

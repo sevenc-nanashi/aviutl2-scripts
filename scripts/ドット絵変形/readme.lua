@@ -1,4 +1,7 @@
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+-- 最新版をダウンロード：https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
+-- 説明書をブラウザで読む：https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2/README.md
+--
 -- ドット絵の拡大縮小・回転を行うスクリプト。
 --
 -- 標準描画と違い、これはドット絵でもドットのまま変形されます。
@@ -55,6 +58,4 @@
 --   - `alpha_grid`：透明グリッド
 --   - `pixelsnap`：ピクセル補正（1 = 中心移動式、2 = 描画移動式、3 = サンプラー式、0 = オフ）
 --   - `debug`：デバッグモード
---
--- 最新版をダウンロード：https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
