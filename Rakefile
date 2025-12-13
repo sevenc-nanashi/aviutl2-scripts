@@ -184,7 +184,11 @@ task "aulua_build:dry" do
     if original[path] != content
       puts "File #{path} needs to be updated"
       $check_mode = :updated
-      File.write(path, original[path], mode: "wb")
+      if original[path]
+        File.write(path, original[path], mode: "wb")
+      else
+        File.delete(path)
+      end
     else
       puts "No changes for #{path}"
     end
