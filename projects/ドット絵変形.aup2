@@ -1088,7 +1088,7 @@ video.scale=1
 video.background=
 audio.rate=44100
 cursor.frame=0
-cursor.layer=5
+cursor.layer=2
 display.frame=0
 display.layer=0
 display.zoom=5000
@@ -1172,6 +1172,7 @@ effect.name=PixelSnap_S
 [29]
 layer=2
 scene=5
+focus=1
 frame=0,359
 group=2
 [29.0]
@@ -1187,7 +1188,7 @@ effect.name=テキスト
 文字揃え=中央揃え[下]
 B=0
 I=0
-テキスト=v3.2\nピクセル補正 = <#b5d2f0>オフ
+テキスト=v3.2\nピクセル補正 = 中心補正式
 文字毎に個別オブジェクト=0
 自動スクロール=0
 移動座標上に表示=0
@@ -1328,7 +1329,6 @@ Z軸回転=0.00
 [33]
 layer=6
 scene=5
-focus=1
 frame=0,359
 [33.0]
 effect.name=テキスト
@@ -1837,7 +1837,7 @@ video.background=
 audio.rate=44100
 cursor.frame=0
 cursor.layer=6
-display.frame=195
+display.frame=0
 display.layer=0
 display.zoom=15000
 display.order=8
