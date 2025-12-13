@@ -193,7 +193,7 @@ task :install_demo, [:script_dir] do |t, args|
       partial_versions.to_h do |version, commit|
         if commit
           puts "  Using override commit #{commit} for version #{version}"
-          next [version, commit]
+          next version, commit
         end
 
         version_commit =
