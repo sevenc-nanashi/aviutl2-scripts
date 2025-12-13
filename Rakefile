@@ -228,7 +228,11 @@ task :install_demo, [:script_dir] do |t, args|
               true
             else
               versions_in_commit =
-                parse_changelog_headers(`git show #{c}:#{script_dir}/README.md`)
+                parse_changelog_headers(
+                  `git show #{c}:#{script_dir}/README.md`.force_encoding(
+                    "UTF-8"
+                  )
+                )
               versions_in_commit.key?(version)
             end
           end
@@ -239,7 +243,7 @@ task :install_demo, [:script_dir] do |t, args|
         [version, version_commit]
       end
     versions
-      .reverse_each
+      .each
       .chain([%i[current_tree current_tree]])
       .each do |version, commit|
         content =
@@ -247,7 +251,7 @@ task :install_demo, [:script_dir] do |t, args|
             File.read("scripts/#{filename}", mode: "rb")
           else
             `git show #{commit}:scripts/#{filename}`
-          end
+          end.force_encoding("UTF-8")
         final_content << if version == :current_tree
           "@current"
         else
