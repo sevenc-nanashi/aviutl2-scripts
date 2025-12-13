@@ -3,7 +3,6 @@
 
 ---$include "./readme.lua"
 
-
 -- このスクリプトはcleanEdgeをベースに作成しました。
 -- cleanEdgeの作者であるtorcado様に感謝いたします。（Great Appreciation to torcado, the author of cleanEdge.）
 -- 以下はcleanEdgeのライセンス情報です。
@@ -182,14 +181,14 @@ elseif type(PI.alpha_grid) == "number" then
 end
 
 local function debug_dump_internal(o)
-  if type(o) == 'table' then
-    local s = '{ '
+  if type(o) == "table" then
+    local s = "{ "
     local keys = {}
     local is_array = true
     local max_index = 0
     for k, _ in pairs(o) do
       table.insert(keys, k)
-      if type(k) ~= 'number' or k < 1 or math.floor(k) ~= k then
+      if type(k) ~= "number" or k < 1 or math.floor(k) ~= k then
         is_array = false
       else
         if k > max_index then
@@ -198,23 +197,27 @@ local function debug_dump_internal(o)
       end
     end
     if is_array then
-      table.sort(keys, function(a, b) return a < b end)
+      table.sort(keys, function(a, b)
+        return a < b
+      end)
     else
-      table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
+      table.sort(keys, function(a, b)
+        return tostring(a) < tostring(b)
+      end)
     end
     for i, k in ipairs(keys) do
       local v = o[k]
       if i > 1 then
-        s = s .. ', '
+        s = s .. ", "
       end
       if is_array then
         s = s .. debug_dump_internal(v)
       else
-        s = s .. tostring(k) .. ' = ' .. debug_dump_internal(v)
+        s = s .. tostring(k) .. " = " .. debug_dump_internal(v)
       end
     end
 
-    return s .. ' }'
+    return s .. " }"
   else
     return tostring(o)
   end
@@ -336,7 +339,7 @@ else
     cy,
     rscale_x,
     rscale_y,
-    angle_rad
+    angle_rad,
   }
   debug_dump("transform args", args)
   ---@diagnostic disable-next-line: param-type-mismatch

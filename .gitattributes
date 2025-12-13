@@ -13,3 +13,5 @@
 *.cam2 text eol=lf linguist-language=Lua working-tree-encoding=utf8
 *.tra2 text eol=lf linguist-language=Lua working-tree-encoding=utf8
 *.lua text eol=lf linguist-language=Lua working-tree-encoding=utf8
+
+*.aup2 binary

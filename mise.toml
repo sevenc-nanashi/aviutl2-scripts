@@ -1,8 +1,10 @@
 [tools]
 "cargo:https://github.com/sevenc-nanashi/aviutl2-aulua" = "branch:feat/multiple-includes"
+"github:rvben/rumdl" = "latest"
 "npm:chokidar-cli" = "latest"
 "npm:lefthook" = "latest"
 ruby = "latest"
+stylua = "latest"
 
 [hooks]
 postinstall = ["lefthook install"]
@@ -10,3 +12,5 @@ postinstall = ["lefthook install"]
 [tasks]
 build = ["rake"]
 dev = ['chokidar ./scripts/*/*.* --initial -i ./scripts/*.* -c rake']
+format = ["stylua .", "rumdl fmt .", "stree write Rakefile"]
+lint = ["stylua -c .", "rumdl check .", "stree check Rakefile"]

@@ -62,7 +62,11 @@ task :prepare_description do
       current_level = 0
       description = nil
       lines.each do |line|
+        # コメントは消す
         line.gsub!(/<!--.*?-->/, "")
+        # URLの周りの<>は消す
+        line.gsub!(%r{<(?<url>https?://[^ >]+)>}) { Regexp.last_match[:url] }
+
         indent = "  " * current_level
         if !line.start_with?("> ") && quote_header_width
           description_lines << "#{indent}└#{"─" * (quote_header_width / 2 + 1)}"
@@ -123,7 +127,7 @@ task :prepare_description do
 
       readme_lua_path = File.join(script_dir, "readme.lua")
       readme_lua_content =
-        description_lines.map { |l| "-- #{l}".strip }.join("\n")
+        description_lines.map { |l| "-- #{l}".strip }.join("\n") + "\n"
       update_file(readme_lua_path, readme_lua_content)
 
       "- [#{title}](#{url})（[説明書](#{readme_url})）：#{description}"

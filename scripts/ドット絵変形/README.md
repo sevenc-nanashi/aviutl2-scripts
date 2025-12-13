@@ -13,7 +13,7 @@
 ピクセル補正を有効にすると、変形後の画像がピクセルグリッドに乗るように調整され、ぼやけを防止します。
 
 > [!TIP]
-> sigma-axis氏のaviutl2_script_PixelSnap_Sも同様の動作を行います： https://github.com/sigma-axis/aviutl2_script_PixelSnap_S
+> sigma-axis氏のaviutl2_script_PixelSnap_Sも同様の動作を行います： <https://github.com/sigma-axis/aviutl2_script_PixelSnap_S>
 
 ### モード
 
@@ -27,7 +27,7 @@
 
 有効にすると、ドット絵の線が塗りの上に描画されるように補間され、線が消えにくくなります。
 また、拡大時に斜めの線がより綺麗に補間されます。
-この機能はcleanEdgeをベースにしています。cleanEdgeについてはこのページを参照してください： https://torcado.com/cleanEdge/
+この機能はcleanEdgeをベースにしています。cleanEdgeについてはこのページを参照してください： <https://torcado.com/cleanEdge/>
 
 ### パラメーター
 
