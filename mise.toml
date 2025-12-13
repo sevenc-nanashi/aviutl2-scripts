@@ -7,7 +7,7 @@ ruby = "latest"
 stylua = "latest"
 
 [hooks]
-postinstall = ["lefthook install"]
+postinstall = ["lefthook install", "bundle"]
 
 [tasks.build]
 description = "Build scripts"
