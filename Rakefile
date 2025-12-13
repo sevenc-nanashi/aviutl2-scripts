@@ -1,39 +1,112 @@
 # frozen_string_literal: true
 
-task default: [:prepare_description, :build]
+task default: %i[prepare_description build]
+
+def update_file(path, new_content)
+  content = (File.exist?(path) ? File.read(path) : nil)
+  if new_content != content
+    File.write(path, new_content, mode: "wb")
+    puts "Updated #{path}"
+  else
+    puts "No changes for #{path}"
+  end
+end
+def text_width(text)
+  text.each_char.sum do |ch|
+    case ch.ord
+    when 0x0000..0x001F, 0x007F..0x009F
+      0
+    when 0x0020..0x1FFF
+      1
+    when 0x2000..0xFF60
+      2
+    else
+      1
+    end
+  end
+end
 
 task :prepare_description do
   require "uri"
   puts "Preparing script descriptions in README.md and script files..."
 
   header_width = 120
+  quote_header_width = nil
 
   base = File.read("README.md")
-  scripts = { "ドット絵変形.anm2" => "./scripts/ドット絵変形/main.lua" }
+  script_dirs = Dir.glob("scripts/*").select { |f| File.directory?(f) }
   replacement =
-    scripts.map do |name, script|
-      puts "Processing #{name}..."
-      content = File.read(script)
-      original_content = content.dup
-      description = content.match(/-- =+\n-- (.+?)\n/)[1].strip
+    script_dirs.sort.map do |script_dir|
+      readme_path = File.join(script_dir, "README.md")
+      raise "Missing README.md in #{script_dir}" unless File.exist?(readme_path)
+      readme_content = File.read(readme_path)
+      lines = readme_content.lines.map(&:chomp)
 
+      title_line = lines.shift
+      title = title_line.sub(/\A#+\s*/, "").strip
       url =
-        "https://aviutl2-scripts-download.sevenc7c.workers.dev/#{URI.encode_www_form_component(name)}"
-      maybe_replaced =
-        content.gsub!(/-- =+\n((?:--(?: .+?)?\n)*)-- .+?\n-- =+\n/) { <<~LUA }
-        -- #{"=" * header_width}
-        #{$1.rstrip}
-        -- #{url}
-        -- #{"=" * header_width}
-        LUA
-      raise "Failed to find script marker in #{script}" unless maybe_replaced
-      if content == original_content
-        puts "No changes made to #{script}."
-      else
-        puts "Updating script file #{script} with download URL..."
-        File.write(script, content, mode: "wb")
+        "https://aviutl2-scripts-download.sevenc7c.workers.dev/#{URI.encode_www_form_component(title)}"
+
+      description_lines = ["━" * (header_width / 2)]
+      skip_empty = true
+      current_level = 0
+      description = nil
+      lines.each do |line|
+        indent = "  " * current_level
+        if !line.start_with?("> ") && quote_header_width
+          description_lines << "#{indent}└#{'─' * (quote_header_width / 2 + 1)}"
+          quote_header_width = nil
+        end
+        if line.start_with?("#")
+          line.match(/\A(?<level>#+) (?<text>.*)/) => { level:, text: }
+          current_level = level.size
+          description_lines << "#{"  " * (current_level - 1)}[ #{text.strip} ]"
+          skip_empty = true
+        elsif line == "----"
+          current_level = level
+        else
+          next if skip_empty && line.strip.empty?
+          if line.start_with?("> ")
+            quote_line = line.sub(/\A> /, "")
+            if quote_line.match(/\[!(?<type>[A-Z]+)\]/) in { type: }
+              label =
+                case type
+                when "NOTE"
+                  "ℹ️ Note"
+                when "TIP"
+                  "💡 Tips"
+                when "WARNING"
+                  "⚠️ Warning"
+                when "IMPORTANT"
+                  "❗ Important"
+                when "CAUTION"
+                  "🛑 Caution"
+                else
+                  type.capitalize
+                end
+              new_line = "#{indent}┌ #{label}"
+              quote_header_width = text_width(label) + 2
+              description_lines << new_line
+            else
+              description_lines << "#{indent}│ #{quote_line.rstrip}"
+            end
+          else
+            description = line if description.nil?
+            skip_empty = false
+            description_lines << "#{indent}#{line.rstrip}"
+          end
+        end
       end
-      "- [#{name}](#{url})：#{description}"
+      description_lines << ""
+      description_lines << "最新版をダウンロード：#{url}"
+      description_lines << "━" * (header_width / 2)
+
+      readme_lua_path = File.join(script_dir, "readme.lua")
+      readme_lua_content =
+        description_lines.map { |l| "-- #{l}".strip }.join("\n")
+      update_file(readme_lua_path, readme_lua_content)
+
+      "- [#{title}](#{url})：#{description}"
     end
   unless base.gsub!(
            /(?<=<!-- script-marker-start -->\n).*(?=\n<!-- script-marker-end -->)/m,
