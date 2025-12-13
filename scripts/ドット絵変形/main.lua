@@ -134,6 +134,7 @@ local PI = {}
 ---$include "./cleanedge.hlsl"
 ]]
 
+-- PIからパラメータを取得
 if type(PI.center_x) == "number" then
   center_x = PI.center_x
 end
@@ -180,6 +181,7 @@ elseif type(PI.alpha_grid) == "number" then
   alpha_grid = PI.alpha_grid
 end
 
+-- デバッグ用関数
 local function debug_dump_internal(o)
   if type(o) == "table" then
     local s = "{ "
@@ -225,16 +227,14 @@ end
 local function debug_dump(m, o)
   if debug then
     if o == nil then
-      debug_print(m)
+      debug_print(debug_dump_internal(m))
     else
       debug_print(m .. ": " .. debug_dump_internal(o))
     end
   end
 end
 
-local rscale_x = scale_x / 100
-local rscale_y = scale_y / 100
-
+-- 回転の計算
 local function rotate_point(x, y, angle_rad)
   -- ( cos theta, -sin theta ) ( x )
   -- ( sin theta,  cos theta ) ( y )
@@ -245,6 +245,9 @@ local function rotate_point(x, y, angle_rad)
   return rx, ry
 end
 
+local rscale_x = scale_x / 100
+local rscale_y = scale_y / 100
+
 local vanilla_cx = obj.w / 2
 local vanilla_cy = obj.h / 2
 
@@ -253,6 +256,7 @@ local cy = vanilla_cy + center_y
 
 local angle_rad = math.rad(angle_deg)
 
+-- 中心から見た四隅の座標を計算
 local left_top_x, left_top_y = rotate_point(-cx * rscale_x, -cy * rscale_y, angle_rad)
 local right_top_x, right_top_y = rotate_point((obj.w - cx) * rscale_x, -cy * rscale_y, angle_rad)
 local left_bottom_x, left_bottom_y = rotate_point(-cx * rscale_x, (obj.h - cy) * rscale_y, angle_rad)
@@ -272,11 +276,12 @@ debug_dump("coords", {
   right_bottom = { x = right_bottom_x, y = right_bottom_y },
 })
 
-local min_x = math.min(left_top_x, right_top_x, left_bottom_x, right_bottom_x)
-local max_x = math.max(left_top_x, right_top_x, left_bottom_x, right_bottom_x)
-local min_y = math.min(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
-local max_y = math.max(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
+local min_x = math.floor(math.min(left_top_x, right_top_x, left_bottom_x, right_bottom_x))
+local max_x = math.ceil(math.max(left_top_x, right_top_x, left_bottom_x, right_bottom_x))
+local min_y = math.floor(math.min(left_top_y, right_top_y, left_bottom_y, right_bottom_y))
+local max_y = math.ceil(math.max(left_top_y, right_top_y, left_bottom_y, right_bottom_y))
 
+-- 変形する画像を準備（透明グリッドを追加）
 local transform_source
 if alpha_grid > 0 then
   obj.setoption("drawtarget", "tempbuffer", math.ceil(obj.w), math.ceil(obj.h))
@@ -292,15 +297,16 @@ else
   transform_source = "object"
 end
 
-local new_w = math.ceil(max_x) - math.floor(min_x)
-local new_h = math.ceil(max_y) - math.floor(min_y)
+local new_w = max_x - min_x
+local new_h = max_y - min_y
 obj.setoption("drawtarget", "tempbuffer", new_w, new_h)
 
 if enable_cleanedge then
+  -- cleanEdge
   local highest_r, highest_g, highest_b = RGB(highest_color)
   local args = {
-    math.floor(min_x),
-    math.floor(min_y),
+    min_x,
+    min_y,
     obj.w,
     obj.h,
     cx,
@@ -316,6 +322,7 @@ if enable_cleanedge then
     similar_threshold / 255,
     line_width,
   }
+  -- シェーダー名を決定
   local shader_name
   if slopes == 0 then
     shader_name = "cleanedge_vanilla"
@@ -330,9 +337,10 @@ if enable_cleanedge then
   ---@diagnostic disable-next-line: param-type-mismatch
   obj.pixelshader(shader_name, "tempbuffer", transform_source, args, "copy", "dot")
 else
+  -- ただのニアレストネイバー
   local args = {
-    math.floor(min_x),
-    math.floor(min_y),
+    min_x,
+    min_y,
     obj.w,
     obj.h,
     cx,
@@ -346,27 +354,45 @@ else
   obj.pixelshader("transform", "tempbuffer", transform_source, args, "copy", "dot")
 end
 
+-- 画像を差し替える直前に元のオブジェクト情報を保存
 local original_obj = {}
 for k, v in pairs(obj) do
   original_obj[k] = v
 end
 
+-- 画像を差し替え
 obj.load("tempbuffer")
 
-local new_cx, new_cy = rotate_point(center_x * rscale_x, center_y * rscale_y, angle_rad)
+-- オブジェクト情報を調整
 obj.ox = original_obj.ox
 obj.oy = original_obj.oy
-obj.cx = original_obj.cx + new_cx
-obj.cy = original_obj.cy + new_cy
+obj.cx = original_obj.cx
+obj.cy = original_obj.cy
+
+-- オブジェクトの中央から見た中心位置を回転・拡大縮小後の位置に更新
+local new_cx, new_cy = rotate_point(center_x * rscale_x, center_y * rscale_y, angle_rad)
+obj.cx = obj.cx + new_cx
+obj.cy = obj.cy + new_cy
+
+-- オブジェクトの左上位置を維持するように調整
+-- 中心点を基準にして、
+-- - 新画像の左上座標（expected）
+-- - 現在の左上座標（current）
+-- を計算し、その差分を中心点に加算する
+local expected_left_top_x = -original_obj.w / 2 - center_x + min_x
+local expected_left_top_y = -original_obj.h / 2 - center_y + min_y
+local current_left_top_x = -new_w / 2 - obj.cx
+local current_left_top_y = -new_h / 2 - obj.cy
+
+obj.cx = obj.cx - (expected_left_top_x - current_left_top_x)
+obj.cy = obj.cy - (expected_left_top_y - current_left_top_y)
 
 if pixelsnap == 1 or pixelsnap == 2 then
   local final_left_top_x = original_obj.screen_w / 2 + original_obj.x + original_obj.ox - (new_w / 2 + obj.cx)
   local final_left_top_y = original_obj.screen_h / 2 + original_obj.y + original_obj.oy - (new_h / 2 + obj.cy)
-  local snapped_left_top_x = math.floor(final_left_top_x + 0.5)
-  local snapped_left_top_y = math.floor(final_left_top_y + 0.5)
+  local snapped_left_top_x = math.floor(final_left_top_x + 0.1)
+  local snapped_left_top_y = math.floor(final_left_top_y + 0.1)
 
-  debug_dump(("left_top_x: %.2f -> %d"):format(final_left_top_x, snapped_left_top_x))
-  debug_dump(("left_top_y: %.2f -> %d"):format(final_left_top_y, snapped_left_top_y))
   if pixelsnap == 1 then
     obj.cx = obj.cx - (snapped_left_top_x - final_left_top_x)
     obj.cy = obj.cy - (snapped_left_top_y - final_left_top_y)
