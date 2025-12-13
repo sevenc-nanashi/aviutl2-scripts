@@ -142,7 +142,7 @@ task :prepare_description do
           else
             description = line if description.nil?
             skip_empty = false
-            description_lines << "#{indent}#{line.rstrip}"
+            description_lines << "#{indent}#{line.rstrip.delete_suffix("\\")}"
           end
         end
       end
