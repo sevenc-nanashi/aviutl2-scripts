@@ -190,10 +190,10 @@ task :install_demo, [:script_dir] do |t, args|
     filename =
       File.read("#{script_dir}/README.md").lines.first.sub(/\A#+\s*/, "").strip
     versions =
-      partial_versions.each do |version, commit|
+      partial_versions.to_h do |version, commit|
         if commit
           puts "  Using override commit #{commit} for version #{version}"
-          next
+          next [version, commit]
         end
 
         version_commit =
@@ -210,7 +210,7 @@ task :install_demo, [:script_dir] do |t, args|
           raise "Could not find commit for version #{version} in #{script_dir}"
         end
         puts "  Found commit #{version_commit} for version #{version}"
-        version_commit
+        [version, version_commit]
       end
     versions
       .reverse_each
