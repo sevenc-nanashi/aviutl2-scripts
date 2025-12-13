@@ -54,7 +54,7 @@ task :prepare_description do
         }/README.md"
 
       description_lines = []
-      description_lines << "━" * (header_width / 2)
+      description_lines << "=" * header_width
       description_lines << "最新版をダウンロード：#{url}"
       description_lines << "説明書をブラウザで読む：#{readme_url}"
       description_lines << ""
@@ -79,7 +79,10 @@ task :prepare_description do
               raise "Unexpected top-level header in #{readme_path}: #{line}"
             end
             current_level = 0
-            description_lines << "[ #{text.strip} ]".ljust(header_width, "-")
+            header = "--< #{text.strip} >"
+            current_width = text_width(header)
+            header += "-" * (header_width - current_width)
+            description_lines << header
             description_lines << ""
             skip_empty = true
             next
@@ -123,7 +126,7 @@ task :prepare_description do
         end
       end
       description_lines << ""
-      description_lines << "━" * (header_width / 2)
+      description_lines << "=" * header_width
 
       readme_lua_path = File.join(script_dir, "readme.lua")
       readme_lua_content =
