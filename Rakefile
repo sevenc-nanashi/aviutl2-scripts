@@ -240,7 +240,7 @@ task :install_demo, [:script_dir] do |t, args|
       .each do |version, commit|
         content =
           if commit == :current_tree
-            File.read("scripts/#{filename}")
+            File.read("scripts/#{filename}", mode: "rb")
           else
             `git show #{commit}:scripts/#{filename}`
           end
