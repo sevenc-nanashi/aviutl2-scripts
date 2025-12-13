@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run:
+    # TODO: auluaが対応したらubuntu-latestで回す
+    # https://github.com/karoterra/aviutl2-aulua/issues/12
+    runs-on: windows-latest
+    steps:
+      - name: Prevent auto line ending conversion
+        run: git config --global core.autocrlf false
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up mise
+        uses: jdx/mise-action@v3
+        with:
+          install: true
+          experimental: true
+
+      - name: Run check
+        run: mise run check

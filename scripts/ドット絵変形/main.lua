@@ -1,71 +1,12 @@
 --label:変形
 --information:https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 
--- ========================================================================================================================
--- ドット絵の拡大縮小・回転を行うスクリプト。
--- 標準描画と違い、これはドット絵でも綺麗に変形されます。
--- また、発展補間オプションを有効にすると線がより綺麗に補間されます。
--- （発展補間はまだ実験的機能です！バージョンの更新により動作が変わる可能性があります。）
---
--- ピクセル補正について：
---   ドット絵を変形するとき、変形後の画像の位置がピクセルグリッドに乗らずにぼやけてしまうことがあります。
---   （シーンの左上から見た画像の左上の位置が(1.3, 2.7)のように小数点になる場合）
---   ピクセル補正を有効にすると、変形後の画像がピクセルグリッドに乗るように調整され、ぼやけを防止します。
---
---   Tips：
---     sigma-axis氏のaviutl2_script_PixelSnap_Sも同様の動作を行います。 https://github.com/sigma-axis/aviutl2_script_PixelSnap_S
---
---   モード：
---     - 中心移動式：画像の左上がピクセルグリッドに乗るように中心点が調整されます。
---     - 描画移動式：画像の左上がピクセルグリッドに乗るように描画位置が調整されます。
---     - サンプラー式：AviUtl2のピクセル補間モードを変更します。
---                     このエフェクトの後にエフェクトを追加するとピクセル補正が無効になるかもしれません。
---     - オフ：ピクセル補正を行いません。
---
--- 発展補間：
---   有効にすると、ドット絵の線が塗りの上に描画されるように補間され、線が消えにくくなります。
---   また、拡大時に斜めの線がより綺麗に補間されます。
---   この機能はcleanEdgeをベースにしています。cleanEdgeについてはこのページを参照してください： https://torcado.com/cleanEdge/
---
---   パラメータ：
---     - 基準色：線の上書き判定に使う色。例えば#ffffffの場合は明るい色が優先されます。もしドット絵に外枠がある場合は、外枠を設定すると綺麗になります。
---               cleanEdgeのHighest Colorに相当します。
---     - 線の太さ：線の太さを指定します。ピクセルが何マス分に広がるかを指定します。45度の線を綺麗にしたい場合は0.707付近にしてください。
---                 cleanEdgeのLine Widthに相当します。
---     - 斜め補間：拡大時に補間する傾斜を指定します。
---                 - 1:1：45度の線のみ補間します。
---                 - 1:1 + 1:2：45度と26.565度（1:2の傾き）の線を補間します。
---                 - 1:1 + 1:2（補正）：45度と26.565度（1:2の傾き）の線を補間し、さらに1:2の線をより綺麗に補間します。
---                 cleanEdgeのSlopesに相当します。
---     - 補間閾値：斜め補間をするときに、どのくらい似ている色を同じ色として扱うかを指定します。
---                 高めると似ている色の間が滑らかに補間されるようになりますが、高すぎると乱れが発生します。
---                 可能な限り低く設定することをお勧めします。
---                 cleanEdgeのSimilar Thresholdに相当します。
---
---
--- PI：
--- - scale_x: X拡大率（1.0で等倍）
--- - scale_y: Y拡大率（1.0で等倍）
--- - center_x: 中心X（ピクセル単位）
--- - center_y: 中心Y（ピクセル単位）
--- - angle_deg: 回転（度）
--- - enable_cleanedge: 発展補間
--- - highest_color: 基準色
--- - line_width: 線の太さ
--- - slopes: 斜め補間（0 = 「1:1のみ」、1 = 「1:1 + 1:2」、2 = 「1:1 + 1:2（補正）」）
--- - similar_threshold: 補間閾値
--- - alpha_grid: 透明グリッド
--- - pixelsnap: ピクセル補正（1 = 中心移動式、2 = 描画移動式、3 = サンプラー式、0 = オフ）
--- - debug: デバッグモード
---
--- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
--- ========================================================================================================================
-
+---$include "./readme.lua"
 
 -- このスクリプトはcleanEdgeをベースに作成しました。
 -- cleanEdgeの作者であるtorcado様に感謝いたします。（Great Appreciation to torcado, the author of cleanEdge.）
 -- 以下はcleanEdgeのライセンス情報です。
--- --------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------
 -- Copyright (c) 2022 torcado
 -- Permission is hereby granted, free of charge, to any person
 -- obtaining a copy of this software and associated documentation
@@ -85,7 +26,7 @@
 -- WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
--- --------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------
 
 --group:中心移動,true
 
@@ -240,14 +181,14 @@ elseif type(PI.alpha_grid) == "number" then
 end
 
 local function debug_dump_internal(o)
-  if type(o) == 'table' then
-    local s = '{ '
+  if type(o) == "table" then
+    local s = "{ "
     local keys = {}
     local is_array = true
     local max_index = 0
-    for k, v in pairs(o) do
+    for k, _ in pairs(o) do
       table.insert(keys, k)
-      if type(k) ~= 'number' or k < 1 or math.floor(k) ~= k then
+      if type(k) ~= "number" or k < 1 or math.floor(k) ~= k then
         is_array = false
       else
         if k > max_index then
@@ -256,23 +197,27 @@ local function debug_dump_internal(o)
       end
     end
     if is_array then
-      table.sort(keys, function(a, b) return a < b end)
+      table.sort(keys, function(a, b)
+        return a < b
+      end)
     else
-      table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
+      table.sort(keys, function(a, b)
+        return tostring(a) < tostring(b)
+      end)
     end
     for i, k in ipairs(keys) do
       local v = o[k]
       if i > 1 then
-        s = s .. ', '
+        s = s .. ", "
       end
       if is_array then
         s = s .. debug_dump_internal(v)
       else
-        s = s .. tostring(k) .. ' = ' .. debug_dump_internal(v)
+        s = s .. tostring(k) .. " = " .. debug_dump_internal(v)
       end
     end
 
-    return s .. ' }'
+    return s .. " }"
   else
     return tostring(o)
   end
@@ -291,13 +236,13 @@ local rscale_x = scale_x / 100
 local rscale_y = scale_y / 100
 
 local function rotate_point(x, y, angle_rad)
-    -- ( cos theta, -sin theta ) ( x )
-    -- ( sin theta,  cos theta ) ( y )
-    local cos_a = math.cos(angle_rad)
-    local sin_a = math.sin(angle_rad)
-    local rx = cos_a * x - sin_a * y
-    local ry = sin_a * x + cos_a * y
-    return rx, ry
+  -- ( cos theta, -sin theta ) ( x )
+  -- ( sin theta,  cos theta ) ( y )
+  local cos_a = math.cos(angle_rad)
+  local sin_a = math.sin(angle_rad)
+  local rx = cos_a * x - sin_a * y
+  local ry = sin_a * x + cos_a * y
+  return rx, ry
 end
 
 local vanilla_cx = obj.w / 2
@@ -321,10 +266,10 @@ left_bottom_y = left_bottom_y + cy
 right_bottom_x = right_bottom_x + cx
 right_bottom_y = right_bottom_y + cy
 debug_dump("coords", {
-  left_top = {x = left_top_x, y = left_top_y},
-  right_top = {x = right_top_x, y = right_top_y},
-  left_bottom = {x = left_bottom_x, y = left_bottom_y},
-  right_bottom = {x = right_bottom_x, y = right_bottom_y},
+  left_top = { x = left_top_x, y = left_top_y },
+  right_top = { x = right_top_x, y = right_top_y },
+  left_bottom = { x = left_bottom_x, y = left_bottom_y },
+  right_bottom = { x = right_bottom_x, y = right_bottom_y },
 })
 
 local min_x = math.min(left_top_x, right_top_x, left_bottom_x, right_bottom_x)
@@ -335,10 +280,13 @@ local max_y = math.max(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
 local transform_source
 if alpha_grid > 0 then
   obj.setoption("drawtarget", "tempbuffer", math.ceil(obj.w), math.ceil(obj.h))
-  obj.pixelshader("alpha_grid", "tempbuffer", {}, {alpha_grid})
+  obj.pixelshader("alpha_grid", "tempbuffer", {}, { alpha_grid })
   obj.draw()
   obj.setoption("draw_state", false)
-  obj.copybuffer("cache:alpha_grid", "tempbuffer")
+  if not obj.copybuffer("cache:alpha_grid", "tempbuffer") then
+    error("Failed to create alpha grid cache.")
+    return
+  end
   transform_source = "cache:alpha_grid"
 else
   transform_source = "object"
@@ -349,7 +297,7 @@ local new_h = math.ceil(max_y) - math.floor(min_y)
 obj.setoption("drawtarget", "tempbuffer", new_w, new_h)
 
 if enable_cleanedge then
-  highest_r, highest_g, highest_b = RGB(highest_color)
+  local highest_r, highest_g, highest_b = RGB(highest_color)
   local args = {
     math.floor(min_x),
     math.floor(min_y),
@@ -378,6 +326,8 @@ if enable_cleanedge then
   end
   debug_dump("shader_name", shader_name)
   debug_dump("cleanedge args", args)
+  -- transform_sourceに`"cache:xxx"`を指定すると型エラーになるため警告を無視する
+  ---@diagnostic disable-next-line: param-type-mismatch
   obj.pixelshader(shader_name, "tempbuffer", transform_source, args, "copy", "dot")
 else
   local args = {
@@ -389,9 +339,10 @@ else
     cy,
     rscale_x,
     rscale_y,
-    angle_rad
+    angle_rad,
   }
   debug_dump("transform args", args)
+  ---@diagnostic disable-next-line: param-type-mismatch
   obj.pixelshader("transform", "tempbuffer", transform_source, args, "copy", "dot")
 end
 
@@ -409,20 +360,22 @@ obj.cx = original_obj.cx + new_cx
 obj.cy = original_obj.cy + new_cy
 
 if pixelsnap == 1 or pixelsnap == 2 then
-  local left_top_x = original_obj.screen_w / 2 + original_obj.x + original_obj.ox - (new_w / 2 + obj.cx)
-  local left_top_y = original_obj.screen_h / 2 + original_obj.y + original_obj.oy - (new_h / 2 + obj.cy)
-  local snapped_left_top_x = math.floor(left_top_x + 0.5)
-  local snapped_left_top_y = math.floor(left_top_y + 0.5)
+  local final_left_top_x = original_obj.screen_w / 2 + original_obj.x + original_obj.ox - (new_w / 2 + obj.cx)
+  local final_left_top_y = original_obj.screen_h / 2 + original_obj.y + original_obj.oy - (new_h / 2 + obj.cy)
+  local snapped_left_top_x = math.floor(final_left_top_x + 0.5)
+  local snapped_left_top_y = math.floor(final_left_top_y + 0.5)
 
-  debug_dump(("left_top_x: %.2f -> %d"):format(left_top_x, snapped_left_top_x))
-  debug_dump(("left_top_y: %.2f -> %d"):format(left_top_y, snapped_left_top_y))
+  debug_dump(("left_top_x: %.2f -> %d"):format(final_left_top_x, snapped_left_top_x))
+  debug_dump(("left_top_y: %.2f -> %d"):format(final_left_top_y, snapped_left_top_y))
   if pixelsnap == 1 then
-    obj.cx = obj.cx - (snapped_left_top_x - left_top_x)
-    obj.cy = obj.cy - (snapped_left_top_y - left_top_y)
+    obj.cx = obj.cx - (snapped_left_top_x - final_left_top_x)
+    obj.cy = obj.cy - (snapped_left_top_y - final_left_top_y)
   elseif pixelsnap == 2 then
-    obj.ox = obj.ox + (snapped_left_top_x - left_top_x)
-    obj.oy = obj.oy + (snapped_left_top_y - left_top_y)
+    obj.ox = obj.ox + (snapped_left_top_x - final_left_top_x)
+    obj.oy = obj.oy + (snapped_left_top_y - final_left_top_y)
   end
 elseif pixelsnap == 3 then
+  --aviutl2.luaの定義が古い
+  ---@diagnostic disable-next-line: param-type-mismatch
   obj.setoption("sampler", "dot")
 end

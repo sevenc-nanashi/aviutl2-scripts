@@ -1,7 +1,7 @@
 pre-push:
   fail_on_changes: "always"
+  parallel: true
   only:
     - main
   jobs:
-    - name: update build
-      run: rake
+    - run: mise run check

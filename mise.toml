@@ -1,12 +1,34 @@
 [tools]
 "cargo:https://github.com/sevenc-nanashi/aviutl2-aulua" = "branch:feat/multiple-includes"
+"github:rvben/rumdl" = "latest"
 "npm:chokidar-cli" = "latest"
 "npm:lefthook" = "latest"
 ruby = "latest"
+stylua = "latest"
 
 [hooks]
-postinstall = ["lefthook install"]
+postinstall = ["lefthook install", "bundle"]
 
-[tasks]
-build = ["rake"]
-dev = ['chokidar ./scripts/*/*.* -i ./scripts/*.* -c rake']
+[tasks.build]
+description = "Build scripts"
+run = ["rake build"]
+
+[tasks.build-dry]
+description = "Check if build is up to date"
+run = ["rake build:dry"]
+
+[tasks.dev]
+description = "Development mode with file watching"
+run = ['mise watch -w ./scripts -i ./scripts/*.* build']
+
+[tasks.format]
+description = "Format code"
+run = ["stylua .", "rumdl fmt .", "rake stree:write"]
+
+[tasks.lint]
+description = "Lint code"
+run = ["stylua -c .", "rumdl check .", "rake stree:check"]
+
+[tasks.check]
+description = "Checks that should pass before committing main"
+depends = ["lint", "build-dry"]
