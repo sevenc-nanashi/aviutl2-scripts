@@ -44,8 +44,9 @@
 -- - line_width: 線の太さ
 -- - slopes: 斜め補間（0 = 「1:1のみ」、1 = 「1:1 + 1:2」、2 = 「1:1 + 1:2（補正）」）
 -- - similar_threshold: 補間閾値
--- - debug: 透明グリッド
--- - pixelsnap: ピクセル補正（1 = 描画移動式、2 = 中心移動式、3 = サンプラー式、0 = オフ）
+-- - alpha_grid: 透明グリッド
+-- - pixelsnap: ピクセル補正（1 = 中心移動式、2 = 描画移動式、3 = サンプラー式、0 = オフ）
+-- - debug: デバッグモード
 --
 -- https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2
 -- ========================================================================================================================
@@ -95,10 +96,11 @@
 --color@highest_color:基準色,0xffffff
 --track@similar_threshold:補間閾値,0,255,16,1
 --group:高度な設定,false
---track@debug:透明グリッド,0,1000,0,1
---select@pixelsnap:ピクセル補正=1,描画移動式=1,中心移動式=2,サンプラー式=3,オフ=0
+--track@alpha_grid:透明グリッド,0,1000,0,1
+--select@pixelsnap:ピクセル補正=1,中心移動式=1,描画移動式=2,サンプラー式=3,オフ=0
+--check@debug:デバッグモード,false
 --value@PI:PI,{}
---[[pixelshader@debug_grid:
+--[[pixelshader@alpha_grid:
 Texture2D tex0 : register(t0);
 SamplerState sampler0 : register(s0);
 cbuffer cb0 : register(b0)
@@ -106,7 +108,7 @@ cbuffer cb0 : register(b0)
     float size;
 };
 
-float4 debug_grid(float4 pos: SV_Position, float2 uv: TEXCOORD) : SV_Target
+float4 alpha_grid(float4 pos: SV_Position, float2 uv: TEXCOORD) : SV_Target
 {
   float checker = fmod(floor(pos.x / size) + floor(pos.y / size), 2.0);
 
@@ -1437,13 +1439,64 @@ if type(PI.pixelsnap) == "number" then
   pixelsnap = PI.pixelsnap
 end
 if type(PI.debug) == "boolean" then
-  if PI.debug then
-    debug = 10
-  else
-    debug = 0
-  end
-elseif type(PI.debug) == "number" then
   debug = PI.debug
+end
+if type(PI.alpha_grid) == "boolean" then
+  if PI.alpha_grid then
+    alpha_grid = 10
+  else
+    alpha_grid = 0
+  end
+elseif type(PI.alpha_grid) == "number" then
+  alpha_grid = PI.alpha_grid
+end
+
+local function debug_dump_internal(o)
+  if type(o) == 'table' then
+    local s = '{ '
+    local keys = {}
+    local is_array = true
+    local max_index = 0
+    for k, v in pairs(o) do
+      table.insert(keys, k)
+      if type(k) ~= 'number' or k < 1 or math.floor(k) ~= k then
+        is_array = false
+      else
+        if k > max_index then
+          max_index = k
+        end
+      end
+    end
+    if is_array then
+      table.sort(keys, function(a, b) return a < b end)
+    else
+      table.sort(keys, function(a, b) return tostring(a) < tostring(b) end)
+    end
+    for i, k in ipairs(keys) do
+      local v = o[k]
+      if i > 1 then
+        s = s .. ', '
+      end
+      if is_array then
+        s = s .. debug_dump_internal(v)
+      else
+        s = s .. tostring(k) .. ' = ' .. debug_dump_internal(v)
+      end
+    end
+
+    return s .. ' }'
+  else
+    return tostring(o)
+  end
+end
+local function debug_dump(m, o)
+  if debug then
+    if o == nil then
+      debug_print(m)
+    else
+      debug_print(m .. ": " .. debug_dump_internal(o))
+    end
+  end
 end
 
 local rscale_x = scale_x / 100
@@ -1479,6 +1532,12 @@ left_bottom_x = left_bottom_x + cx
 left_bottom_y = left_bottom_y + cy
 right_bottom_x = right_bottom_x + cx
 right_bottom_y = right_bottom_y + cy
+debug_dump("coords", {
+  left_top = {x = left_top_x, y = left_top_y},
+  right_top = {x = right_top_x, y = right_top_y},
+  left_bottom = {x = left_bottom_x, y = left_bottom_y},
+  right_bottom = {x = right_bottom_x, y = right_bottom_y},
+})
 
 local min_x = math.min(left_top_x, right_top_x, left_bottom_x, right_bottom_x)
 local max_x = math.max(left_top_x, right_top_x, left_bottom_x, right_bottom_x)
@@ -1486,13 +1545,13 @@ local min_y = math.min(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
 local max_y = math.max(left_top_y, right_top_y, left_bottom_y, right_bottom_y)
 
 local transform_source
-if debug > 0 then
+if alpha_grid > 0 then
   obj.setoption("drawtarget", "tempbuffer", math.ceil(obj.w), math.ceil(obj.h))
-  obj.pixelshader("debug_grid", "tempbuffer", {}, {debug})
+  obj.pixelshader("alpha_grid", "tempbuffer", {}, {alpha_grid})
   obj.draw()
   obj.setoption("draw_state", false)
-  obj.copybuffer("cache:debug_grid", "tempbuffer")
-  transform_source = "cache:debug_grid"
+  obj.copybuffer("cache:alpha_grid", "tempbuffer")
+  transform_source = "cache:alpha_grid"
 else
   transform_source = "object"
 end
@@ -1529,9 +1588,11 @@ if enable_cleanedge then
   else
     shader_name = "cleanedge_slope_cleanup"
   end
+  debug_dump("shader_name", shader_name)
+  debug_dump("cleanedge args", args)
   obj.pixelshader(shader_name, "tempbuffer", transform_source, args, "copy", "dot")
 else
-  obj.pixelshader("transform", "tempbuffer", transform_source, {
+  local args = {
     math.floor(min_x),
     math.floor(min_y),
     obj.w,
@@ -1541,7 +1602,9 @@ else
     rscale_x,
     rscale_y,
     angle_rad
-  }, "copy", "dot")
+  }
+  debug_dump("transform args", args)
+  obj.pixelshader("transform", "tempbuffer", transform_source, args, "copy", "dot")
 end
 
 local original_obj = {}
@@ -1558,19 +1621,19 @@ obj.cx = original_obj.cx + new_cx
 obj.cy = original_obj.cy + new_cy
 
 if pixelsnap == 1 or pixelsnap == 2 then
-  local left_top_x = original_obj.screen_w / 2 + original_obj.x + original_obj.ox - new_w / 2 + obj.cx
-  local left_top_y = original_obj.screen_h / 2 + original_obj.y + original_obj.oy - new_h / 2 + obj.cy
+  local left_top_x = original_obj.screen_w / 2 + original_obj.x + original_obj.ox - (new_w / 2 + obj.cx)
+  local left_top_y = original_obj.screen_h / 2 + original_obj.y + original_obj.oy - (new_h / 2 + obj.cy)
   local snapped_left_top_x = math.floor(left_top_x + 0.5)
   local snapped_left_top_y = math.floor(left_top_y + 0.5)
 
-  debug_print(("left_top_x: %.2f -> %d"):format(left_top_x, snapped_left_top_x))
-  debug_print(("left_top_y: %.2f -> %d"):format(left_top_y, snapped_left_top_y))
+  debug_dump(("left_top_x: %.2f -> %d"):format(left_top_x, snapped_left_top_x))
+  debug_dump(("left_top_y: %.2f -> %d"):format(left_top_y, snapped_left_top_y))
   if pixelsnap == 1 then
+    obj.cx = obj.cx - (snapped_left_top_x - left_top_x)
+    obj.cy = obj.cy - (snapped_left_top_y - left_top_y)
+  elseif pixelsnap == 2 then
     obj.ox = obj.ox + (snapped_left_top_x - left_top_x)
     obj.oy = obj.oy + (snapped_left_top_y - left_top_y)
-  elseif pixelsnap == 2 then
-    obj.cx = obj.cx + (snapped_left_top_x - left_top_x)
-    obj.cy = obj.cy + (snapped_left_top_y - left_top_y)
   end
 elseif pixelsnap == 3 then
   obj.setoption("sampler", "dot")
