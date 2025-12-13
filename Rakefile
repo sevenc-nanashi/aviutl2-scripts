@@ -1,13 +1,33 @@
 # frozen_string_literal: true
 
+require "syntax_tree/rake_tasks"
+
 task default: %i[build]
 task build: %i[prepare_description aulua_build]
+
+$check_mode = false
+
+task "build:dry" do
+  $check_mode = :not_updated
+  Rake::Task[:build].invoke
+  if $check_mode == :not_updated
+    puts "All files are up to date."
+  else
+    puts "Some files need to be updated."
+    exit 1
+  end
+end
 
 def update_file(path, new_content)
   content = (File.exist?(path) ? File.read(path) : nil)
   if new_content != content
-    File.write(path, new_content, mode: "wb")
-    puts "Updated #{path}"
+    if $check_mode == false
+      File.write(path, new_content, mode: "wb")
+      puts "Updated #{path}"
+    else
+      puts "File #{path} needs to be updated"
+      $check_mode = :updated
+    end
   else
     puts "No changes for #{path}"
   end
@@ -141,7 +161,7 @@ task :prepare_description do
          )
     raise "Failed to find script marker in README.md"
   end
-  File.write("README.md", base, mode: "wb")
+  update_file("README.md", base)
   puts "Done."
 end
 
@@ -216,8 +236,7 @@ task :install_demo, [:script_dir] do |t, args|
       end
     new_filename = "@#{filename}"
     script_path = File.join(install_root, new_filename)
-    puts "Writing #{script_path}"
-    File.write(script_path, final_content.join("\n"), mode: "wb")
+    update_file(script_path, final_content.join("\n"))
   end
 end
 
@@ -235,3 +254,8 @@ def parse_changelog_headers(content)
     end
   headers
 end
+
+configure = ->(task) { task.source_files = FileList[%w[Rakefile]] }
+
+SyntaxTree::Rake::CheckTask.new(&configure)
+SyntaxTree::Rake::WriteTask.new(&configure)

@@ -9,8 +9,26 @@ stylua = "latest"
 [hooks]
 postinstall = ["lefthook install"]
 
-[tasks]
-build = ["rake"]
-dev = ['chokidar ./scripts/*/*.* --initial -i ./scripts/*.* -c rake']
-format = ["stylua .", "rumdl fmt .", "stree write Rakefile"]
-lint = ["stylua -c .", "rumdl check .", "stree check Rakefile"]
+[tasks.build]
+description = "Build scripts"
+run = ["rake build"]
+
+[tasks.build-dry]
+description = "Check if build is up to date"
+run = ["rake build:dry"]
+
+[tasks.dev]
+description = "Development mode with file watching"
+run = ['mise watch -w ./scripts -i ./scripts/*.* build']
+
+[tasks.format]
+description = "Format code"
+run = ["stylua .", "rumdl fmt .", "rake stree:write"]
+
+[tasks.lint]
+description = "Lint code"
+run = ["stylua -c .", "rumdl check .", "rake stree:check"]
+
+[tasks.check]
+description = "Checks that should pass before committing main"
+depends = ["lint", "build"]
