@@ -31,4 +31,4 @@ run = ["stylua -c .", "rumdl check .", "rake stree:check"]
 
 [tasks.check]
 description = "Checks that should pass before committing main"
-depends = ["lint", "build:dry"]
+depends = ["lint", "build-dry"]
