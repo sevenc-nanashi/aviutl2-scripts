@@ -1,7 +1,7 @@
 [project]
 version=2002301
 file=E:\aviutl2\aviutl2-scripts\projects\ドット絵変形.aup2
-display.scene=4
+display.scene=0
 [scene.0]
 scene=0
 name=Root
@@ -1296,8 +1296,8 @@ video.rate=30
 video.scale=1
 video.background=
 audio.rate=44100
-cursor.frame=0
-cursor.layer=5
+cursor.frame=182
+cursor.layer=1
 display.frame=0
 display.layer=0
 display.zoom=5000
@@ -1315,7 +1315,6 @@ display.tempo.offset=0.000000
 [32]
 layer=0
 scene=3
-focus=1
 frame=0,359
 [32.0]
 effect.name=画像ファイル
@@ -1341,7 +1340,7 @@ Z軸回転=0.00
 [32.2]
 effect.name=ドット絵変形
 中心X=0.00
-中心Y=25.00
+中心Y=25.50
 X拡大率=100.000
 Y拡大率=100.000
 回転（度）=0.0
@@ -1372,6 +1371,7 @@ PI=
 [33]
 layer=1
 scene=3
+focus=1
 frame=0,359
 [33.0]
 effect.name=画像ファイル
@@ -1397,7 +1397,7 @@ Z軸回転=0.00
 [33.2]
 effect.name=ドット絵変形
 中心X=0.00
-中心Y=25.00
+中心Y=25.50
 X拡大率=100.000
 Y拡大率=100.000
 回転（度）=0.0
@@ -1408,7 +1408,7 @@ Y拡大率=100.000
 補間閾値=32
 透明グリッド=0
 ピクセル補正=中心移動式
-デバッグモード=0
+デバッグモード=1
 PI=angle_deg = obj.frame
 [33.3]
 effect.name=v3.1@ドット絵変形
@@ -1454,7 +1454,7 @@ Z軸回転=0.00
 [34.2]
 effect.name=ドット絵変形
 中心X=0.00
-中心Y=25.00
+中心Y=25.50
 X拡大率=100.000
 Y拡大率=100.000
 回転（度）=0.0
@@ -1511,7 +1511,7 @@ Z軸回転=0.00
 [35.2]
 effect.name=ドット絵変形
 中心X=0.00
-中心Y=25.00
+中心Y=25.50
 X拡大率=100.000
 Y拡大率=100.000
 回転（度）=0.0

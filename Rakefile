@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-task default: %i[prepare_description build]
+task default: %i[build]
+task build: %i[prepare_description aulua_build]
 
 def update_file(path, new_content)
   content = (File.exist?(path) ? File.read(path) : nil)
@@ -137,7 +138,7 @@ task :prepare_description do
   puts "Done."
 end
 
-task :build do
+task :aulua_build do
   sh "aulua build"
 end
 
@@ -184,7 +185,9 @@ task :install_demo, [:script_dir] do |t, args|
         puts "  Found commit #{version_commit} for version #{version}"
         version_commit
       end
-    [%i[current_tree current_tree]].chain(versions)
+    versions
+      .reverse_each
+      .chain([%i[current_tree current_tree]])
       .each do |version, commit|
         content =
           if commit == :current_tree
