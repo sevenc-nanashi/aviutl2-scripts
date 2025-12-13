@@ -2,6 +2,6 @@ pre-push:
   fail_on_changes: "always"
   parallel: true
   only:
-    - main
+    - ref: main
   jobs:
     - run: mise run check
