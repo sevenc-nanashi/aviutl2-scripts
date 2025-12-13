@@ -6,6 +6,7 @@ clang = "latest"
 "npm:lefthook" = "latest"
 ruby = "latest"
 stylua = "latest"
+taplo = "latest"
 
 [hooks]
 postinstall = ["lefthook install", "bundle"]
@@ -27,8 +28,8 @@ description = "Format code"
 run = [
   "stylua .",
   "rumdl fmt .",
-  "rake clang_format",
-  "rake stree:write",
+  "taplo fmt .",
+  "rake clang_format stree:write",
 ]
 
 [tasks.lint]
@@ -36,8 +37,8 @@ description = "Lint code"
 run = [
   "stylua -c .",
   "rumdl check .",
-  "rake clang_format:dry",
-  "rake stree:check",
+  "taplo fmt . --check",
+  "rake clang_format:dry stree:check",
 ]
 
 [tasks.check]
