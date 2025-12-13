@@ -60,6 +60,7 @@ task :prepare_description do
       current_level = 0
       description = nil
       lines.each do |line|
+        line.gsub!(/<!--.*?-->/, "")
         indent = "  " * current_level
         if !line.start_with?("> ") && quote_header_width
           description_lines << "#{indent}└#{"─" * (quote_header_width / 2 + 1)}"
@@ -67,7 +68,17 @@ task :prepare_description do
         end
         if line.start_with?("#")
           line.match(/\A(?<level>#+) (?<text>.*)/) => { level:, text: }
-          current_level = level.size
+          if level.size == 1
+            unless line == "# 更新履歴"
+              raise "Unexpected top-level header in #{readme_path}: #{line}"
+            end
+            current_level = 0
+            description_lines << "[ #{text.strip} ]".ljust(header_width, "-")
+            description_lines << ""
+            skip_empty = true
+            next
+          end
+          current_level = level.size - 1
           description_lines << "#{"  " * (current_level - 1)}[ #{text.strip} ]"
           skip_empty = true
         elsif line == "----"
@@ -105,6 +116,7 @@ task :prepare_description do
           end
         end
       end
+      description_lines << ""
       description_lines << "━" * (header_width / 2)
 
       readme_lua_path = File.join(script_dir, "readme.lua")
