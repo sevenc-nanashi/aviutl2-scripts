@@ -281,6 +281,14 @@ def parse_changelog_headers(content)
   headers
 end
 
+clang_format_files = Dir.glob("**/*.hlsl")
+task "clang_format" do
+  sh "clang-format -i -- #{clang_format_files.join(" ")}"
+end
+task "clang_format:dry" do
+  sh "clang-format --fail-on-incomplete-format -- #{clang_format_files.join(" ")}"
+end
+
 configure = ->(task) { task.source_files = FileList[%w[Rakefile]] }
 
 SyntaxTree::Rake::CheckTask.new(&configure)

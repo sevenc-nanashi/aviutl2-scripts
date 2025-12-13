@@ -1,5 +1,6 @@
 [tools]
 "cargo:https://github.com/sevenc-nanashi/aviutl2-aulua" = "branch:feat/multiple-includes"
+clang = "latest"
 "github:rvben/rumdl" = "latest"
 "npm:chokidar-cli" = "latest"
 "npm:lefthook" = "latest"
@@ -23,11 +24,21 @@ run = ['mise watch -w ./scripts -i ./scripts/*.* build']
 
 [tasks.format]
 description = "Format code"
-run = ["stylua .", "rumdl fmt .", "rake stree:write"]
+run = [
+  "stylua .",
+  "rumdl fmt .",
+  "clang-format -i --fail-on-incomplete-format -- ./**/*.hlsl",
+  "rake stree:write",
+]
 
 [tasks.lint]
 description = "Lint code"
-run = ["stylua -c .", "rumdl check .", "rake stree:check"]
+run = [
+  "stylua -c .",
+  "rumdl check .",
+  "clang-format -i -- ./**/*.hlsl",
+  "rake stree:check",
+]
 
 [tasks.check]
 description = "Checks that should pass before committing main"

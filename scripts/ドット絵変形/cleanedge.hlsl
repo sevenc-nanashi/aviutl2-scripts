@@ -75,26 +75,21 @@ float4 get_pixel(float2 xy) {
 
 // Helpers ported from GLSL implementation
 bool similar(float4 col1, float4 col2) {
-  return ((col1.a == 0.0 && col2.a == 0.0) ||
-          distance(col1, col2) <= similar_threshold);
+  return ((col1.a == 0.0 && col2.a == 0.0) || distance(col1, col2) <= similar_threshold);
 }
 
-bool similar3(float4 c1, float4 c2, float4 c3) {
-  return similar(c1, c2) && similar(c2, c3);
-}
+bool similar3(float4 c1, float4 c2, float4 c3) { return similar(c1, c2) && similar(c2, c3); }
 
 bool similar4(float4 c1, float4 c2, float4 c3, float4 c4) {
   return similar(c1, c2) && similar(c2, c3) && similar(c3, c4);
 }
 
 bool similar5(float4 c1, float4 c2, float4 c3, float4 c4, float4 c5) {
-  return similar(c1, c2) && similar(c2, c3) && similar(c3, c4) &&
-         similar(c4, c5);
+  return similar(c1, c2) && similar(c2, c3) && similar(c3, c4) && similar(c4, c5);
 }
 
 bool higher(float4 thisCol, float4 otherCol) {
-  if (similar(thisCol, otherCol))
-    return false;
+  if (similar(thisCol, otherCol)) return false;
   if (thisCol.a == otherCol.a) {
     float3 highest = float3(highest_r, highest_g, highest_b);
     return distance(thisCol.rgb, highest) < distance(otherCol.rgb, highest);
@@ -109,15 +104,13 @@ float distToLine(float2 testPt, float2 pt1, float2 pt2, float2 dir) {
   float2 lineDir = pt2 - pt1;
   float2 perpDir = float2(lineDir.y, -lineDir.x);
   float2 dirToPt1 = pt1 - testPt;
-  return (dot(perpDir, dir) > 0.0 ? 1.0 : -1.0) *
-         dot(normalize(perpDir), dirToPt1);
+  return (dot(perpDir, dir) > 0.0 ? 1.0 : -1.0) * dot(normalize(perpDir), dirToPt1);
 }
 
 // Returns float4(-1) if slice not applied, else the chosen color.
-float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir,
-                 float4 ub, float4 u, float4 uf, float4 uff, float4 b, float4 c,
-                 float4 f, float4 ff, float4 db, float4 d, float4 df,
-                 float4 dff, float4 ddb, float4 dd, float4 ddf) {
+float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir, float4 ub, float4 u, float4 uf, float4 uff,
+                 float4 b, float4 c, float4 f, float4 ff, float4 db, float4 d, float4 df, float4 dff, float4 ddb,
+                 float4 dd, float4 ddf) {
   // float min_width;
   // float max_width;
   // #ifdef ENABLE_SLOPE
@@ -129,20 +122,16 @@ float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir,
   // #endif
   // float local_line_width = clamp(line_width, min_width, max_width);
   float local_line_width = line_width;
-  base_point = main_dir * (base_point - 0.5) + 0.5; // flip point by main_dir
+  base_point = main_dir * (base_point - 0.5) + 0.5;  // flip point by main_dir
 
   // edge detection
-  float dist_against =
-      4.0 * cd(f, d) + cd(uf, c) + cd(c, db) + cd(ff, df) + cd(df, dd);
-  float dist_towards =
-      4.0 * cd(c, df) + cd(u, f) + cd(f, dff) + cd(b, d) + cd(d, ddf);
-  bool should_slice = (dist_against < dist_towards) ||
-                      ((dist_against < dist_towards + 0.001) && !higher(c, f));
+  float dist_against = 4.0 * cd(f, d) + cd(uf, c) + cd(c, db) + cd(ff, df) + cd(df, dd);
+  float dist_towards = 4.0 * cd(c, df) + cd(u, f) + cd(f, dff) + cd(b, d) + cd(d, ddf);
+  bool should_slice = (dist_against < dist_towards) || ((dist_against < dist_towards + 0.001) && !higher(c, f));
   if (similar4(f, d, b, u) && similar4(uf, df, db, ub) && !similar(c, f)) {
-    should_slice = false; // checkerboard edge case
+    should_slice = false;  // checkerboard edge case
   }
-  if (!should_slice)
-    return float4(-1.0, -1.0, -1.0, -1.0);
+  if (!should_slice) return float4(-1.0, -1.0, -1.0, -1.0);
 
   float dist = 1.0;
   bool flip = false;
@@ -154,70 +143,58 @@ float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir,
     if (similar(c, df) && higher(c, f)) {
       // no flip
     } else {
-      if (higher(c, f))
-        flip = true;
-      if (similar(u, f) && !similar(c, df) && !higher(c, u))
-        flip = true;
+      if (higher(c, f)) flip = true;
+      if (similar(u, f) && !similar(c, df) && !higher(c, u)) flip = true;
     }
 
     if (flip) {
-      dist = local_line_width -
-             distToLine(base_point, center + point_dir * float2(1.5, -1.0),
-                        center + point_dir * float2(-0.5, 0.0), -point_dir);
+      dist = local_line_width - distToLine(base_point, center + point_dir * float2(1.5, -1.0),
+                                           center + point_dir * float2(-0.5, 0.0), -point_dir);
     } else {
-      dist = distToLine(base_point, center + point_dir * float2(1.5, 0.0),
-                        center + point_dir * float2(-0.5, 1.0), point_dir);
+      dist = distToLine(base_point, center + point_dir * float2(1.5, 0.0), center + point_dir * float2(-0.5, 1.0),
+                        point_dir);
     }
 
 #ifdef ENABLE_CLEANUP
-    if (!flip && similar(c, uf) &&
-        !(similar3(c, uf, uff) && !similar3(c, uf, ff) && !similar(d, uff))) {
-      float dist2 =
-          distToLine(base_point, center + point_dir * float2(2.0, -1.0),
-                     center + point_dir * float2(-0.0, 1.0), point_dir);
+    if (!flip && similar(c, uf) && !(similar3(c, uf, uff) && !similar3(c, uf, ff) && !similar(d, uff))) {
+      float dist2 = distToLine(base_point, center + point_dir * float2(2.0, -1.0),
+                               center + point_dir * float2(-0.0, 1.0), point_dir);
       dist = min(dist, dist2);
     }
 #endif
 
     dist -= (local_line_width / 2.0);
-    return (dist <= 0.0) ? ((cd(c, f) <= cd(c, d)) ? f : d)
-                         : float4(-1.0, -1.0, -1.0, -1.0);
+    return (dist <= 0.0) ? ((cd(c, f) <= cd(c, d)) ? f : d) : float4(-1.0, -1.0, -1.0, -1.0);
   }
   // forward steep 2:1 slant
   else if (similar3(uf, f, d) && !similar3(u, f, d) && !similar(uf, db)) {
     if (similar(c, df) && higher(c, d)) {
       // no flip
     } else {
-      if (higher(c, d))
-        flip = true;
-      if (similar(b, d) && !similar(c, df) && !higher(c, d))
-        flip = true;
+      if (higher(c, d)) flip = true;
+      if (similar(b, d) && !similar(c, df) && !higher(c, d)) flip = true;
     }
 
     if (flip) {
-      dist = local_line_width -
-             distToLine(base_point, center + point_dir * float2(0.0, -0.5),
-                        center + point_dir * float2(-1.0, 1.5), -point_dir);
+      dist = local_line_width - distToLine(base_point, center + point_dir * float2(0.0, -0.5),
+                                           center + point_dir * float2(-1.0, 1.5), -point_dir);
     } else {
-      dist = distToLine(base_point, center + point_dir * float2(1.0, -0.5),
-                        center + point_dir * float2(0.0, 1.5), point_dir);
+      dist = distToLine(base_point, center + point_dir * float2(1.0, -0.5), center + point_dir * float2(0.0, 1.5),
+                        point_dir);
     }
 
 #ifdef ENABLE_CLEANUP
-    if (!flip && similar(c, db) &&
-        !(similar3(c, db, ddb) && !similar3(c, db, dd) && !similar(f, ddb))) {
-      float dist2 =
-          distToLine(base_point, center + point_dir * float2(1.0, 0.0),
-                     center + point_dir * float2(-1.0, 2.0), point_dir);
+    if (!flip && similar(c, db) && !(similar3(c, db, ddb) && !similar3(c, db, dd) && !similar(f, ddb))) {
+      float dist2 = distToLine(base_point, center + point_dir * float2(1.0, 0.0),
+                               center + point_dir * float2(-1.0, 2.0), point_dir);
       dist = min(dist, dist2);
     }
 #endif
 
     dist -= (local_line_width / 2.0);
-    return (dist <= 0.0) ? ((cd(c, f) <= cd(c, d)) ? f : d)
-                         : float4(-1.0, -1.0, -1.0, -1.0);
+    return (dist <= 0.0) ? ((cd(c, f) <= cd(c, d)) ? f : d) : float4(-1.0, -1.0, -1.0, -1.0);
   }
-#endif // ENABLE_SLOPE
+#endif  // ENABLE_SLOPE
 
   // 45 diagonal
   if (similar(f, d)) {
@@ -226,96 +203,77 @@ float4 sliceDist(float2 base_point, float2 main_dir, float2 point_dir,
         flip = true;
       }
     } else {
-      if (higher(c, f))
-        flip = true;
-      if (!similar(c, b) && similar4(b, f, d, u))
-        flip = true;
+      if (higher(c, f)) flip = true;
+      if (!similar(c, b) && similar4(b, f, d, u)) flip = true;
     }
 
     // single pixel 2:1 slope, don't flip
-    if (((similar(f, db) && similar3(u, f, df)) ||
-         (similar(uf, d) && similar3(b, d, df))) &&
-        !similar(c, df)) {
+    if (((similar(f, db) && similar3(u, f, df)) || (similar(uf, d) && similar3(b, d, df))) && !similar(c, df)) {
       flip = true;
     }
 
     if (flip) {
-      dist = local_line_width -
-             distToLine(base_point, center + point_dir * float2(1.0, -1.0),
-                        center + point_dir * float2(-1.0, 1.0), -point_dir);
+      dist = local_line_width - distToLine(base_point, center + point_dir * float2(1.0, -1.0),
+                                           center + point_dir * float2(-1.0, 1.0), -point_dir);
     } else {
-      dist = distToLine(base_point, center + point_dir * float2(1.0, 0.0),
-                        center + point_dir * float2(0.0, 1.0), point_dir);
+      dist = distToLine(base_point, center + point_dir * float2(1.0, 0.0), center + point_dir * float2(0.0, 1.0),
+                        point_dir);
     }
 
 #ifdef ENABLE_SLOPE
 #ifdef ENABLE_CLEANUP
-    if (!flip && similar3(c, uf, uff) && !similar3(c, uf, ff) &&
-        !similar(d, uff)) {
-      float dist2 =
-          distToLine(base_point, center + point_dir * float2(1.5, 0.0),
-                     center + point_dir * float2(-0.5, 1.0), point_dir);
+    if (!flip && similar3(c, uf, uff) && !similar3(c, uf, ff) && !similar(d, uff)) {
+      float dist2 = distToLine(base_point, center + point_dir * float2(1.5, 0.0),
+                               center + point_dir * float2(-0.5, 1.0), point_dir);
       dist = max(dist, dist2);
     }
-    if (!flip && similar3(ddb, db, c) && !similar3(dd, db, c) &&
-        !similar(ddb, f)) {
-      float dist2 =
-          distToLine(base_point, center + point_dir * float2(1.0, -0.5),
-                     center + point_dir * float2(0.0, 1.5), point_dir);
+    if (!flip && similar3(ddb, db, c) && !similar3(dd, db, c) && !similar(ddb, f)) {
+      float dist2 = distToLine(base_point, center + point_dir * float2(1.0, -0.5),
+                               center + point_dir * float2(0.0, 1.5), point_dir);
       dist = max(dist, dist2);
     }
 #endif
 #endif
 
     dist -= (local_line_width / 2.0);
-    return (dist <= 0.0) ? ((cd(c, f) <= cd(c, d)) ? f : d)
-                         : float4(-1.0, -1.0, -1.0, -1.0);
+    return (dist <= 0.0) ? ((cd(c, f) <= cd(c, d)) ? f : d) : float4(-1.0, -1.0, -1.0, -1.0);
   }
-
 #ifdef ENABLE_SLOPE
   // far corner of shallow slant
   else if (similar3(ff, df, d) && !similar3(ff, df, c) && !similar(uff, d)) {
     if (similar(f, dff) && higher(f, ff)) {
       // no flip
     } else {
-      if (higher(f, ff))
-        flip = true;
-      if (similar(uf, ff) && !similar(f, dff) && !higher(f, uf))
-        flip = true;
+      if (higher(f, ff)) flip = true;
+      if (similar(uf, ff) && !similar(f, dff) && !higher(f, uf)) flip = true;
     }
     if (flip) {
-      dist = local_line_width -
-             distToLine(base_point, center + point_dir * float2(2.5, -1.0),
-                        center + point_dir * float2(0.5, 0.0), -point_dir);
+      dist = local_line_width - distToLine(base_point, center + point_dir * float2(2.5, -1.0),
+                                           center + point_dir * float2(0.5, 0.0), -point_dir);
     } else {
-      dist = distToLine(base_point, center + point_dir * float2(2.5, 0.0),
-                        center + point_dir * float2(0.5, 1.0), point_dir);
+      dist = distToLine(base_point, center + point_dir * float2(2.5, 0.0), center + point_dir * float2(0.5, 1.0),
+                        point_dir);
     }
     dist -= (local_line_width / 2.0);
-    return (dist <= 0.0) ? ((cd(f, ff) <= cd(f, df)) ? ff : df)
-                         : float4(-1.0, -1.0, -1.0, -1.0);
+    return (dist <= 0.0) ? ((cd(f, ff) <= cd(f, df)) ? ff : df) : float4(-1.0, -1.0, -1.0, -1.0);
   }
   // far corner of steep slant
   else if (similar3(f, df, dd) && !similar3(c, df, dd) && !similar(f, ddb)) {
     if (similar(d, ddf) && higher(d, dd)) {
       // no flip
     } else {
-      if (higher(d, dd))
-        flip = true;
-      if (similar(db, dd) && !similar(d, ddf) && !higher(d, dd))
-        flip = true;
+      if (higher(d, dd)) flip = true;
+      if (similar(db, dd) && !similar(d, ddf) && !higher(d, dd)) flip = true;
     }
     if (flip) {
-      dist = local_line_width -
-             distToLine(base_point, center + point_dir * float2(0.0, 0.5),
-                        center + point_dir * float2(-1.0, 2.5), -point_dir);
+      dist = local_line_width - distToLine(base_point, center + point_dir * float2(0.0, 0.5),
+                                           center + point_dir * float2(-1.0, 2.5), -point_dir);
     } else {
-      dist = distToLine(base_point, center + point_dir * float2(1.0, 0.5),
-                        center + point_dir * float2(0.0, 2.5), point_dir);
+      dist = distToLine(base_point, center + point_dir * float2(1.0, 0.5), center + point_dir * float2(0.0, 2.5),
+                        point_dir);
     }
     dist -= (local_line_width / 2.0);
-    return (dist <= 0.0) ? ((cd(d, df) <= cd(d, dd)) ? df : dd)
-                         : float4(-1.0, -1.0, -1.0, -1.0);
+    return (dist <= 0.0) ? ((cd(d, df) <= cd(d, dd)) ? df : dd) : float4(-1.0, -1.0, -1.0, -1.0);
   }
 #endif
 
@@ -333,8 +291,7 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
 
   float2 rel_pos = new_pos - center_xy;
 
-  float2 rotated =
-      angle == 0 ? rel_pos : rotate_point(rel_pos.x, rel_pos.y, -angle);
+  float2 rotated = angle == 0 ? rel_pos : rotate_point(rel_pos.x, rel_pos.y, -angle);
   float2 scaled = rotated / scale_xy;
 
   float sample_x = scaled.x + center_x;
@@ -377,24 +334,18 @@ float4 ENTRYPOINT(float4 pos : SV_Position, float2 uv : TEXCOORD) : SV_Target {
   float4 col = cp;
 
   // corner, back, up slices (only these 3 quadrants can be reached)
-  float4 c_col =
-      sliceDist(sample_local, float2(1.0, 1.0), point_dir, ub, up, uf, uff, cb,
-                cp, cf, cff, db, dp, df, dff, ddb, ddp, ddf);
+  float4 c_col = sliceDist(sample_local, float2(1.0, 1.0), point_dir, ub, up, uf, uff, cb, cp, cf, cff, db, dp, df, dff,
+                           ddb, ddp, ddf);
 
-  float4 b_col =
-      sliceDist(sample_local, float2(-1.0, 1.0), point_dir, uf, up, ub, ubb, cf,
-                cp, cb, cbb, df, dp, db, dbb, ddf, ddp, ddb);
+  float4 b_col = sliceDist(sample_local, float2(-1.0, 1.0), point_dir, uf, up, ub, ubb, cf, cp, cb, cbb, df, dp, db,
+                           dbb, ddf, ddp, ddb);
 
-  float4 u_col =
-      sliceDist(sample_local, float2(1.0, -1.0), point_dir, db, dp, df, dff, cb,
-                cp, cf, cff, ub, up, uf, uff, uub, uup, uuf);
+  float4 u_col = sliceDist(sample_local, float2(1.0, -1.0), point_dir, db, dp, df, dff, cb, cp, cf, cff, ub, up, uf,
+                           uff, uub, uup, uuf);
 
-  if (c_col.r >= 0.0)
-    col = c_col;
-  if (b_col.r >= 0.0)
-    col = b_col;
-  if (u_col.r >= 0.0)
-    col = u_col;
+  if (c_col.r >= 0.0) col = c_col;
+  if (b_col.r >= 0.0) col = b_col;
+  if (u_col.r >= 0.0) col = u_col;
 
   return col;
 }
