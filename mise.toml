@@ -9,4 +9,4 @@ postinstall = ["lefthook install"]
 
 [tasks]
 build = ["rake"]
-dev = ['chokidar ./scripts/*/*.* -i ./scripts/*.* -c rake']
+dev = ['chokidar ./scripts/*/*.* --initial -i ./scripts/*.* -c rake']
