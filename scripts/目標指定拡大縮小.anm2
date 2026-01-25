@@ -5,7 +5,7 @@
 -- 最新版をダウンロード：https://aviutl2-scripts-download.sevenc7c.workers.dev/%E7%9B%AE%E6%A8%99%E6%8C%87%E5%AE%9A%E6%8B%A1%E5%A4%A7%E7%B8%AE%E5%B0%8F.anm2
 -- 説明書をブラウザで読む：https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E7%9B%AE%E6%A8%99%E6%8C%87%E5%AE%9A%E6%8B%A1%E5%A4%A7%E7%B8%AE%E5%B0%8F/README.md
 --
--- 目標のピクセル数を指定して拡大縮小を行うスクリプト。
+-- 目標のピクセル数を指定し、アスペクト比を維持したまま拡大縮小を行うスクリプト。
 --
 -- [ モード ]
 --   - 下限指定：指定した範囲が埋まるように拡大縮小します。（CSSにおけるcoverに相当）
@@ -21,7 +21,7 @@
 --
 -- --< 更新履歴 >----------------------------------------------------------------------------------------------------------
 --
--- [ Unreleased ]
+-- [ v1.0（2026/01/25） ]
 --   - 初版リリース
 --
 -- ========================================================================================================================
@@ -84,7 +84,10 @@ end
 if debug then
   debug_print(string.format("original: width=%.2f, height=%.2f", current_width, current_height))
   debug_print(string.format("target: width=%.2f, height=%.2f", target_width, target_height))
-  debug_print(string.format("real: width=%.2f (x%.2f), height=%.2f (x%.2f)", real_width, real_width / current_width, real_height, real_height / current_height))
+  debug_print(string.format("real: width=%.2f, height=%.2f", real_width, real_height))
+
+  debug_print(string.format("sx: %.4f -> %.4f", obj.sx, obj.sx * (real_width / current_width)))
+  debug_print(string.format("sy: %.4f -> %.4f", obj.sy, obj.sy * (real_height / current_height)))
 end
 
 obj.sx = obj.sx * (real_width / current_width)

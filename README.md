@@ -9,7 +9,7 @@
 <!-- rumdl-disable MD032 -->
 <!-- script-marker-start -->
 - [ドット絵変形.anm2](https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2.anm2)（[説明書](https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E3%83%89%E3%83%83%E3%83%88%E7%B5%B5%E5%A4%89%E5%BD%A2/README.md)）：ドット絵の拡大縮小・回転を行うスクリプト。
-- [目標指定拡大縮小.anm2](https://aviutl2-scripts-download.sevenc7c.workers.dev/%E7%9B%AE%E6%A8%99%E6%8C%87%E5%AE%9A%E6%8B%A1%E5%A4%A7%E7%B8%AE%E5%B0%8F.anm2)（[説明書](https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E7%9B%AE%E6%A8%99%E6%8C%87%E5%AE%9A%E6%8B%A1%E5%A4%A7%E7%B8%AE%E5%B0%8F/README.md)）：目標のピクセル数を指定して拡大縮小を行うスクリプト。
+- [目標指定拡大縮小.anm2](https://aviutl2-scripts-download.sevenc7c.workers.dev/%E7%9B%AE%E6%A8%99%E6%8C%87%E5%AE%9A%E6%8B%A1%E5%A4%A7%E7%B8%AE%E5%B0%8F.anm2)（[説明書](https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E7%9B%AE%E6%A8%99%E6%8C%87%E5%AE%9A%E6%8B%A1%E5%A4%A7%E7%B8%AE%E5%B0%8F/README.md)）：目標のピクセル数を指定し、アスペクト比を維持したまま拡大縮小を行うスクリプト。
 <!-- script-marker-end -->
 <!-- rumdl-enable MD032 -->
 
