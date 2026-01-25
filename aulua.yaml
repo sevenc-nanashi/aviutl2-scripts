@@ -13,3 +13,6 @@ scripts:
   - name: ドット絵変形.anm2
     sources:
       - path: scripts/ドット絵変形/main.lua
+  - name: 目標指定拡大縮小.anm2
+    sources:
+      - path: scripts/目標指定拡大縮小/main.lua
