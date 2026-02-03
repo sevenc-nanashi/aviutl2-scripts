@@ -25,6 +25,7 @@ PIのテーブルのキーは各種スクリプトに記載されています。
 ## ライセンス
 
 スクリプトは自由に使ってね（Creative Commons CC0 1.0 Universal に準拠）。\
+親作品登録は [sm45904404](https://www.nicovideo.jp/watch/sm45904404) にお願いします。
 詳しくは [LICENSE](LICENSE) を参照。
 
 ダウンロードリンクのサーバー（`./download-server`下）はMIT Licenseに準拠しています。
