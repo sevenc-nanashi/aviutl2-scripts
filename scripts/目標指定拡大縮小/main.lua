@@ -87,3 +87,4 @@ end
 
 obj.sx = obj.sx * (real_width / current_width)
 obj.sy = obj.sy * (real_height / current_height)
+--vim: set ft=lua:

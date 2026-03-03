@@ -1,0 +1,33 @@
+#:schema ./.aviutl2-cli/aviutl2.schema.json
+# 設定ファイルについては https://github.com/sevenc-nanashi/aviutl2-cli を参照してください。
+[project]
+id = "sevenc-nanashi.aviutl2_scripts"
+name = "aviutl2-scripts"
+version = "0.1.0"
+
+[development]
+aviutl2_version = "latest"
+
+[artifacts.pixel_transform-anm2]
+source = "scripts/ドット絵変形.anm2"
+destination = "Script/ドット絵変形.anm2"
+
+[artifacts.targeted_scale-anm2]
+source = "scripts/目標指定拡大縮小.anm2"
+destination = "Script/目標指定拡大縮小.anm2"
+
+[artifacts.pixel_transform-demo-anm2]
+source = "demo/@ドット絵変形.anm2"
+destination = "Script/@ドット絵変形.anm2"
+
+[artifacts.targeted_scale-demo-anm2]
+source = "demo/@目標指定拡大縮小.anm2"
+destination = "Script/@目標指定拡大縮小.anm2"
+
+[artifacts.basic_s]
+source = "https://raw.githubusercontent.com/sigma-axis/aviutl2_script_Basic_S/refs/heads/main/%40Basic_S.anm2"
+destination = "Script/@Basic_S.anm2"
+
+[artifacts.pixelsnap_s]
+source = "https://raw.githubusercontent.com/sigma-axis/aviutl2_script_PixelSnap_S/refs/heads/main/PixelSnap_S.anm2"
+destination = "Script/PixelSnap_S.anm2"

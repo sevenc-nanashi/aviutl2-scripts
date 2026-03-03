@@ -195,13 +195,12 @@ task "aulua_build:dry" do
   end
 end
 
-desc "デモ用に過去のバージョンもインストールする"
-task :install_demo, [:script_dir] do |t, args|
+desc "デモ用のスクリプトを生成する"
+task :demo do |t, args|
   require "fileutils"
-  script_dir = args[:script_dir] || "C:/ProgramData/aviutl2/Script"
+  install_dir = "./demo"
 
-  install_root = File.join(script_dir, "sevenc-nanashi_aviutl2-scripts")
-  FileUtils.mkdir_p(install_root)
+  FileUtils.mkdir_p(install_dir)
   script_dirs.each do |script_dir|
     puts "Processing #{script_dir}..."
     final_content = []
@@ -265,7 +264,7 @@ task :install_demo, [:script_dir] do |t, args|
         final_content << content
       end
     new_filename = "@#{filename}"
-    script_path = File.join(install_root, new_filename)
+    script_path = File.join(install_dir, new_filename)
     update_file(script_path, final_content.join("\n"))
   end
 end

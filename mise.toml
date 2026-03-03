@@ -1,5 +1,6 @@
 [tools]
-"cargo:https://github.com/sevenc-nanashi/aviutl2-aulua" = "branch:feat/multiple-includes"
+"github:karoterra/aviutl2-aulua" = "latest"
+"github:sevenc-nanashi/aviutl2-cli" = "latest"
 clang = "latest"
 "github:rvben/rumdl" = "latest"
 "npm:chokidar-cli" = "latest"

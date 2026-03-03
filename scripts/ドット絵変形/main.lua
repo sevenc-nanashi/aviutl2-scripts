@@ -405,3 +405,5 @@ elseif pixelsnap == 3 then
   ---@diagnostic disable-next-line: param-type-mismatch
   obj.setoption("sampler", "dot")
 end
+
+--vim: set ft=lua:
