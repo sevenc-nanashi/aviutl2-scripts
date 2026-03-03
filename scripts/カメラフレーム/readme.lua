@@ -2,7 +2,15 @@
 -- 最新版をダウンロード：https://aviutl2-scripts-download.sevenc7c.workers.dev/%E3%82%AB%E3%83%A1%E3%83%A9%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0.obj2
 -- 説明書をブラウザで読む：https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/%E3%82%AB%E3%83%A1%E3%83%A9%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0/README.md
 --
--- カメラのフレームっぽい図形を描画するスクリプト。
+-- カメラフレームっぽい図形を描画するスクリプト。
+--
+-- [ PI ]
+--   - `width`：幅（ピクセル単位）
+--   - `height`：高さ（ピクセル単位）
+--   - `line_length`：線の長さ（ピクセル単位）
+--   - `line_thickness`：線の太さ（ピクセル単位）
+--   - `line_color`：線の色（`0xRRGGBB`）
+--   - `size_specifier`：サイズ指定（1=余白指定、2=絶対指定）
 --
 -- --< 更新履歴 >----------------------------------------------------------------------------------------------------------
 --
