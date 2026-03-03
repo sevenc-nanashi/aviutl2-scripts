@@ -153,6 +153,9 @@ end
 
 local red, green, blue = RGB(line_color)
 
+debug_dump("resolved_width", resolved_width)
+debug_dump("resolved_height", resolved_height)
+
 obj.setoption("drawtarget", "tempbuffer", resolved_width, resolved_height)
 obj.pixelshader("frame", "tempbuffer", {}, {
   line_length,
@@ -164,7 +167,6 @@ obj.pixelshader("frame", "tempbuffer", {}, {
   blue / 255,
 })
 obj.load("tempbuffer")
-
 
 --vim: set ft=lua:
 
