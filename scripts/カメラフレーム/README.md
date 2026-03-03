@@ -10,6 +10,7 @@
 - `line_thickness`：線の太さ（ピクセル単位）
 - `line_color`：線の色（`0xRRGGBB`）
 - `size_specifier`：サイズ指定（1=余白指定、2=絶対指定）
+- `debug`：デバッグモード
 
 # 更新履歴
 
