@@ -8,6 +8,8 @@ clang = "latest"
 ruby = "latest"
 stylua = "latest"
 taplo = "latest"
+"github:antaalt/shader-sense" = "latest"
+"github:nolanderc/glsl_analyzer" = "latest"
 
 [hooks]
 postinstall = ["lefthook install", "bundle"]

@@ -8,21 +8,34 @@ version = "0.1.0"
 [development]
 aviutl2_version = "latest"
 
-[artifacts.pixel_transform-anm2]
-source = "scripts/ドット絵変形.anm2"
-destination = "Script/ドット絵変形.anm2"
+[build_group]
+aulua = "rake"
+demo = "rake demo"
+
+[artifacts.camera_frame-obj2]
+build = { group = "aulua" }
+source = "scripts/カメラフレーム.obj2"
+destination = "Script/カメラフレーム.obj2"
 
 [artifacts.targeted_scale-anm2]
+build = { group = "aulua" }
 source = "scripts/目標指定拡大縮小.anm2"
 destination = "Script/目標指定拡大縮小.anm2"
 
 [artifacts.pixel_transform-demo-anm2]
+build = { group = "aulua" }
 source = "demo/@ドット絵変形.anm2"
 destination = "Script/@ドット絵変形.anm2"
 
 [artifacts.targeted_scale-demo-anm2]
+build = { group = "demo" }
 source = "demo/@目標指定拡大縮小.anm2"
 destination = "Script/@目標指定拡大縮小.anm2"
+
+[artifacts.camera_frame-demo-obj2]
+build = { group = "demo" }
+source = "demo/@カメラフレーム.obj2"
+destination = "Script/@カメラフレーム.obj2"
 
 [artifacts.basic_s]
 source = "https://raw.githubusercontent.com/sigma-axis/aviutl2_script_Basic_S/refs/heads/main/%40Basic_S.anm2"

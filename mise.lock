@@ -2,10 +2,28 @@
 version = "22.1.0"
 backend = "vfox:clang"
 
+[[tools."github:antaalt/shader-sense"]]
+version = "1.2.2"
+backend = "github:antaalt/shader-sense"
+"platforms.linux-arm64" = { checksum = "sha256:83b24c9cfc7c8cf9e224cde28c38e6229aa8d821c3026ca31b91e1199f7d5f7a", url = "https://github.com/antaalt/shader-sense/releases/download/v1.2.2/shader-language-server-wasm32-wasip1-threads.zip", url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/320404225"}
+"platforms.linux-x64" = { checksum = "sha256:9a6e7164884c7b771bba45db80a14014a12205647b9ce31c66a68e0dc6aa6afa", url = "https://github.com/antaalt/shader-sense/releases/download/v1.2.2/shader-language-server-x86_64-unknown-linux-gnu.zip", url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/320404226"}
+"platforms.macos-arm64" = { checksum = "sha256:83b24c9cfc7c8cf9e224cde28c38e6229aa8d821c3026ca31b91e1199f7d5f7a", url = "https://github.com/antaalt/shader-sense/releases/download/v1.2.2/shader-language-server-wasm32-wasip1-threads.zip", url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/320404225"}
+"platforms.macos-x64" = { checksum = "sha256:83b24c9cfc7c8cf9e224cde28c38e6229aa8d821c3026ca31b91e1199f7d5f7a", url = "https://github.com/antaalt/shader-sense/releases/download/v1.2.2/shader-language-server-wasm32-wasip1-threads.zip", url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/320404225"}
+"platforms.windows-x64" = { checksum = "sha256:3263fc4ebed08acc2acf136b0c5019c405cbc39665264221e1246a2e0a6ff54b", url = "https://github.com/antaalt/shader-sense/releases/download/v1.2.2/shader-language-server-x86_64-pc-windows-msvc.zip", url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/320404223"}
+
 [[tools."github:karoterra/aviutl2-aulua"]]
 version = "0.4.1"
 backend = "github:karoterra/aviutl2-aulua"
 "platforms.windows-x64" = { checksum = "sha256:8932e43e3657491310d7ffc80e1fbb8227d91164f217b62c933adde0b202c35b", url = "https://github.com/karoterra/aviutl2-aulua/releases/download/v0.4.1/aulua-v0.4.1-windows.zip", url_api = "https://api.github.com/repos/karoterra/aviutl2-aulua/releases/assets/364663087"}
+
+[[tools."github:nolanderc/glsl_analyzer"]]
+version = "1.7.1"
+backend = "github:nolanderc/glsl_analyzer"
+"platforms.linux-arm64" = { checksum = "sha256:dda05d727979c34333b86562bb706122ab95d17cd7298665e8afbaba79f76ea6", url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/aarch64-linux-musl.zip", url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401549"}
+"platforms.linux-x64" = { checksum = "sha256:7c929b304e0d34abf4305d07895c409861f054613c3ae4070baa7ca15c916e7a", url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/x86_64-linux-musl.zip", url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401550"}
+"platforms.macos-arm64" = { checksum = "sha256:7f78d98e762b241f7a39dde0fed81c9e4c58766cba5a8abcf20ce03790ee1678", url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/aarch64-macos.zip", url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401547"}
+"platforms.macos-x64" = { checksum = "sha256:8025e8c765b3bd6ab1e08bf7fd096437827397d618c43de2d4e377cc3b1f16fe", url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/x86_64-macos.zip", url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401548"}
+"platforms.windows-x64" = { checksum = "sha256:117604ba20860abf0808fc5551a6e06d305066c1f4296d81a51f175a2cf2a38c", url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/x86_64-windows.zip", url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401551"}
 
 [[tools."github:rvben/rumdl"]]
 version = "0.1.36"

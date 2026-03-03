@@ -1550,3 +1550,5 @@ elseif pixelsnap == 3 then
   obj.setoption("sampler", "dot")
 end
 
+--vim: set ft=lua:
+

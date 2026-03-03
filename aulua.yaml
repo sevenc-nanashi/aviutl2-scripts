@@ -10,6 +10,9 @@ install:
   out_dir: C:\ProgramData\aviutl2\Script\[sevenc-nanashi/aviutl2-scripts]
 
 scripts:
+  - name: カメラフレーム.obj2
+    sources:
+      - path: scripts/カメラフレーム/main.lua
   - name: ドット絵変形.anm2
     sources:
       - path: scripts/ドット絵変形/main.lua
