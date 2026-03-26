@@ -1,5 +1,7 @@
 # aviutl2-scripts
 
+[![sm45904404](https://niconi-commons-badge.sevenc7c.workers.dev/badge/sm45904404)](https://commons.nicovideo.jp/works/sm45904404)
+
 雑多AviUtl2スクリプト集。
 
 ## スクリプト一覧
