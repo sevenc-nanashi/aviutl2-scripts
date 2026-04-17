@@ -5,11 +5,11 @@ clang = "latest"
 "github:rvben/rumdl" = "latest"
 "npm:chokidar-cli" = "latest"
 "npm:lefthook" = "latest"
-ruby = "latest"
 stylua = "latest"
 taplo = "latest"
 "github:antaalt/shader-sense" = "latest"
 "github:nolanderc/glsl_analyzer" = "latest"
+ruby = "latest"
 
 [hooks]
 postinstall = ["lefthook install", "bundle"]
@@ -24,7 +24,7 @@ run = ["rake build:dry"]
 
 [tasks.dev]
 description = "Development mode with file watching"
-run = ['mise watch -w ./scripts -i ./scripts/*.* build']
+run = ['mise watch -w ./scripts -e lua -e hlsl build']
 
 [tasks.format]
 description = "Format code"
