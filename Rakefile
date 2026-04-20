@@ -137,7 +137,7 @@ task :prepare_description do
               quote_header_width = text_width(label) + 2
               description_lines << new_line
             else
-              description_lines << "#{indent}│ #{quote_line.rstrip}"
+              description_lines << "#{indent}│ #{quote_line.rstrip.delete_suffix("\\")}"
             end
           else
             description = line if description.nil?

@@ -8,7 +8,7 @@
 -- ニコニコショートのUIで隠れる部分を表示するためのスクリプト。
 --
 -- ┌ ℹ️ Note
--- │ デフォルトでは出力時に非表示になります。\
+-- │ デフォルトでは出力時に非表示になります。
 -- │ 出力時にも表示したい場合は、「出力時にも表示」を有効にしてください。
 -- └──────
 --
@@ -230,11 +230,11 @@ if show_tags then
   table.insert(rects, {
     x = layout.padding_x,
     y = layout.height
-      - layout.footer_height
-      - layout.comment_padding_y
-      - layout.comment_height
-      - layout.tag_padding_y
-      - layout.tag_height,
+        - layout.footer_height
+        - layout.comment_padding_y
+        - layout.comment_height
+        - layout.tag_padding_y
+        - layout.tag_height,
     width = layout.width - layout.padding_x * 2,
     height = layout.tag_height,
     radius = layout.tag_height / 2,
@@ -245,13 +245,13 @@ end
 table.insert(rects, {
   x = layout.width - layout.padding_x - layout.like_size,
   y = layout.height
-    - layout.footer_height
-    - layout.comment_padding_y
-    - layout.comment_height
-    - layout.tag_padding_y
-    - layout.tag_height
-    - layout.like_padding_y
-    - layout.like_size,
+      - layout.footer_height
+      - layout.comment_padding_y
+      - layout.comment_height
+      - layout.tag_padding_y
+      - layout.tag_height
+      - layout.like_padding_y
+      - layout.like_size,
   width = layout.like_size,
   height = layout.like_size,
   radius = layout.like_size / 2,
@@ -261,13 +261,13 @@ table.insert(rects, {
 table.insert(rects, {
   x = layout.padding_x,
   y = layout.height
-    - layout.footer_height
-    - layout.comment_padding_y
-    - layout.comment_height
-    - layout.tag_padding_y
-    - layout.tag_height
-    - layout.title_padding_y
-    - layout.title_height,
+      - layout.footer_height
+      - layout.comment_padding_y
+      - layout.comment_height
+      - layout.tag_padding_y
+      - layout.tag_height
+      - layout.title_padding_y
+      - layout.title_height,
   width = layout.width - layout.padding_x * 2 - layout.like_size - layout.padding_x,
   height = layout.title_height,
   radius = layout.title_height / 2,
@@ -277,15 +277,15 @@ table.insert(rects, {
 table.insert(rects, {
   x = layout.padding_x,
   y = layout.height
-    - layout.footer_height
-    - layout.comment_padding_y
-    - layout.comment_height
-    - layout.tag_padding_y
-    - layout.tag_height
-    - layout.title_padding_y
-    - layout.title_height
-    - layout.author_padding_y
-    - layout.author_size,
+      - layout.footer_height
+      - layout.comment_padding_y
+      - layout.comment_height
+      - layout.tag_padding_y
+      - layout.tag_height
+      - layout.title_padding_y
+      - layout.title_height
+      - layout.author_padding_y
+      - layout.author_size,
   width = layout.author_size,
   height = layout.author_size,
   radius = layout.author_size / 2,
@@ -295,16 +295,16 @@ table.insert(rects, {
 table.insert(rects, {
   x = layout.padding_x + layout.author_size + layout.author_padding_x,
   y = layout.height
-    - layout.footer_height
-    - layout.comment_padding_y
-    - layout.comment_height
-    - layout.tag_padding_y
-    - layout.tag_height
-    - layout.title_padding_y
-    - layout.title_height
-    - layout.author_padding_y
-    - layout.author_size / 2
-    - layout.author_name_size / 2,
+      - layout.footer_height
+      - layout.comment_padding_y
+      - layout.comment_height
+      - layout.tag_padding_y
+      - layout.tag_height
+      - layout.title_padding_y
+      - layout.title_height
+      - layout.author_padding_y
+      - layout.author_size / 2
+      - layout.author_name_size / 2,
   width = author_name_width,
   height = layout.author_name_size,
   radius = layout.author_name_size / 2,
@@ -314,15 +314,15 @@ table.insert(rects, {
 table.insert(rects, {
   x = layout.padding_x + layout.author_size + layout.author_padding_x + author_name_width + layout.author_padding_x,
   y = layout.height
-    - layout.footer_height
-    - layout.comment_padding_y
-    - layout.comment_height
-    - layout.tag_padding_y
-    - layout.tag_height
-    - layout.title_padding_y
-    - layout.title_height
-    - layout.author_padding_y
-    - layout.author_size,
+      - layout.footer_height
+      - layout.comment_padding_y
+      - layout.comment_height
+      - layout.tag_padding_y
+      - layout.tag_height
+      - layout.title_padding_y
+      - layout.title_height
+      - layout.author_padding_y
+      - layout.author_size,
   width = layout.follow_width,
   height = layout.author_size,
   radius = layout.author_size / 2,
@@ -333,17 +333,17 @@ if show_forward then
   table.insert(rects, {
     x = layout.padding_x,
     y = layout.height
-      - layout.footer_height
-      - layout.comment_padding_y
-      - layout.comment_height
-      - layout.tag_padding_y
-      - layout.tag_height
-      - layout.title_padding_y
-      - layout.title_height
-      - layout.author_padding_y
-      - layout.author_size
-      - layout.forward_padding_y
-      - layout.forward_height,
+        - layout.footer_height
+        - layout.comment_padding_y
+        - layout.comment_height
+        - layout.tag_padding_y
+        - layout.tag_height
+        - layout.title_padding_y
+        - layout.title_height
+        - layout.author_padding_y
+        - layout.author_size
+        - layout.forward_padding_y
+        - layout.forward_height,
     width = layout.forward_width,
     height = layout.forward_height,
     radius = layout.forward_radius,
@@ -388,14 +388,14 @@ obj.drawpoly({
     -layout.width / 2 + layout.screen_radius,
     layout.height / 2,
     0.0,
-    -1.0,
-    -1.0,
-    1.0,
-    -1.0,
-    1.0,
-    1.0,
-    -1.0,
-    1.0,
+    0.0,
+    0.0,
+    2.0,
+    0.0,
+    2.0,
+    2.0,
+    0.0,
+    2.0,
   },
   {
     -layout.width / 2,
@@ -410,23 +410,53 @@ obj.drawpoly({
     -layout.width / 2,
     layout.height / 2 - layout.screen_radius,
     0.0,
-    -1.0,
-    -1.0,
-    1.0,
-    -1.0,
-    1.0,
-    1.0,
-    -1.0,
-    1.0,
+    0.0,
+    0.0,
+    2.0,
+    0.0,
+    2.0,
+    2.0,
+    0.0,
+    2.0,
   },
 })
-obj.load("figure", "円", color, layout.screen_radius * 2)
-obj.draw(-layout.width / 2 + layout.screen_radius, -layout.height / 2 + layout.screen_radius)
-obj.draw(layout.width / 2 - layout.screen_radius, -layout.height / 2 + layout.screen_radius)
-obj.draw(-layout.width / 2 + layout.screen_radius, layout.height / 2 - layout.screen_radius)
-obj.draw(layout.width / 2 - layout.screen_radius, layout.height / 2 - layout.screen_radius)
-
+local function draw_circles_at(radius, positions)
+  local polygons = {}
+  for _, pos in ipairs(positions) do
+    table.insert(polygons, {
+      pos[1] - radius,
+      pos[2] - radius,
+      0.0,
+      pos[1] + radius,
+      pos[2] - radius,
+      0.0,
+      pos[1] + radius,
+      pos[2] + radius,
+      0.0,
+      pos[1] - radius,
+      pos[2] + radius,
+      0.0,
+      0.0,
+      0.0,
+      radius * 2,
+      0.0,
+      radius * 2,
+      radius * 2,
+      0.0,
+      radius * 2,
+    })
+  end
+  obj.drawpoly(polygons)
+end
+obj.load("figure", "円", 0xffffff, layout.screen_radius * 2)
+draw_circles_at(layout.screen_radius, {
+  { -layout.width / 2 + layout.screen_radius, -layout.height / 2 + layout.screen_radius },
+  { layout.width / 2 - layout.screen_radius,  -layout.height / 2 + layout.screen_radius },
+  { -layout.width / 2 + layout.screen_radius, layout.height / 2 - layout.screen_radius },
+  { layout.width / 2 - layout.screen_radius,  layout.height / 2 - layout.screen_radius },
+})
 obj.setoption("blend", "none")
+
 
 local polygons = {}
 
@@ -481,13 +511,22 @@ for _, rect in ipairs(rects) do
       })
     end
     obj.load("figure", "円", color, rect.radius * 2)
-    obj.draw(rect.x + rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2)
-    obj.draw(rect.x + rect.width - rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2)
-    obj.draw(rect.x + rect.radius - layout.width / 2, rect.y + rect.height - rect.radius - layout.height / 2)
-    obj.draw(
-      rect.x + rect.width - rect.radius - layout.width / 2,
-      rect.y + rect.height - rect.radius - layout.height / 2
-    )
+    draw_circles_at(rect.radius, {
+      { rect.x + rect.radius - layout.width / 2,              rect.y + rect.radius - layout.height / 2 },
+      { rect.x + rect.width - rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2 },
+      { rect.x + rect.radius - layout.width / 2,              rect.y + rect.height - rect.radius - layout.height / 2 },
+      {
+        rect.x + rect.width - rect.radius - layout.width / 2,
+        rect.y + rect.height - rect.radius - layout.height / 2,
+      },
+    })
+    -- obj.draw(rect.x + rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2)
+    -- obj.draw(rect.x + rect.width - rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2)
+    -- obj.draw(rect.x + rect.radius - layout.width / 2, rect.y + rect.height - rect.radius - layout.height / 2)
+    -- obj.draw(
+    --   rect.x + rect.width - rect.radius - layout.width / 2,
+    --   rect.y + rect.height - rect.radius - layout.height / 2
+    -- )
   else
     table.insert(polygons, {
       -layout.width / 2 + rect.x,
@@ -502,14 +541,14 @@ for _, rect in ipairs(rects) do
       -layout.width / 2 + rect.x,
       -layout.height / 2 + rect.y + rect.height,
       0.0,
-      -1.0,
-      -1.0,
-      1.0,
-      -1.0,
-      1.0,
-      1.0,
-      -1.0,
-      1.0,
+      0.0,
+      0.0,
+      2.0,
+      0.0,
+      2.0,
+      2.0,
+      0.0,
+      2.0,
     })
   end
 end
