@@ -1,19 +1,27 @@
---select@aspect_ratio:画面サイズ=1,9:19.5（iPhone / Dynamic Island）=1,9:16（iPhone）=2,3:4（タブレット）=3
+--select@device:デバイス=1,iPhone 16（iOS 26）=1,iPad mini（iPadOS 26）=3
 --color@color:色,0xffffff
 --check@show_pinned:ピン留め動画,true
+--check@show_tags:タグ,true
 --track@author_name_width:投稿者名の幅,64,640,160,1
 --track@side_line_width:左右線の幅,0,640,64,1
+--check@show_on_output:出力時にも表示,false
+---@class Rectangle
+---@field x number
+---@field y number
+---@field width number
+---@field height number
+---@field radius number
 
 ---@class Layout
 ---@field width number
 ---@field height number
 ---@field footer_height number
+---@field screen_radius number
 ---@field comment_padding_y number
 ---@field padding_x number
 ---@field comment_height number
 ---@field tag_padding_y number
 ---@field tag_height number
----@field tag_gap number
 ---@field like_padding_y number
 ---@field like_size number
 ---@field title_padding_y number
@@ -27,6 +35,10 @@
 ---@field forward_height number
 ---@field forward_padding_y number
 ---@field forward_radius number
+---@field toolbar_size number
+---@field toolbar_gap number
+---@field toolbar_padding_y number
+---@field notch Rectangle | nil
 
 ---@type table<integer, Layout>
 local layouts = {
@@ -35,12 +47,12 @@ local layouts = {
     width = 1179,
     height = 2556,
     footer_height = 280,
+    screen_radius = 165,
     comment_padding_y = 32,
     padding_x = 44,
     comment_height = 100,
     tag_padding_y = 46,
     tag_height = 40,
-    tag_gap = 32,
     like_padding_y = 50,
     like_size = 165,
     author_size = 97,
@@ -53,14 +65,67 @@ local layouts = {
     forward_width = 581,
     forward_height = 108,
     forward_padding_y = 36,
-    forward_radius = 24
+    forward_radius = 24,
+    toolbar_size = 60,
+    toolbar_gap = 90,
+    toolbar_padding_y = 237,
+    notch = {
+      x = 1179 / 2 - 376 / 2,
+      y = 34,
+      width = 376,
+      height = 110,
+      radius = 55
+    },
+  },
+  [3] = {
+    width = 1488,
+    height = 2266,
+    footer_height = 174,
+    screen_radius = 20,
+    padding_x = 31,
+    comment_padding_y = 28,
+    comment_height = 66,
+    tag_padding_y = 31,
+    tag_height = 24,
+    like_padding_y = 35,
+    like_size = 110,
+    title_height = 26,
+    title_padding_y = 31,
+    author_size = 64,
+    author_padding_x = 17,
+    author_padding_y = 23,
+    author_name_size = 25,
+    follow_width = 184,
+    forward_width = 381,
+    forward_height = 72,
+    forward_radius = 18,
+    forward_padding_y = 24,
+    toolbar_size = 40,
+    toolbar_gap = 60,
+    toolbar_padding_y = 104,
+    notch = nil,
   },
 }
 
----@type Layout
-local layout = layouts[aspect_ratio] or layouts[1]
+if obj.getinfo("saving") and not show_on_output then
+  return
+end
 
+---@type Layout
+local layout = layouts[device] or layouts[1]
+
+if not show_tags then
+  layout.tag_height = 0
+  layout.tag_padding_y = 0
+end
+
+---@type Rectangle[]
 local rects = {}
+if layout.notch then
+  -- ノッチ
+  table.insert(rects, layout.notch)
+end
+
 -- フッター
 table.insert(rects, {
   x = 0,
@@ -79,19 +144,21 @@ table.insert(rects, {
   radius = layout.comment_height / 2,
 })
 
--- タグ欄
-table.insert(rects, {
-  x = layout.padding_x,
-  y = layout.height
-      - layout.footer_height
-      - layout.comment_padding_y
-      - layout.comment_height
-      - layout.tag_padding_y
-      - layout.tag_height,
-  width = layout.width - layout.padding_x * 2,
-  height = layout.tag_height,
-  radius = layout.tag_height / 2,
-})
+if show_tags then
+  -- タグ欄
+  table.insert(rects, {
+    x = layout.padding_x,
+    y = layout.height
+        - layout.footer_height
+        - layout.comment_padding_y
+        - layout.comment_height
+        - layout.tag_padding_y
+        - layout.tag_height,
+    width = layout.width - layout.padding_x * 2,
+    height = layout.tag_height,
+    radius = layout.tag_height / 2,
+  })
+end
 
 -- いいねボタン
 table.insert(rects, {
@@ -202,29 +269,44 @@ if show_pinned then
   })
 end
 
-if side_line_width > 0 then
-  -- 左線
+-- ツールバー
+table.insert(rects, {
+  x = layout.padding_x,
+  y = layout.toolbar_padding_y,
+  width = layout.toolbar_size,
+  height = layout.toolbar_size,
+  radius = layout.toolbar_size / 2,
+})
+for i = 0, 2 do
   table.insert(rects, {
-    x = -side_line_width,
-    y = 0,
-    width = side_line_width,
-    height = layout.height,
-    radius = 0,
-  })
-  -- 右線
-  table.insert(rects, {
-    x = layout.width,
-    y = 0,
-    width = side_line_width,
-    height = layout.height,
-    radius = 0,
+    x = layout.width - layout.padding_x - layout.toolbar_size - (layout.toolbar_size + layout.toolbar_gap) * i,
+    y = layout.toolbar_padding_y,
+    width = layout.toolbar_size,
+    height = layout.toolbar_size,
+    radius = layout.toolbar_size / 2,
   })
 end
 
 obj.setoption("drawtarget", "tempbuffer", layout.width + side_line_width * 2, layout.height)
+obj.clearbuffer("tempbuffer", color)
+
+-- 画面分の消去
+obj.setoption("blend", "alpha_sub")
+obj.load("figure", "四角形", color, 100)
+obj.effect("リサイズ", "X", layout.width - layout.screen_radius * 2, "Y", layout.height, "ピクセル数でサイズ指定", 1)
+obj.draw(0, 0)
+obj.effect("リサイズ", "X", layout.width, "Y", layout.height - layout.screen_radius * 2, "ピクセル数でサイズ指定", 1)
+obj.draw(0, 0)
+obj.load("figure", "円", color, layout.screen_radius * 2)
+obj.draw(-layout.width / 2 + layout.screen_radius, -layout.height / 2 + layout.screen_radius)
+obj.draw(layout.width / 2 - layout.screen_radius, -layout.height / 2 + layout.screen_radius)
+obj.draw(-layout.width / 2 + layout.screen_radius, layout.height / 2 - layout.screen_radius)
+obj.draw(layout.width / 2 - layout.screen_radius, layout.height / 2 - layout.screen_radius)
+
+obj.setoption("blend", "none")
+
 for _, rect in ipairs(rects) do
   if rect.radius > 0 then
-    print(rect)
     obj.load("figure", "四角形", color, 100)
     obj.effect(
       "リサイズ",
