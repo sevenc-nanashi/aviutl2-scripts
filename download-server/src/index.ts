@@ -65,7 +65,7 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
       const scriptContent = await fetchScriptContent(scriptName, entry);
       const plainReadme = await getPlainReadme(scriptName, entry.commit);
       const escapedZipName = encodeURIComponent(
-        `${scriptName.replace(".", `-${entry.version}.`)}.au2pkg.zip`,
+        `${scriptName.replace(".", `-v${entry.version}.`)}.au2pkg.zip`,
       );
       const packaged = await packageScript(
         scriptId,
