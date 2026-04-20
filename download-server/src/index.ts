@@ -64,7 +64,9 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
       const entry = selectVersionEntry(entries, scriptName, versionSpecifier);
       const scriptContent = await fetchScriptContent(scriptName, entry);
       const plainReadme = await getPlainReadme(scriptName, entry.commit);
-      const escapedScriptName = encodeURIComponent(`${scriptName}.au2pkg.zip`);
+      const escapedZipName = encodeURIComponent(
+        `${scriptName.replace(".", `-${entry.version}.`)}.au2pkg.zip`,
+      );
       const packaged = await packageScript(
         scriptId,
         scriptName,
@@ -72,7 +74,7 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
         plainReadme,
       );
       return c.body(packaged, 200, {
-        "Content-Disposition": `attachment; filename="${escapedScriptName}"`,
+        "Content-Disposition": `attachment; filename="${escapedZipName}"`,
         "Content-Type": "application/zip",
         "X-Script-Version": entry.version,
         "X-Script-Commit": entry.commit ?? "unknown",
