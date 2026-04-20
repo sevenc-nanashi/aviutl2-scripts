@@ -1,13 +1,13 @@
 ---$select:デバイス
 ---iPhone 16（iOS 26）=1
----iPad mini（iPadOS 26）=3
+---iPad mini（iPadOS 26）=2
 local device = 1
 
 ---$color:色
 local color = 0xffffff
 
 ---$check:ピン留め動画
-local show_pinned = true
+local show_forward = true
 
 ---$check:タグ
 local show_tags = true
@@ -27,6 +27,9 @@ local side_line_width = 64
 ---$check:出力時にも表示
 local show_on_output = false
 
+---$value:PI
+local PI = {}
+
 ---@class Rectangle
 ---@field x number
 ---@field y number
@@ -35,32 +38,32 @@ local show_on_output = false
 ---@field radius number
 
 ---@class Layout
----@field width number
----@field height number
----@field footer_height number
----@field screen_radius number
----@field comment_padding_y number
----@field padding_x number
----@field comment_height number
----@field tag_padding_y number
----@field tag_height number
----@field like_padding_y number
----@field like_size number
----@field title_padding_y number
----@field title_height number
----@field author_padding_y number
----@field author_size number
----@field author_name_size number
----@field author_padding_x number
----@field follow_width number
----@field forward_width number
----@field forward_height number
----@field forward_padding_y number
----@field forward_radius number
----@field toolbar_size number
----@field toolbar_gap number
----@field toolbar_padding_y number
----@field notch Rectangle | nil
+---@field width number 画面幅
+---@field height number 画面高さ
+---@field footer_height number 下のバーの高さ
+---@field screen_radius number 画面の角の半径
+---@field padding_x number 画面の左右の余白
+---@field comment_padding_y number コメント欄と下のバーの間隔
+---@field comment_height number コメント欄の高さ
+---@field tag_padding_y number タグ欄とコメント欄の間隔
+---@field tag_height number タグ欄の高さ
+---@field like_padding_y number いいねボタンとタグ欄の間隔
+---@field like_size number いいねボタンのサイズ
+---@field title_padding_y number タイトルとタグ欄の間隔
+---@field title_height number タイトルの高さ
+---@field author_padding_y number 投稿者アイコンとタイトルの間隔
+---@field author_size number 投稿者アイコンのサイズ
+---@field author_name_size number 投稿者名の高さ
+---@field author_padding_x number 投稿者アイコンと投稿者名の間隔
+---@field follow_width number フォローボタンの幅
+---@field forward_width number ピン留め動画の幅
+---@field forward_height number ピン留め動画の高さ
+---@field forward_padding_y number ピン留め動画と投稿者アイコンの間隔
+---@field forward_radius number ピン留め動画の角の半径
+---@field toolbar_size number ツールバーのアイコンのサイズ
+---@field toolbar_gap number ツールバーのアイコン同士の間隔
+---@field toolbar_padding_y number ツールバーと画面上部の間隔
+---@field notch Rectangle | nil ノッチの位置とサイズ。ノッチがない場合はnil
 
 ---@type table<integer, Layout>
 local layouts = {
@@ -96,10 +99,10 @@ local layouts = {
       y = 34,
       width = 376,
       height = 110,
-      radius = 55
+      radius = 55,
     },
   },
-  [3] = {
+  [2] = {
     width = 1488,
     height = 2266,
     footer_height = 174,
@@ -129,12 +132,52 @@ local layouts = {
   },
 }
 
+if type(PI.device) == "number" then
+  device = PI.device
+end
+if type(PI.color) == "number" then
+  color = PI.color
+end
+if type(PI.show_forward) == "boolean" then
+  show_forward = PI.show_forward
+end
+if type(PI.show_tags) == "boolean" then
+  show_tags = PI.show_tags
+end
+if type(PI.author_name_width) == "number" then
+  author_name_width = PI.author_name_width
+end
+if type(PI.side_line_width) == "number" then
+  side_line_width = PI.side_line_width
+end
+if type(PI.show_on_output) == "boolean" then
+  show_on_output = PI.show_on_output
+end
+
 if obj.getinfo("saving") and not show_on_output then
   return
 end
 
+---@param src table
+---@return table
+local function shallow_copy(src)
+  local dst = {}
+  for k, v in pairs(src) do
+    dst[k] = v
+  end
+  return dst
+end
+
 ---@type Layout
-local layout = layouts[device] or layouts[1]
+local layout = shallow_copy(layouts[device] or layouts[1])
+if type(layout.notch) == "table" then
+  layout.notch = shallow_copy(layout.notch)
+end
+if type(PI.layout) == "table" then
+  for k, v in pairs(PI.layout) do
+    layout[k] = v
+  end
+end
 
 if not show_tags then
   layout.tag_height = 0
@@ -171,11 +214,11 @@ if show_tags then
   table.insert(rects, {
     x = layout.padding_x,
     y = layout.height
-        - layout.footer_height
-        - layout.comment_padding_y
-        - layout.comment_height
-        - layout.tag_padding_y
-        - layout.tag_height,
+      - layout.footer_height
+      - layout.comment_padding_y
+      - layout.comment_height
+      - layout.tag_padding_y
+      - layout.tag_height,
     width = layout.width - layout.padding_x * 2,
     height = layout.tag_height,
     radius = layout.tag_height / 2,
@@ -186,13 +229,13 @@ end
 table.insert(rects, {
   x = layout.width - layout.padding_x - layout.like_size,
   y = layout.height
-      - layout.footer_height
-      - layout.comment_padding_y
-      - layout.comment_height
-      - layout.tag_padding_y
-      - layout.tag_height
-      - layout.like_padding_y
-      - layout.like_size,
+    - layout.footer_height
+    - layout.comment_padding_y
+    - layout.comment_height
+    - layout.tag_padding_y
+    - layout.tag_height
+    - layout.like_padding_y
+    - layout.like_size,
   width = layout.like_size,
   height = layout.like_size,
   radius = layout.like_size / 2,
@@ -202,13 +245,13 @@ table.insert(rects, {
 table.insert(rects, {
   x = layout.padding_x,
   y = layout.height
-      - layout.footer_height
-      - layout.comment_padding_y
-      - layout.comment_height
-      - layout.tag_padding_y
-      - layout.tag_height
-      - layout.title_padding_y
-      - layout.title_height,
+    - layout.footer_height
+    - layout.comment_padding_y
+    - layout.comment_height
+    - layout.tag_padding_y
+    - layout.tag_height
+    - layout.title_padding_y
+    - layout.title_height,
   width = layout.width - layout.padding_x * 2 - layout.like_size - layout.padding_x,
   height = layout.title_height,
   radius = layout.title_height / 2,
@@ -218,15 +261,15 @@ table.insert(rects, {
 table.insert(rects, {
   x = layout.padding_x,
   y = layout.height
-      - layout.footer_height
-      - layout.comment_padding_y
-      - layout.comment_height
-      - layout.tag_padding_y
-      - layout.tag_height
-      - layout.title_padding_y
-      - layout.title_height
-      - layout.author_padding_y
-      - layout.author_size,
+    - layout.footer_height
+    - layout.comment_padding_y
+    - layout.comment_height
+    - layout.tag_padding_y
+    - layout.tag_height
+    - layout.title_padding_y
+    - layout.title_height
+    - layout.author_padding_y
+    - layout.author_size,
   width = layout.author_size,
   height = layout.author_size,
   radius = layout.author_size / 2,
@@ -236,16 +279,16 @@ table.insert(rects, {
 table.insert(rects, {
   x = layout.padding_x + layout.author_size + layout.author_padding_x,
   y = layout.height
-      - layout.footer_height
-      - layout.comment_padding_y
-      - layout.comment_height
-      - layout.tag_padding_y
-      - layout.tag_height
-      - layout.title_padding_y
-      - layout.title_height
-      - layout.author_padding_y
-      - layout.author_size / 2
-      - layout.author_name_size / 2,
+    - layout.footer_height
+    - layout.comment_padding_y
+    - layout.comment_height
+    - layout.tag_padding_y
+    - layout.tag_height
+    - layout.title_padding_y
+    - layout.title_height
+    - layout.author_padding_y
+    - layout.author_size / 2
+    - layout.author_name_size / 2,
   width = author_name_width,
   height = layout.author_name_size,
   radius = layout.author_name_size / 2,
@@ -255,6 +298,25 @@ table.insert(rects, {
 table.insert(rects, {
   x = layout.padding_x + layout.author_size + layout.author_padding_x + author_name_width + layout.author_padding_x,
   y = layout.height
+    - layout.footer_height
+    - layout.comment_padding_y
+    - layout.comment_height
+    - layout.tag_padding_y
+    - layout.tag_height
+    - layout.title_padding_y
+    - layout.title_height
+    - layout.author_padding_y
+    - layout.author_size,
+  width = layout.follow_width,
+  height = layout.author_size,
+  radius = layout.author_size / 2,
+})
+
+if show_forward then
+  -- ピン留め動画
+  table.insert(rects, {
+    x = layout.padding_x,
+    y = layout.height
       - layout.footer_height
       - layout.comment_padding_y
       - layout.comment_height
@@ -263,28 +325,9 @@ table.insert(rects, {
       - layout.title_padding_y
       - layout.title_height
       - layout.author_padding_y
-      - layout.author_size,
-  width = layout.follow_width,
-  height = layout.author_size,
-  radius = layout.author_size / 2,
-})
-
-if show_pinned then
-  -- ピン留め動画
-  table.insert(rects, {
-    x = layout.padding_x,
-    y = layout.height
-        - layout.footer_height
-        - layout.comment_padding_y
-        - layout.comment_height
-        - layout.tag_padding_y
-        - layout.tag_height
-        - layout.title_padding_y
-        - layout.title_height
-        - layout.author_padding_y
-        - layout.author_size
-        - layout.forward_padding_y
-        - layout.forward_height,
+      - layout.author_size
+      - layout.forward_padding_y
+      - layout.forward_height,
     width = layout.forward_width,
     height = layout.forward_height,
     radius = layout.forward_radius,
@@ -315,9 +358,25 @@ obj.clearbuffer("tempbuffer", color)
 -- 画面分の消去
 obj.setoption("blend", "alpha_sub")
 obj.load("figure", "四角形", color, 100)
-obj.effect("リサイズ", "X", layout.width - layout.screen_radius * 2, "Y", layout.height, "ピクセル数でサイズ指定", 1)
+obj.effect(
+  "リサイズ",
+  "X",
+  layout.width - layout.screen_radius * 2,
+  "Y",
+  layout.height,
+  "ピクセル数でサイズ指定",
+  1
+)
 obj.draw(0, 0)
-obj.effect("リサイズ", "X", layout.width, "Y", layout.height - layout.screen_radius * 2, "ピクセル数でサイズ指定", 1)
+obj.effect(
+  "リサイズ",
+  "X",
+  layout.width,
+  "Y",
+  layout.height - layout.screen_radius * 2,
+  "ピクセル数でサイズ指定",
+  1
+)
 obj.draw(0, 0)
 obj.load("figure", "円", color, layout.screen_radius * 2)
 obj.draw(-layout.width / 2 + layout.screen_radius, -layout.height / 2 + layout.screen_radius)
