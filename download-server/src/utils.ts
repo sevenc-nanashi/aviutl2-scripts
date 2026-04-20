@@ -1,8 +1,8 @@
 import { env } from "cloudflare:workers";
 
-const repository = "sevenc-nanashi/aviutl2-scripts";
-const githubApiBaseUrl = "https://api.github.com/repos";
-const githubRawBaseUrl = "https://raw.githubusercontent.com";
+export const repository = "sevenc-nanashi/aviutl2-scripts";
+export const githubApiBaseUrl = "https://api.github.com/repos";
+export const githubRawBaseUrl = "https://raw.githubusercontent.com";
 
 export const mainRef = "refs/heads/main";
 export const latestReadmeCloudflareCacheTtlSec = 10;

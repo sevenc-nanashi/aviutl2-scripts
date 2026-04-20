@@ -7,6 +7,7 @@ import {
   selectVersionEntry,
 } from "./resolve";
 import { fetchScriptContent } from "./utils";
+import { getPlainReadme, getScriptId, packageScript } from "./package";
 
 const app = new Hono();
 
@@ -52,7 +53,30 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
       });
     }
     case "au2pkg": {
-      return c.text("Not implemented", 501);
+      const scriptId = await getScriptId(scriptName);
+      if (!scriptId) {
+        return c.text(
+          `Script "${scriptName}" not found in catalog, please wait for it to be indexed.`,
+          503,
+        );
+      }
+      const entries = await resolveVersionEntries(scriptName);
+      const entry = selectVersionEntry(entries, scriptName, versionSpecifier);
+      const scriptContent = await fetchScriptContent(scriptName, entry);
+      const plainReadme = await getPlainReadme(scriptName, entry.commit);
+      const escapedScriptName = encodeURIComponent(`${scriptName}.au2pkg.zip`);
+      const packaged = await packageScript(
+        scriptId,
+        scriptName,
+        scriptContent,
+        plainReadme,
+      );
+      return c.body(packaged, 200, {
+        "Content-Disposition": `attachment; filename="${escapedScriptName}"`,
+        "Content-Type": "application/zip",
+        "X-Script-Version": entry.version,
+        "X-Script-Commit": entry.commit ?? "unknown",
+      });
     }
     case "script": {
       const entries = await resolveVersionEntries(scriptName);

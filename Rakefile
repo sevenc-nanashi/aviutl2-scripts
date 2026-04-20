@@ -154,7 +154,7 @@ task :prepare_description do
         description_lines.map { |l| "-- #{l}".strip }.join("\n") + "\n"
       update_file(readme_lua_path, readme_lua_content)
 
-      "- [#{title}](#{url})（[説明書](#{readme_url})）：#{description}"
+      "- #{title}（[au2pkg](#{url}?type=au2pkg)、[スクリプト本体](#{url}?type=script)、[説明書](#{readme_url})）：#{description}"
     end
   unless base.gsub!(
            /(?<=<!-- script-marker-start -->\n).*(?=\n<!-- script-marker-end -->)/m,
