@@ -1,3 +1,8 @@
+--label:画面効果
+--information:https://aviutl2-scripts-download.sevenc7c.workers.dev/%E7%B8%A6%E5%8B%95%E7%94%BB%E3%82%AC%E3%82%A4%E3%83%89.obj2
+
+---$include "./readme.lua"
+
 ---$select:デバイス
 ---iPhone 16（iOS 26）=1
 ---iPad mini（iPadOS 26）=2
