@@ -7,20 +7,31 @@ version = "0.1.0"
 
 [development]
 aviutl2_version = "latest"
+catalog_dependencies = ["sigma-axis.Basic_S", "sigma-axis.PixelSnap_S"]
 
 [build_group]
 aulua = "rake"
 demo = "rake demo"
+
+[artifacts.pixel_transform-anm2]
+build = { group = "aulua" }
+source = "scripts/ドット絵変形.anm2"
+destination = "Script/ドット絵変形.anm2"
+
+[artifacts.targeted_scale-anm2]
+build = { group = "aulua" }
+source = "scripts/目標指定拡大縮小.anm2"
+destination = "Script/目標指定拡大縮小.anm2"
 
 [artifacts.camera_frame-obj2]
 build = { group = "aulua" }
 source = "scripts/カメラフレーム.obj2"
 destination = "Script/カメラフレーム.obj2"
 
-[artifacts.targeted_scale-anm2]
+[artifacts.shorts_guide-obj2]
 build = { group = "aulua" }
-source = "scripts/目標指定拡大縮小.anm2"
-destination = "Script/目標指定拡大縮小.anm2"
+source = "scripts/縦動画ガイド.obj2"
+destination = "Script/縦動画ガイド.obj2"
 
 [artifacts.pixel_transform-demo-anm2]
 build = { group = "aulua" }
@@ -37,10 +48,7 @@ build = { group = "demo" }
 source = "demo/@カメラフレーム.obj2"
 destination = "Script/@カメラフレーム.obj2"
 
-[artifacts.basic_s]
-source = "https://raw.githubusercontent.com/sigma-axis/aviutl2_script_Basic_S/refs/heads/main/%40Basic_S.anm2"
-destination = "Script/@Basic_S.anm2"
-
-[artifacts.pixelsnap_s]
-source = "https://raw.githubusercontent.com/sigma-axis/aviutl2_script_PixelSnap_S/refs/heads/main/PixelSnap_S.anm2"
-destination = "Script/PixelSnap_S.anm2"
+[artifacts.shorts_guide-demo-obj2]
+build = { group = "demo" }
+source = "demo/@縦動画ガイド.obj2"
+destination = "Script/@縦動画ガイド.obj2"
