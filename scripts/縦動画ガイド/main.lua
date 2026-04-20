@@ -9,7 +9,7 @@
 local device = 1
 
 ---$color:色
-local color = 0xffffff
+local color = 0xff0000
 
 ---$check:ピン留め動画
 local show_forward = true
