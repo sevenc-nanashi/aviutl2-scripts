@@ -68,6 +68,14 @@ export async function fetchReadmeCommits(
   return commits.map((commit) => commit.sha);
 }
 
+export async function resolveCommitSha(commit: string): Promise<string> {
+  const url = `${githubApiBaseUrl}/${repository}/commits/${commit}`;
+  const resolvedCommit = await fetchJson<GitHubCommit>(url, {
+    cloudflareCacheTtlSec: versionLookupCloudflareCacheTtlSec,
+  });
+  return resolvedCommit.sha;
+}
+
 export async function fetchText(
   url: string,
   options: GitHubFetchOptions = {},
@@ -130,14 +138,6 @@ export function rawUrlForPath(path: string, ref: string): string {
 
 function encodePath(path: string): string {
   return path.split("/").map(encodeURIComponent).join("/");
-}
-
-export function normalizeVersionSpecifier(versionSpecifier: string): string {
-  const version = versionSpecifier.replace(/^v/, "");
-  if (!version.match(/^[0-9.]+$/)) {
-    throw new Error(`Invalid version specifier: ${versionSpecifier}`);
-  }
-  return version;
 }
 
 export function readmePathForScript(scriptName: string): string {

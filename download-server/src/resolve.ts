@@ -4,16 +4,27 @@ import {
   fetchText,
   latestReadmeCloudflareCacheTtlSec,
   mainRef,
-  normalizeVersionSpecifier,
   parseChangelogHeaders,
   rawUrlForPath,
   readmePathForScript,
+  resolveCommitSha,
   type VersionEntry,
   versionLookupCloudflareCacheTtlSec,
 } from "./utils";
 
 const versionEntriesCacheBaseUrl =
   "https://aviutl2-scripts-download.local/version-entries";
+const versionEntriesCacheVersion = "2";
+
+export async function doesScriptExist(scriptName: string): Promise<boolean> {
+  try {
+    const headers = await resolveVersionHeaders(scriptName);
+    return headers.length > 0;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
 
 export async function resolveVersionEntries(
   scriptName: string,
@@ -43,9 +54,9 @@ export async function resolveVersionEntries(
 export function selectVersionEntry(
   entries: VersionEntry[],
   scriptName: string,
-  versionSpecifier: string | undefined,
+  version: string,
 ): VersionEntry {
-  if (versionSpecifier === undefined) {
+  if (version === "latest") {
     const latestEntry = entries[0];
     if (latestEntry === undefined) {
       throw new Error(
@@ -55,7 +66,6 @@ export function selectVersionEntry(
     return latestEntry;
   }
 
-  const version = normalizeVersionSpecifier(versionSpecifier);
   const entry = entries.find((entry) => entry.version === version);
   if (entry === undefined) {
     throw new Error(
@@ -104,6 +114,7 @@ function versionEntriesCacheRequest(
     `${versionEntriesCacheBaseUrl}/${encodeURIComponent(scriptName)}`,
   );
   url.searchParams.set("latest", latestVersion);
+  url.searchParams.set("cacheVersion", versionEntriesCacheVersion);
   return new Request(url);
 }
 
@@ -143,7 +154,8 @@ async function findVersionEntries(
   for (const header of headers) {
     const overrideCommit = header.commit;
     if (overrideCommit !== null) {
-      entries.push({ version: header.version, commit: overrideCommit });
+      const resolvedCommit = await resolveCommitSha(overrideCommit);
+      entries.push({ version: header.version, commit: resolvedCommit });
       continue;
     }
 
