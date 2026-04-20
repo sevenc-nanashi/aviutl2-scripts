@@ -362,27 +362,53 @@ obj.clearbuffer("tempbuffer", color)
 
 -- 画面分の消去
 obj.setoption("blend", "alpha_sub")
-obj.load("figure", "四角形", color, 100)
-obj.effect(
-  "リサイズ",
-  "X",
-  layout.width - layout.screen_radius * 2,
-  "Y",
-  layout.height,
-  "ピクセル数でサイズ指定",
-  1
-)
-obj.draw(0, 0)
-obj.effect(
-  "リサイズ",
-  "X",
-  layout.width,
-  "Y",
-  layout.height - layout.screen_radius * 2,
-  "ピクセル数でサイズ指定",
-  1
-)
-obj.draw(0, 0)
+obj.load("figure", "四角形", 0xffffff, 2)
+obj.drawpoly({
+  {
+    -layout.width / 2 + layout.screen_radius,
+    -layout.height / 2,
+    0.0,
+    layout.width / 2 - layout.screen_radius,
+    -layout.height / 2,
+    0.0,
+    layout.width / 2 - layout.screen_radius,
+    layout.height / 2,
+    0.0,
+    -layout.width / 2 + layout.screen_radius,
+    layout.height / 2,
+    0.0,
+    -1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    1.0,
+    1.0,
+    -1.0,
+    1.0,
+  },
+  {
+    -layout.width / 2,
+    -layout.height / 2 + layout.screen_radius,
+    0.0,
+    layout.width / 2,
+    -layout.height / 2 + layout.screen_radius,
+    0.0,
+    layout.width / 2,
+    layout.height / 2 - layout.screen_radius,
+    0.0,
+    -layout.width / 2,
+    layout.height / 2 - layout.screen_radius,
+    0.0,
+    -1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    1.0,
+    1.0,
+    -1.0,
+    1.0,
+  },
+})
 obj.load("figure", "円", color, layout.screen_radius * 2)
 obj.draw(-layout.width / 2 + layout.screen_radius, -layout.height / 2 + layout.screen_radius)
 obj.draw(layout.width / 2 - layout.screen_radius, -layout.height / 2 + layout.screen_radius)
@@ -391,29 +417,58 @@ obj.draw(layout.width / 2 - layout.screen_radius, layout.height / 2 - layout.scr
 
 obj.setoption("blend", "none")
 
+local polygons = {}
+
 for _, rect in ipairs(rects) do
   if rect.radius > 0 then
-    obj.load("figure", "四角形", color, 100)
-    obj.effect(
-      "リサイズ",
-      "X",
-      rect.width - rect.radius * 2,
-      "Y",
-      rect.height,
-      "ピクセル数でサイズ指定",
-      1
-    )
-    obj.draw(rect.x + rect.width / 2 - layout.width / 2, rect.y + rect.height / 2 - layout.height / 2)
-    obj.effect(
-      "リサイズ",
-      "X",
-      rect.width,
-      "Y",
-      rect.height - rect.radius * 2,
-      "ピクセル数でサイズ指定",
-      1
-    )
-    obj.draw(rect.x + rect.width / 2 - layout.width / 2, rect.y + rect.height / 2 - layout.height / 2)
+    if rect.width - rect.radius * 2 > 0 then
+      table.insert(polygons, {
+        -layout.width / 2 + rect.x + rect.radius,
+        -layout.height / 2 + rect.y,
+        0.0,
+        -layout.width / 2 + rect.x + rect.width - rect.radius,
+        -layout.height / 2 + rect.y,
+        0.0,
+        -layout.width / 2 + rect.x + rect.width - rect.radius,
+        -layout.height / 2 + rect.y + rect.height,
+        0.0,
+        -layout.width / 2 + rect.x + rect.radius,
+        -layout.height / 2 + rect.y + rect.height,
+        0.0,
+        -1.0,
+        -1.0,
+        1.0,
+        -1.0,
+        1.0,
+        1.0,
+        -1.0,
+        1.0,
+      })
+    end
+    if rect.height - rect.radius * 2 > 0 then
+      table.insert(polygons, {
+        -layout.width / 2 + rect.x,
+        -layout.height / 2 + rect.y + rect.radius,
+        0.0,
+        -layout.width / 2 + rect.x + rect.width,
+        -layout.height / 2 + rect.y + rect.radius,
+        0.0,
+        -layout.width / 2 + rect.x + rect.width,
+        -layout.height / 2 + rect.y + rect.height - rect.radius,
+        0.0,
+        -layout.width / 2 + rect.x,
+        -layout.height / 2 + rect.y + rect.height - rect.radius,
+        0.0,
+        -1.0,
+        -1.0,
+        1.0,
+        -1.0,
+        1.0,
+        1.0,
+        -1.0,
+        1.0,
+      })
+    end
     obj.load("figure", "円", color, rect.radius * 2)
     obj.draw(rect.x + rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2)
     obj.draw(rect.x + rect.width - rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2)
@@ -423,11 +478,32 @@ for _, rect in ipairs(rects) do
       rect.y + rect.height - rect.radius - layout.height / 2
     )
   else
-    obj.load("figure", "四角形", color, 100)
-    obj.effect("リサイズ", "X", rect.width, "Y", rect.height, "ピクセル数でサイズ指定", 1)
-    obj.draw(rect.x + rect.width / 2 - layout.width / 2, rect.y + rect.height / 2 - layout.height / 2)
+    table.insert(polygons, {
+      -layout.width / 2 + rect.x,
+      -layout.height / 2 + rect.y,
+      0.0,
+      -layout.width / 2 + rect.x + rect.width,
+      -layout.height / 2 + rect.y,
+      0.0,
+      -layout.width / 2 + rect.x + rect.width,
+      -layout.height / 2 + rect.y + rect.height,
+      0.0,
+      -layout.width / 2 + rect.x,
+      -layout.height / 2 + rect.y + rect.height,
+      0.0,
+      -1.0,
+      -1.0,
+      1.0,
+      -1.0,
+      1.0,
+      1.0,
+      -1.0,
+      1.0,
+    })
   end
 end
+obj.load("figure", "四角形", color, 2)
+obj.drawpoly(polygons)
 
 obj.setoption("drawtarget", "framebuffer")
 obj.load("tempbuffer")

@@ -7,6 +7,11 @@
 --
 -- ニコニコショートのUIで隠れる部分を表示するためのスクリプト。
 --
+-- ┌ ℹ️ Note
+-- │ デフォルトでは出力時に非表示になります。\
+-- │ 出力時にも表示したい場合は、「出力時にも表示」を有効にしてください。
+-- └──────
+--
 -- [ PI ]
 --   - `device`：デバイス
 --     - `1`：iPhone 16（iOS 26）
@@ -21,6 +26,9 @@
 --
 -- --< 更新履歴 >----------------------------------------------------------------------------------------------------------
 --
+-- [ v1.2（2026/4/20） ]
+--   - パフォーマンスを大幅に改善
+--
 -- [ v1.1（2026/4/20） ]
 --   - レイアウトを修正
 --
@@ -31,7 +39,7 @@
 
 
 --select@device:デバイス=1,iPhone 16（iOS 26）=1,iPad mini（iPadOS 26）=2
---color@color:色,0xffffff
+--color@color:色,0xff0000
 --check@show_forward:ピン留め動画,true
 --check@show_tags:タグ,true
 --track@author_name_width:投稿者名の幅,64,640,160,1
@@ -365,27 +373,53 @@ obj.clearbuffer("tempbuffer", color)
 
 -- 画面分の消去
 obj.setoption("blend", "alpha_sub")
-obj.load("figure", "四角形", color, 100)
-obj.effect(
-  "リサイズ",
-  "X",
-  layout.width - layout.screen_radius * 2,
-  "Y",
-  layout.height,
-  "ピクセル数でサイズ指定",
-  1
-)
-obj.draw(0, 0)
-obj.effect(
-  "リサイズ",
-  "X",
-  layout.width,
-  "Y",
-  layout.height - layout.screen_radius * 2,
-  "ピクセル数でサイズ指定",
-  1
-)
-obj.draw(0, 0)
+obj.load("figure", "四角形", 0xffffff, 2)
+obj.drawpoly({
+  {
+    -layout.width / 2 + layout.screen_radius,
+    -layout.height / 2,
+    0.0,
+    layout.width / 2 - layout.screen_radius,
+    -layout.height / 2,
+    0.0,
+    layout.width / 2 - layout.screen_radius,
+    layout.height / 2,
+    0.0,
+    -layout.width / 2 + layout.screen_radius,
+    layout.height / 2,
+    0.0,
+    -1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    1.0,
+    1.0,
+    -1.0,
+    1.0,
+  },
+  {
+    -layout.width / 2,
+    -layout.height / 2 + layout.screen_radius,
+    0.0,
+    layout.width / 2,
+    -layout.height / 2 + layout.screen_radius,
+    0.0,
+    layout.width / 2,
+    layout.height / 2 - layout.screen_radius,
+    0.0,
+    -layout.width / 2,
+    layout.height / 2 - layout.screen_radius,
+    0.0,
+    -1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    1.0,
+    1.0,
+    -1.0,
+    1.0,
+  },
+})
 obj.load("figure", "円", color, layout.screen_radius * 2)
 obj.draw(-layout.width / 2 + layout.screen_radius, -layout.height / 2 + layout.screen_radius)
 obj.draw(layout.width / 2 - layout.screen_radius, -layout.height / 2 + layout.screen_radius)
@@ -394,29 +428,58 @@ obj.draw(layout.width / 2 - layout.screen_radius, layout.height / 2 - layout.scr
 
 obj.setoption("blend", "none")
 
+local polygons = {}
+
 for _, rect in ipairs(rects) do
   if rect.radius > 0 then
-    obj.load("figure", "四角形", color, 100)
-    obj.effect(
-      "リサイズ",
-      "X",
-      rect.width - rect.radius * 2,
-      "Y",
-      rect.height,
-      "ピクセル数でサイズ指定",
-      1
-    )
-    obj.draw(rect.x + rect.width / 2 - layout.width / 2, rect.y + rect.height / 2 - layout.height / 2)
-    obj.effect(
-      "リサイズ",
-      "X",
-      rect.width,
-      "Y",
-      rect.height - rect.radius * 2,
-      "ピクセル数でサイズ指定",
-      1
-    )
-    obj.draw(rect.x + rect.width / 2 - layout.width / 2, rect.y + rect.height / 2 - layout.height / 2)
+    if rect.width - rect.radius * 2 > 0 then
+      table.insert(polygons, {
+        -layout.width / 2 + rect.x + rect.radius,
+        -layout.height / 2 + rect.y,
+        0.0,
+        -layout.width / 2 + rect.x + rect.width - rect.radius,
+        -layout.height / 2 + rect.y,
+        0.0,
+        -layout.width / 2 + rect.x + rect.width - rect.radius,
+        -layout.height / 2 + rect.y + rect.height,
+        0.0,
+        -layout.width / 2 + rect.x + rect.radius,
+        -layout.height / 2 + rect.y + rect.height,
+        0.0,
+        -1.0,
+        -1.0,
+        1.0,
+        -1.0,
+        1.0,
+        1.0,
+        -1.0,
+        1.0,
+      })
+    end
+    if rect.height - rect.radius * 2 > 0 then
+      table.insert(polygons, {
+        -layout.width / 2 + rect.x,
+        -layout.height / 2 + rect.y + rect.radius,
+        0.0,
+        -layout.width / 2 + rect.x + rect.width,
+        -layout.height / 2 + rect.y + rect.radius,
+        0.0,
+        -layout.width / 2 + rect.x + rect.width,
+        -layout.height / 2 + rect.y + rect.height - rect.radius,
+        0.0,
+        -layout.width / 2 + rect.x,
+        -layout.height / 2 + rect.y + rect.height - rect.radius,
+        0.0,
+        -1.0,
+        -1.0,
+        1.0,
+        -1.0,
+        1.0,
+        1.0,
+        -1.0,
+        1.0,
+      })
+    end
     obj.load("figure", "円", color, rect.radius * 2)
     obj.draw(rect.x + rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2)
     obj.draw(rect.x + rect.width - rect.radius - layout.width / 2, rect.y + rect.radius - layout.height / 2)
@@ -426,11 +489,32 @@ for _, rect in ipairs(rects) do
       rect.y + rect.height - rect.radius - layout.height / 2
     )
   else
-    obj.load("figure", "四角形", color, 100)
-    obj.effect("リサイズ", "X", rect.width, "Y", rect.height, "ピクセル数でサイズ指定", 1)
-    obj.draw(rect.x + rect.width / 2 - layout.width / 2, rect.y + rect.height / 2 - layout.height / 2)
+    table.insert(polygons, {
+      -layout.width / 2 + rect.x,
+      -layout.height / 2 + rect.y,
+      0.0,
+      -layout.width / 2 + rect.x + rect.width,
+      -layout.height / 2 + rect.y,
+      0.0,
+      -layout.width / 2 + rect.x + rect.width,
+      -layout.height / 2 + rect.y + rect.height,
+      0.0,
+      -layout.width / 2 + rect.x,
+      -layout.height / 2 + rect.y + rect.height,
+      0.0,
+      -1.0,
+      -1.0,
+      1.0,
+      -1.0,
+      1.0,
+      1.0,
+      -1.0,
+      1.0,
+    })
   end
 end
+obj.load("figure", "四角形", color, 2)
+obj.drawpoly(polygons)
 
 obj.setoption("drawtarget", "framebuffer")
 obj.load("tempbuffer")
