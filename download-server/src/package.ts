@@ -45,7 +45,7 @@ export async function packageScript(
 ): Promise<Uint8Array<ArrayBuffer>> {
   const zip = new JSZip();
   zip.file(`Script/${scriptName}`, scriptContent);
-  zip.file("package.txt", readmeContent);
+  zip.file("package.txt", readmeContent.replaceAll("\n", "\r\n"));
   const basename = scriptName.split(".")[0];
   zip.file(
     "package.ini",
@@ -53,5 +53,7 @@ export async function packageScript(
       basename,
     )}/README.md\n`,
   );
-  return await zip.generateAsync({ type: "uint8array" }) as Uint8Array<ArrayBuffer>;
+  return (await zip.generateAsync({
+    type: "uint8array",
+  })) as Uint8Array<ArrayBuffer>;
 }
