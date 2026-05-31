@@ -22,3 +22,6 @@ scripts:
   - name: 目標指定拡大縮小.anm2
     sources:
       - path: scripts/目標指定拡大縮小/main.lua
+  - name: CRTディスプレイ.anm2
+    sources:
+      - path: scripts/CRTディスプレイ/main.lua
