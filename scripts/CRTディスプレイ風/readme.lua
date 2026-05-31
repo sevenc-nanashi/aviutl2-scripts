@@ -1,8 +1,8 @@
 -- ========================================================================================================================
--- 最新版をダウンロード：https://aviutl2-scripts-download.sevenc7c.workers.dev/CRT%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4.anm2
--- 説明書をブラウザで読む：https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/CRT%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4/README.md
+-- 最新版をダウンロード：https://aviutl2-scripts-download.sevenc7c.workers.dev/CRT%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4%E9%A2%A8.anm2
+-- 説明書をブラウザで読む：https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/CRT%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4%E9%A2%A8/README.md
 --
--- CRTディスプレイ風。
+-- CRTディスプレイ風のエフェクト。
 --
 -- [ 謝辞 ]
 --   このスクリプトは[CRTディスプレイの再現 - ideoaves](https://ideoaves.github.io/blog/2025-12-10.html)を参考にして作成されました。
