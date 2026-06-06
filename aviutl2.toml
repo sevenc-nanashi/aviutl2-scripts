@@ -38,6 +38,11 @@ build.group = "aulua"
 source = "scripts/CRTディスプレイ風.anm2"
 destination = "Script/CRTディスプレイ風.anm2"
 
+[artifacts.gpu_pixelsort-anm2]
+build.group = "aulua"
+source = "scripts/GPUピクセルソート.anm2"
+destination = "Script/GPUピクセルソート.anm2"
+
 [artifacts.pixel_transform-demo-anm2]
 build.group = "aulua"
 source = "demo/@ドット絵変形.anm2"
@@ -62,3 +67,8 @@ destination = "Script/@縦動画ガイド.obj2"
 build = { group = "demo" }
 source = "demo/@CRTディスプレイ風.anm2"
 destination = "Script/@CRTディスプレイ風.anm2"
+
+[artifacts.gpu_pixelsort-demo-anm2]
+build = { group = "demo" }
+source = "demo/@GPUピクセルソート.anm2"
+destination = "Script/@GPUピクセルソート.anm2"

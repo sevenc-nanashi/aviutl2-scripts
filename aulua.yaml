@@ -25,3 +25,6 @@ scripts:
   - name: CRTディスプレイ風.anm2
     sources:
       - path: scripts/CRTディスプレイ風/main.lua
+  - name: GPUピクセルソート.anm2
+    sources:
+      - path: scripts/GPUピクセルソート/main.lua

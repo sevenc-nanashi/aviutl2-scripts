@@ -1,0 +1,22 @@
+# GPUピクセルソート.anm2
+
+GPUを使用してピクセルソートを行うスクリプト。
+
+> [!WARNING]
+> ソート方向のサイズが2048ピクセル未満である必要があります。
+
+## PI
+
+- `direction`：方向（0=横方向、1=縦方向、2=横方向（反転）、3=縦方向（反転））
+- `threshold_min`：しきい値の最小値
+- `threshold_max`：しきい値の最大値
+- `visualize_sort_range`：ソート範囲を可視化するか
+- `visualize_color`：ソート範囲可視化の色（`0xRRGGBB`）
+- `visualize_fill_opacity`：ソート範囲可視化の塗りの不透明度
+- `visualize_source_opacity`：ソート範囲可視化時の元画像の不透明度
+
+# 更新履歴
+
+## v1.0（2026/6/7）
+
+- 初版リリース
