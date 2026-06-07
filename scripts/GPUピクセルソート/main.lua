@@ -53,30 +53,30 @@ local threshold_max = 1
 local visualize_sort_range = false
 ---$color:ソート範囲可視化::色
 local visualize_color = 0xff00ff
----$track:ソート範囲可視化::塗りの不透明度
+--separator:不透明度
+---$track:ソート範囲可視化::塗り
 ---min=0
 ---max=1
 ---step=0.01
 local visualize_fill_opacity = 0.5
----$track:ソート範囲可視化::元画像の不透明度
+---$track:ソート範囲可視化::元画像
 ---min=0
 ---max=1
 ---step=0.01
 local visualize_source_opacity = 0.5
+--group:その他
 
 ---$value:PI
 local PI = {}
 
---[[computeshader@bitonic_pixelsort_meta:
+--[[computeshader@bitonic_pixelsort_2048:
+#define ENTRYPOINT bitonic_pixelsort_2048
 ---$include "./shader.hlsl"
 ]]
-
---[[computeshader@bitonic_pixelsort_sort:
+--[[computeshader@bitonic_pixelsort_4096:
+#define BPS_SIZE_4096
+#define ENTRYPOINT bitonic_pixelsort_4096
 ---$include "./shader.hlsl"
-]]
-
---[[pixelshader@bitonic_pixelsort_visualize_sort_range:
----$include "./visualizer.hlsl"
 ]]
 
 if type(PI.direction) == "number" then
@@ -107,15 +107,6 @@ if type(PI.visualize_source_opacity) == "number" then
   visualize_source_opacity = PI.visualize_source_opacity
 end
 
-local function log2(x)
-  local n = 0
-  while x > 1 do
-    x = x / 2
-    n = n + 1
-  end
-  return n
-end
-
 local size, lines
 if direction == 0 or direction == 2 then
   size = obj.w
@@ -125,29 +116,14 @@ else
   lines = obj.w
 end
 
-if size >= 2048 then
-  error("too large! size=" .. size .. " must be less than 2048.")
-end
-
-local meta_width, meta_height
-if direction == 0 or direction == 2 then
-  meta_width = math.ceil(obj.w / 2)
-  meta_height = obj.h
-else
-  meta_width = obj.w
-  meta_height = math.ceil(obj.h / 2)
+if size > 4096 then
+  error("too large! size=" .. size .. " must be 4096 or smaller.")
 end
 
 local prefix = "cache:bitonic_pixelsort__"
 
-obj.clearbuffer(prefix .. "meta", meta_width, meta_height)
 obj.clearbuffer(prefix .. "sorted", obj.w, obj.h)
 
--- NOTE: GetKernelThreadGroupSizes相当がないのでハードコード
-local meta_group_x, meta_group_y, meta_group_z = 16, 1, 1
-local meta_group_size = meta_group_x * meta_group_y * meta_group_z
-local meta_dispatch_count = math.ceil(lines * 2 / meta_group_size)
-local max_levels = math.ceil(log2(size))
 local visualize_r_uint, visualize_g_uint, visualize_b_uint = RGB(visualize_color)
 local visualize_r = visualize_r_uint / 255
 local visualize_g = visualize_g_uint / 255
@@ -155,14 +131,7 @@ local visualize_b = visualize_b_uint / 255
 local common_params = {
   threshold_min,
   threshold_max,
-  max_levels,
-  math.floor(direction / 2),
-  (direction + 1) % 2,
-}
-local visualize_params = {
-  threshold_min,
-  threshold_max,
-  max_levels,
+  visualize_sort_range and 1 or 0,
   math.floor(direction / 2),
   (direction + 1) % 2,
   visualize_r,
@@ -171,30 +140,6 @@ local visualize_params = {
   visualize_fill_opacity,
   visualize_source_opacity,
 }
-obj.computeshader(
-  "bitonic_pixelsort_meta",
-  { prefix .. "meta", prefix .. "sorted" },
-  "object",
-  common_params,
-  meta_dispatch_count,
-  1,
-  1
-)
-obj.computeshader(
-  "bitonic_pixelsort_sort",
-  { prefix .. "meta", prefix .. "sorted" },
-  "object",
-  common_params,
-  lines,
-  1,
-  1
-)
-if visualize_sort_range then
-  obj.pixelshader(
-    "bitonic_pixelsort_visualize_sort_range",
-    prefix .. "sorted",
-    { prefix .. "sorted", prefix .. "meta" },
-    visualize_params
-  )
-end
+local shader_name = size <= 2048 and "bitonic_pixelsort_2048" or "bitonic_pixelsort_4096"
+obj.computeshader(shader_name, { prefix .. "sorted" }, "object", common_params, lines, 1, 1)
 obj.copybuffer("object", prefix .. "sorted")
