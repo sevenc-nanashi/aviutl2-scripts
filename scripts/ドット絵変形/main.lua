@@ -3,9 +3,8 @@
 
 ---$include "./readme.lua"
 
--- このスクリプトはcleanEdgeをベースに作成しました。
--- cleanEdgeの作者であるtorcado様に感謝いたします。（Great Appreciation to torcado, the author of cleanEdge.）
--- 以下はcleanEdgeのライセンス情報です。
+-- This script is based on cleanEdge.
+-- Great Appreciation to torcado, the author of cleanEdge.
 -- ------------------------------------------------------------------------------------------------------------------------
 -- Copyright (c) 2022 torcado
 -- Permission is hereby granted, free of charge, to any person
@@ -42,6 +41,12 @@ local center_x = 0
 local center_y = 0
 
 --group:拡大縮小,true
+
+---$track:拡大率
+---min=1
+---max=10000
+---step=0.001
+local scale = 100
 
 ---$track:X拡大率
 ---min=1
@@ -140,6 +145,9 @@ if type(PI.center_x) == "number" then
 end
 if type(PI.center_y) == "number" then
   center_y = PI.center_y
+end
+if type(PI.scale) == "number" then
+  scale = PI.scale * 100
 end
 if type(PI.scale_x) == "number" then
   scale_x = PI.scale_x * 100
@@ -245,8 +253,8 @@ local function rotate_point(x, y, angle_rad)
   return rx, ry
 end
 
-local rscale_x = scale_x / 100
-local rscale_y = scale_y / 100
+local rscale_x = scale_x / 100 * (scale / 100)
+local rscale_y = scale_y / 100 * (scale / 100)
 
 local vanilla_cx = obj.w / 2
 local vanilla_cy = obj.h / 2
