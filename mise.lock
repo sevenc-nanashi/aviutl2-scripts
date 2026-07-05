@@ -6,38 +6,38 @@ backend = "github:endevco/aube"
 
 [tools.aube."platforms.linux-arm64"]
 checksum = "sha256:e9b6477afde82d1142d9c784e18533460fb4f3ff0173357b44183ce98c1decd4"
-url = "https://github.com/endevco/aube/releases/download/v1.17.1/aube-v1.17.1-aarch64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/endevco/aube/releases/assets/434710709"
+url = "https://github.com/jdx/aube/releases/download/v1.17.1/aube-v1.17.1-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/aube/releases/assets/434710709"
 provenance = "github-attestations"
 
 [tools.aube."platforms.linux-arm64-musl"]
 checksum = "sha256:2bbfaecc09a45ef2e8a60c160494376c6285a9ed3fecfdf98dc057cad2ee6636"
-url = "https://github.com/endevco/aube/releases/download/v1.17.1/aube-v1.17.1-aarch64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/endevco/aube/releases/assets/434649307"
+url = "https://github.com/jdx/aube/releases/download/v1.17.1/aube-v1.17.1-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/aube/releases/assets/434649307"
 provenance = "github-attestations"
 
 [tools.aube."platforms.linux-x64"]
 checksum = "sha256:61fa92055042de2b315a5d8bc7992d1a4b9ab3b6361420e30f30d62e49d1ccf1"
-url = "https://github.com/endevco/aube/releases/download/v1.17.1/aube-v1.17.1-x86_64-unknown-linux-gnu.tar.gz"
-url_api = "https://api.github.com/repos/endevco/aube/releases/assets/434657319"
+url = "https://github.com/jdx/aube/releases/download/v1.17.1/aube-v1.17.1-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/jdx/aube/releases/assets/434657319"
 provenance = "github-attestations"
 
 [tools.aube."platforms.linux-x64-musl"]
 checksum = "sha256:ab5b51813ca6f5e24a4ec571c7404cf94f5767d94d32ac058bd2e2d3e4ed0896"
-url = "https://github.com/endevco/aube/releases/download/v1.17.1/aube-v1.17.1-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/endevco/aube/releases/assets/434660501"
+url = "https://github.com/jdx/aube/releases/download/v1.17.1/aube-v1.17.1-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/jdx/aube/releases/assets/434660501"
 provenance = "github-attestations"
 
 [tools.aube."platforms.macos-arm64"]
 checksum = "sha256:ef3f429bd94f99afbfd4d49631e10260848b7ffc18cc908199b2eea651fa55cf"
-url = "https://github.com/endevco/aube/releases/download/v1.17.1/aube-v1.17.1-aarch64-apple-darwin.tar.gz"
-url_api = "https://api.github.com/repos/endevco/aube/releases/assets/434693494"
+url = "https://github.com/jdx/aube/releases/download/v1.17.1/aube-v1.17.1-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/jdx/aube/releases/assets/434693494"
 provenance = "github-attestations"
 
 [tools.aube."platforms.windows-x64"]
 checksum = "sha256:dca4a1ea053f8c775d03be267e3a000cffbe958f01ee942a788c17a3d086015a"
-url = "https://github.com/endevco/aube/releases/download/v1.17.1/aube-v1.17.1-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/endevco/aube/releases/assets/434660591"
+url = "https://github.com/jdx/aube/releases/download/v1.17.1/aube-v1.17.1-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/jdx/aube/releases/assets/434660591"
 provenance = "github-attestations"
 
 [[tools.clang]]
@@ -65,45 +65,6 @@ url = "https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-a
 [tools.clang."platforms.windows-x64"]
 url = "https://github.com/prefix-dev/pixi/releases/latest/download/pixi-x86_64-pc-windows-msvc.zip"
 
-[[tools."github:antaalt/shader-sense"]]
-version = "1.3.1"
-backend = "github:antaalt/shader-sense"
-
-[tools."github:antaalt/shader-sense"."platforms.linux-arm64"]
-checksum = "sha256:1a523310b1c817b80f86901077d9c4dfde81a72a0698c09f0dad26e578fea7fa"
-url = "https://github.com/antaalt/shader-sense/releases/download/v1.3.1/shader-language-server-wasm32-wasip1-threads.zip"
-url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/394264212"
-
-[tools."github:antaalt/shader-sense"."platforms.linux-arm64-musl"]
-checksum = "sha256:1a523310b1c817b80f86901077d9c4dfde81a72a0698c09f0dad26e578fea7fa"
-url = "https://github.com/antaalt/shader-sense/releases/download/v1.3.1/shader-language-server-wasm32-wasip1-threads.zip"
-url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/394264212"
-
-[tools."github:antaalt/shader-sense"."platforms.linux-x64"]
-checksum = "sha256:61710df7ca17a2d063b598936c57c56c49fbf837707a1aa886f9b0193a35be3c"
-url = "https://github.com/antaalt/shader-sense/releases/download/v1.3.1/shader-language-server-x86_64-unknown-linux-gnu.zip"
-url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/394264302"
-
-[tools."github:antaalt/shader-sense"."platforms.linux-x64-musl"]
-checksum = "sha256:61710df7ca17a2d063b598936c57c56c49fbf837707a1aa886f9b0193a35be3c"
-url = "https://github.com/antaalt/shader-sense/releases/download/v1.3.1/shader-language-server-x86_64-unknown-linux-gnu.zip"
-url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/394264302"
-
-[tools."github:antaalt/shader-sense"."platforms.macos-arm64"]
-checksum = "sha256:1a523310b1c817b80f86901077d9c4dfde81a72a0698c09f0dad26e578fea7fa"
-url = "https://github.com/antaalt/shader-sense/releases/download/v1.3.1/shader-language-server-wasm32-wasip1-threads.zip"
-url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/394264212"
-
-[tools."github:antaalt/shader-sense"."platforms.macos-x64"]
-checksum = "sha256:1a523310b1c817b80f86901077d9c4dfde81a72a0698c09f0dad26e578fea7fa"
-url = "https://github.com/antaalt/shader-sense/releases/download/v1.3.1/shader-language-server-wasm32-wasip1-threads.zip"
-url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/394264212"
-
-[tools."github:antaalt/shader-sense"."platforms.windows-x64"]
-checksum = "sha256:49081c5547ddde1b8b3b17295282a80ddacbca1d6f5dcd834e2788c02bafa997"
-url = "https://github.com/antaalt/shader-sense/releases/download/v1.3.1/shader-language-server-x86_64-pc-windows-msvc.zip"
-url_api = "https://api.github.com/repos/antaalt/shader-sense/releases/assets/394264338"
-
 [[tools."github:karoterra/aviutl2-aulua"]]
 version = "0.8.0"
 backend = "github:karoterra/aviutl2-aulua"
@@ -122,45 +83,6 @@ url_api = "https://api.github.com/repos/karoterra/aviutl2-aulua/releases/assets/
 checksum = "sha256:04c6305a3e7d3757b2c1315d6cdc08eff818d3374291960d4416fa692cad7021"
 url = "https://github.com/karoterra/aviutl2-aulua/releases/download/v0.8.0/aulua-v0.8.0-windows-x64.zip"
 url_api = "https://api.github.com/repos/karoterra/aviutl2-aulua/releases/assets/399796714"
-
-[[tools."github:nolanderc/glsl_analyzer"]]
-version = "1.7.1"
-backend = "github:nolanderc/glsl_analyzer"
-
-[tools."github:nolanderc/glsl_analyzer"."platforms.linux-arm64"]
-checksum = "sha256:dda05d727979c34333b86562bb706122ab95d17cd7298665e8afbaba79f76ea6"
-url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/aarch64-linux-musl.zip"
-url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401549"
-
-[tools."github:nolanderc/glsl_analyzer"."platforms.linux-arm64-musl"]
-checksum = "sha256:dda05d727979c34333b86562bb706122ab95d17cd7298665e8afbaba79f76ea6"
-url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/aarch64-linux-musl.zip"
-url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401549"
-
-[tools."github:nolanderc/glsl_analyzer"."platforms.linux-x64"]
-checksum = "sha256:7c929b304e0d34abf4305d07895c409861f054613c3ae4070baa7ca15c916e7a"
-url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/x86_64-linux-musl.zip"
-url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401550"
-
-[tools."github:nolanderc/glsl_analyzer"."platforms.linux-x64-musl"]
-checksum = "sha256:7c929b304e0d34abf4305d07895c409861f054613c3ae4070baa7ca15c916e7a"
-url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/x86_64-linux-musl.zip"
-url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401550"
-
-[tools."github:nolanderc/glsl_analyzer"."platforms.macos-arm64"]
-checksum = "sha256:7f78d98e762b241f7a39dde0fed81c9e4c58766cba5a8abcf20ce03790ee1678"
-url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/aarch64-macos.zip"
-url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401547"
-
-[tools."github:nolanderc/glsl_analyzer"."platforms.macos-x64"]
-checksum = "sha256:8025e8c765b3bd6ab1e08bf7fd096437827397d618c43de2d4e377cc3b1f16fe"
-url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/x86_64-macos.zip"
-url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401548"
-
-[tools."github:nolanderc/glsl_analyzer"."platforms.windows-x64"]
-checksum = "sha256:117604ba20860abf0808fc5551a6e06d305066c1f4296d81a51f175a2cf2a38c"
-url = "https://github.com/nolanderc/glsl_analyzer/releases/download/v1.7.1/x86_64-windows.zip"
-url_api = "https://api.github.com/repos/nolanderc/glsl_analyzer/releases/assets/307401551"
 
 [[tools."github:rvben/rumdl"]]
 version = "0.1.76"
@@ -237,13 +159,37 @@ checksum = "sha256:a5ed78a19ebabb271864e6cd12b8294e5eb2c39ea7bd4cf2866f39687e9ba
 url = "https://github.com/sevenc-nanashi/aviutl2-cli/releases/download/0.8.2/au2-v0.8.2-windows.exe"
 url_api = "https://api.github.com/repos/sevenc-nanashi/aviutl2-cli/releases/assets/391520740"
 
+[[tools.hk]]
+version = "1.46.0"
+backend = "aqua:jdx/hk"
+
+[tools.hk."platforms.linux-arm64"]
+checksum = "sha256:bad1b4e52cce2147646d943baa06a7bdb3d182ae0876853897a72225626411ae"
+url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-aarch64-unknown-linux-gnu.tar.gz"
+
+[tools.hk."platforms.linux-arm64-musl"]
+checksum = "sha256:ad11b69485096ec5b1822f5bad298d2a44664b85d10d0308c812473b17b1321a"
+url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-aarch64-unknown-linux-musl.tar.gz"
+
+[tools.hk."platforms.linux-x64"]
+checksum = "sha256:85b2cc167443cd27b49e323ef9b9d1a946d4bc18196eccb66112842d30fb90cb"
+url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-x86_64-unknown-linux-gnu.tar.gz"
+
+[tools.hk."platforms.linux-x64-musl"]
+checksum = "sha256:4ff45e1bfc9672b1b00572b4a50fac3b57e4add622ed56e9e2587745299932eb"
+url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-x86_64-unknown-linux-musl.tar.gz"
+
+[tools.hk."platforms.macos-arm64"]
+checksum = "sha256:9db3fac25754cfb929dc3f92b294fffdb966d4e838b8e0adeaf5b9b7eccc4f6c"
+url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-aarch64-apple-darwin.tar.gz"
+
+[tools.hk."platforms.windows-x64"]
+checksum = "sha256:5af7e769acb7f70d8630ed53ae1fb2cc4b205117f29df5d83619fa0ff72a3bf1"
+url = "https://github.com/jdx/hk/releases/download/v1.46.0/hk-x86_64-pc-windows-msvc.zip"
+
 [[tools."npm:chokidar-cli"]]
 version = "3.0.0"
 backend = "npm:chokidar-cli"
-
-[[tools."npm:lefthook"]]
-version = "2.1.6"
-backend = "npm:lefthook"
 
 [[tools.ruby]]
 version = "4.0.2"
@@ -291,8 +237,8 @@ checksum = "sha256:ce8363cf77fb88f31e5cd8fe4cd8a61ff63ac0483bc5e38a1e24c5a894f04
 url = "https://github.com/JohnnyMorganz/StyLua/releases/download/v2.4.1/stylua-linux-aarch64.zip"
 
 [tools.stylua."platforms.linux-arm64-musl"]
-checksum = "sha256:ce8363cf77fb88f31e5cd8fe4cd8a61ff63ac0483bc5e38a1e24c5a894f04035"
-url = "https://github.com/JohnnyMorganz/StyLua/releases/download/v2.4.1/stylua-linux-aarch64.zip"
+checksum = "sha256:f007809cb4d2b3c23abfecc061a276a19e4f74484239d1ed297be8eb6a11a86f"
+url = "https://github.com/JohnnyMorganz/StyLua/releases/download/v2.4.1/stylua-linux-aarch64-musl.zip"
 
 [tools.stylua."platforms.linux-x64"]
 checksum = "sha256:cb9280d967a3f83e443b354a6497b562de4acc1daccf4456df0f7232653d3843"
@@ -317,6 +263,24 @@ url = "https://github.com/JohnnyMorganz/StyLua/releases/download/v2.4.1/stylua-w
 [[tools.taplo]]
 version = "0.10.0"
 backend = "aqua:tamasfe/taplo"
+
+[tools.taplo."platforms.linux-arm64"]
+url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-aarch64.gz"
+
+[tools.taplo."platforms.linux-arm64-musl"]
+url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-aarch64.gz"
+
+[tools.taplo."platforms.linux-x64"]
+url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-x86_64.gz"
+
+[tools.taplo."platforms.linux-x64-musl"]
+url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-linux-x86_64.gz"
+
+[tools.taplo."platforms.macos-arm64"]
+url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-darwin-aarch64.gz"
+
+[tools.taplo."platforms.macos-x64"]
+url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-darwin-x86_64.gz"
 
 [tools.taplo."platforms.windows-x64"]
 url = "https://github.com/tamasfe/taplo/releases/download/0.10.0/taplo-windows-x86_64.zip"
