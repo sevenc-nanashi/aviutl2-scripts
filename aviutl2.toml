@@ -49,6 +49,11 @@ build.group = "aulua"
 source = "scripts/GPUピクセルソート.anm2"
 destination = "Script/GPUピクセルソート.anm2"
 
+[artifacts.hide_on_export-anm2]
+build.group = "aulua"
+source = "scripts/出力時に非表示.anm2"
+destination = "Script/出力時に非表示.anm2"
+
 [artifacts.pixel_transform-demo-anm2]
 build.group = "aulua"
 source = "demo/@ドット絵変形.anm2"
@@ -78,3 +83,8 @@ destination = "Script/@CRTディスプレイ風.anm2"
 build = { group = "demo" }
 source = "demo/@GPUピクセルソート.anm2"
 destination = "Script/@GPUピクセルソート.anm2"
+
+[artifacts.hide_on_export-demo-anm2]
+build.group = "aulua"
+source = "demo/@出力時に非表示.anm2"
+destination = "Script/@出力時に非表示.anm2"

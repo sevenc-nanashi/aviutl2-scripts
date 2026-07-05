@@ -301,16 +301,70 @@ task "new_script" do
     puts "Script name cannot be empty."
     exit 1
   end
-  script_dir = File.join("scripts", script_name)
+  unless script_name.match?(/\.[a-z]{3}2\z/)
+    puts "Script name must end with .xxx2"
+    exit 1
+  end
+  print "Enter script ID: "
+  script_id = STDIN.gets.chomp
+  unless script_id.match?(/\-[a-z]{3}2\z/)
+    puts "Script ID must end with -xxx2"
+    exit 1
+  end
+  demo_script_id = script_id.sub(/\-[a-z]{3}2\z/, "-demo\\0")
+  if script_name[-4..-2] != demo_script_id[-4..-2]
+    puts "Script name and script ID must have the same extension"
+    exit 1
+  end
+  script_dir_name = File.basename(script_name, ".*")
+  script_dir = File.join("scripts", script_dir_name)
   if Dir.exist?(script_dir)
     puts "Directory #{script_dir} already exists."
     exit 1
   end
   FileUtils.mkdir_p(script_dir)
   readme_path = File.join(script_dir, "README.md")
-  File.write(readme_path, "# #{script_name}\n\n## 更新履歴\n\n## 説明\n\n")
-  script_path = File.join(script_dir, "#{script_name}.lua")
-  File.write(script_path, "--label:#{script_name}\n\n-- 説明をここに書く\n")
+  File.write(readme_path, <<~MARKDOWN)
+    # #{script_name}
+
+    # 更新履歴
+
+    ## v1.0（#{Time.now.strftime("%Y/%m/%d").gsub("/0", "/")}）
+
+    - 初版リリース
+  MARKDOWN
+  script_path = File.join(script_dir, "main.lua")
+  File.write(script_path, <<~LUA)
+  --label:
+
+  ---$include "./readme.lua"
+  LUA
+
+  aviutl2_toml = File.read("aviutl2.toml")
+  before_demo = aviutl2_toml.index("[artifacts.pixel_transform-demo-anm2]")
+  aviutl2_toml.insert(before_demo, <<~TOML)
+    [artifacts.#{script_id}]
+    build.group = "aulua"
+    source = "scripts/#{script_name}"
+    destination = "Script/#{script_name}"
+    TOML
+  aviutl2_toml += <<~TOML
+
+    [artifacts.#{demo_script_id}]
+    build.group = "aulua"
+    source = "demo/@#{script_name}"
+    destination = "Script/@#{script_name}"
+  TOML
+  File.write("aviutl2.toml", aviutl2_toml)
+
+  aulua = File.read("aulua.yaml")
+  aulua += <<-YAML
+  - name: #{script_name}
+    sources:
+      - path: #{script_dir}/main.lua
+  YAML
+  File.write("aulua.yaml", aulua)
+
   puts "Created new script in #{script_dir}."
 end
 

@@ -28,3 +28,6 @@ scripts:
   - name: GPUピクセルソート.anm2
     sources:
       - path: scripts/GPUピクセルソート/main.lua
+  - name: 出力時に非表示.anm2
+    sources:
+      - path: scripts/出力時に非表示/main.lua
