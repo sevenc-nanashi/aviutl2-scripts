@@ -292,6 +292,28 @@ task "clang_format:dry" do
   sh "clang-format -i --dry-run --fail-on-incomplete-format -Werror -- #{clang_format_files.join(" ")}"
 end
 
+task "new_script" do
+  require "fileutils"
+  puts "Creating new script..."
+  print "Enter script name: "
+  script_name = STDIN.gets.chomp
+  if script_name.empty?
+    puts "Script name cannot be empty."
+    exit 1
+  end
+  script_dir = File.join("scripts", script_name)
+  if Dir.exist?(script_dir)
+    puts "Directory #{script_dir} already exists."
+    exit 1
+  end
+  FileUtils.mkdir_p(script_dir)
+  readme_path = File.join(script_dir, "README.md")
+  File.write(readme_path, "# #{script_name}\n\n## 更新履歴\n\n## 説明\n\n")
+  script_path = File.join(script_dir, "#{script_name}.lua")
+  File.write(script_path, "--label:#{script_name}\n\n-- 説明をここに書く\n")
+  puts "Created new script in #{script_dir}."
+end
+
 configure = ->(task) { task.source_files = FileList[%w[Rakefile]] }
 
 SyntaxTree::Rake::CheckTask.new(&configure)
