@@ -1,0 +1,12 @@
+[カメラフレーム]
+カメラフレーム=Camera Frame
+幅=Width
+高さ=Height
+線の長さ=Line Length
+線の太さ=Line Thickness
+線の色=Line Color
+サイズ指定=Size Mode
+余白指定=Margin
+絶対指定=Absolute
+デバッグモード=Debug Mode
+PI=PI

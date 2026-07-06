@@ -57,8 +57,7 @@ task :prepare_description do
   header_width = 120
   quote_header_width = nil
 
-  base = File.read("README.md")
-  replacement =
+  scripts =
     script_dirs.sort.map do |script_dir|
       readme_path = File.join(script_dir, "README.md")
       raise "Missing README.md in #{script_dir}" unless File.exist?(readme_path)
@@ -154,15 +153,51 @@ task :prepare_description do
         description_lines.map { |l| "-- #{l}".strip }.join("\n") + "\n"
       update_file(readme_lua_path, readme_lua_content)
 
-      "- #{title}（[au2pkg](#{url}?type=au2pkg)、[スクリプト本体](#{url}?type=script)、[説明書](#{readme_url})）：#{description}"
+      readme_en_path = File.join(script_dir, "README.en.md")
+      readme_en_content = File.read(readme_en_path)
+      en_title_line = readme_en_content.lines.first.sub(/\A#+\s*/, "").strip
+      en_description =
+        readme_en_content.lines[1..]
+          .find { |line| !line.strip.empty? }
+          &.strip || ""
+
+      # "- #{title}（[au2pkg](#{url}?type=au2pkg)、[スクリプト本体](#{url}?type=script)、[説明書](#{readme_url})）：#{description}"
+      {
+        title:,
+        title_en: en_title_line,
+        url:,
+        readme_url:,
+        description:,
+        description_en: en_description
+      }
     end
-  unless base.gsub!(
+
+  base_ja = File.read("README.md")
+  replacement_ja =
+    scripts.map do |script|
+      "- #{script[:title]}（[au2pkg](#{script[:url]}?type=au2pkg)、[スクリプト本体](#{script[:url]}?type=script)、[説明書](#{script[:readme_url]})）：#{script[:description]}"
+    end
+  unless base_ja.gsub!(
            /(?<=<!-- script-marker-start -->\n).*(?=\n<!-- script-marker-end -->)/m,
-           replacement.join("\n")
+           replacement_ja.join("\n")
          )
     raise "Failed to find script marker in README.md"
   end
-  update_file("README.md", base)
+  update_file("README.md", base_ja)
+
+  base_en = File.read("README.en.md")
+  replacement_en =
+    scripts.map do |script|
+      "- #{script[:title_en]} ([au2pkg](#{script[:url]}?type=au2pkg), [script](#{script[:url]}?type=script), [readme](#{script[:readme_url]})): #{script[:description_en]}"
+    end
+  unless base_en.gsub!(
+           /(?<=<!-- script-marker-start -->\n).*(?=\n<!-- script-marker-end -->)/m,
+           replacement_en.join("\n")
+         )
+    raise "Failed to find script marker in README.en.md"
+  end
+  update_file("README.en.md", base_en)
+
   puts "Done."
 end
 
@@ -316,6 +351,7 @@ task "new_script" do
     puts "Script name and script ID must have the same extension"
     exit 1
   end
+  i18n_english_id = script_id.sub(/\-[a-z]{3}2\z/, "\\0-i18n-en")
   script_dir_name = File.basename(script_name, ".*")
   script_dir = File.join("scripts", script_dir_name)
   if Dir.exist?(script_dir)
@@ -341,19 +377,21 @@ task "new_script" do
   LUA
 
   aviutl2_toml = File.read("aviutl2.toml")
-  before_demo = aviutl2_toml.index("[artifacts.pixel_transform-demo-anm2]")
-  aviutl2_toml.insert(before_demo, <<~TOML)
+  aviutl2_toml += <<~TOML
+
     [artifacts.#{script_id}]
     build.group = "aulua"
     source = "scripts/#{script_name}"
     destination = "Script/#{script_name}"
-    TOML
-  aviutl2_toml += <<~TOML
 
     [artifacts.#{demo_script_id}]
     build.group = "aulua"
     source = "demo/@#{script_name}"
     destination = "Script/@#{script_name}"
+
+    [artifacts.#{i18n_english_id}]
+    source = "#{script_dir}/i18n/English.#{script_id}.aul2"
+    destination = "Language/English.#{script_id}.aul2"
   TOML
   File.write("aviutl2.toml", aviutl2_toml)
 

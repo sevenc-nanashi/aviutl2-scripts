@@ -2,6 +2,8 @@
 
 [![sm45904404](https://niconi-commons-badge.sevenc7c.workers.dev/badge/sm45904404)](https://commons.nicovideo.jp/works/sm45904404)
 
+[English README](./README.en.md)
+
 雑多AviUtl2スクリプト集。
 
 ## スクリプト一覧
@@ -22,7 +24,7 @@
 
 ## PIについて
 
-[@sigma-axis氏](https://github.com/sigma-axis)のスクリプトと同様、スクリプトにはPI（Parameter Injection）を使用できます。\
+スクリプトにはPI（Parameter Injection）を使用できます。\
 各種パラメーターをLuaの数式で指定できます。\
 PIによって設定された値はトラックバーによる指定より優先されます。
 

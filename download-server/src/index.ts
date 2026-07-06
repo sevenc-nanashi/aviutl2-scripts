@@ -7,7 +7,12 @@ import {
   selectVersionEntry,
 } from "./resolve";
 import { fetchScriptContent } from "./utils";
-import { getPlainReadme, getScriptId, packageScript } from "./package";
+import {
+  getI18nFiles,
+  getPlainReadme,
+  getScriptId,
+  packageScript,
+} from "./package";
 
 const app = new Hono();
 
@@ -64,6 +69,7 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
       const entry = selectVersionEntry(entries, scriptName, versionSpecifier);
       const scriptContent = await fetchScriptContent(scriptName, entry);
       const plainReadme = await getPlainReadme(scriptName, entry.commit);
+      const i18nFiles = await getI18nFiles(scriptName, entry.commit);
       const escapedZipName = encodeURIComponent(
         `${scriptName.replace(".", `-v${entry.version}.`)}.au2pkg.zip`,
       );
@@ -72,6 +78,7 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
         scriptName,
         scriptContent,
         plainReadme,
+        i18nFiles,
       );
       return c.body(packaged, 200, {
         "Content-Disposition": `attachment; filename="${escapedZipName}"`,

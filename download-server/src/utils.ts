@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import * as v from "valibot";
 
 export const repository = "sevenc-nanashi/aviutl2-scripts";
 export const githubApiBaseUrl = "https://api.github.com/repos";
@@ -12,6 +13,17 @@ export const scriptCloudflareCacheTtlSec = 60 * 60 * 24 * 7;
 type GitHubCommit = {
   sha: string;
 };
+
+const GitTreeSchema = v.object({
+  tree: v.array(
+    v.object({
+      path: v.string(),
+      type: v.string(),
+    }),
+  ),
+});
+
+export type GitTreeEntry = v.InferOutput<typeof GitTreeSchema>["tree"][number];
 
 export type ChangelogHeader = {
   version: string;
@@ -74,6 +86,16 @@ export async function resolveCommitSha(commit: string): Promise<string> {
     cloudflareCacheTtlSec: versionLookupCloudflareCacheTtlSec,
   });
   return resolvedCommit.sha;
+}
+
+export async function fetchRepositoryTree(
+  commit: string,
+): Promise<GitTreeEntry[]> {
+  const url = `${githubApiBaseUrl}/${repository}/git/trees/${commit}?recursive=1`;
+  const tree = await fetchJson<unknown>(url, {
+    cloudflareCacheTtlSec: scriptCloudflareCacheTtlSec,
+  });
+  return v.parse(GitTreeSchema, tree).tree;
 }
 
 export async function fetchText(

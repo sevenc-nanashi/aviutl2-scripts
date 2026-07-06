@@ -1,0 +1,18 @@
+[GPUピクセルソート]
+GPUピクセルソート=GPU Pixel Sort
+方向=Direction
+横方向=Horizontal
+縦方向=Vertical
+横方向（反転）=Horizontal (Reversed)
+縦方向（反転）=Vertical (Reversed)
+しきい値=Threshold
+最小=Minimum
+最大=Maximum
+ソート範囲可視化=Sort Range Preview
+可視化=Preview
+色=Color
+不透明度=Opacity
+塗り=Fill
+元画像=Source Image
+その他=Other
+PI=PI

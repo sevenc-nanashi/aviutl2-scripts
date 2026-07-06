@@ -24,65 +24,93 @@ build.group = "aulua"
 source = "scripts/ドット絵変形.anm2"
 destination = "Script/ドット絵変形.anm2"
 
-[artifacts.targeted_scale-anm2]
-build.group = "aulua"
-source = "scripts/目標指定拡大縮小.anm2"
-destination = "Script/目標指定拡大縮小.anm2"
-
-[artifacts.camera_frame-obj2]
-build.group = "aulua"
-source = "scripts/カメラフレーム.obj2"
-destination = "Script/カメラフレーム.obj2"
-
-[artifacts.shorts_guide-obj2]
-build.group = "aulua"
-source = "scripts/縦動画ガイド.obj2"
-destination = "Script/縦動画ガイド.obj2"
-
-[artifacts.crt_display-anm2]
-build.group = "aulua"
-source = "scripts/CRTディスプレイ風.anm2"
-destination = "Script/CRTディスプレイ風.anm2"
-
-[artifacts.gpu_pixelsort-anm2]
-build.group = "aulua"
-source = "scripts/GPUピクセルソート.anm2"
-destination = "Script/GPUピクセルソート.anm2"
-
-[artifacts.hide_on_export-anm2]
-build.group = "aulua"
-source = "scripts/出力時に非表示.anm2"
-destination = "Script/出力時に非表示.anm2"
+[artifacts.pixel_transform-anm2-i18n-en]
+source = "scripts/ドット絵変形/i18n/English.pixel_transform-anm2.aul2"
+destination = "Language/English.pixel_transform-anm2.aul2"
 
 [artifacts.pixel_transform-demo-anm2]
 build.group = "aulua"
 source = "demo/@ドット絵変形.anm2"
 destination = "Script/@ドット絵変形.anm2"
 
+[artifacts.targeted_scale-anm2]
+build.group = "aulua"
+source = "scripts/目標指定拡大縮小.anm2"
+destination = "Script/目標指定拡大縮小.anm2"
+
+[artifacts.targeted_scale-anm2-i18n-en]
+source = "scripts/目標指定拡大縮小/i18n/English.targeted_scale-anm2.aul2"
+destination = "Language/English.targeted_scale-anm2.aul2"
+
 [artifacts.targeted_scale-demo-anm2]
 build = { group = "demo" }
 source = "demo/@目標指定拡大縮小.anm2"
 destination = "Script/@目標指定拡大縮小.anm2"
+
+[artifacts.camera_frame-obj2]
+build.group = "aulua"
+source = "scripts/カメラフレーム.obj2"
+destination = "Script/カメラフレーム.obj2"
+
+[artifacts.camera_frame-obj2-i18n-en]
+source = "scripts/カメラフレーム/i18n/English.camera_frame-obj2.aul2"
+destination = "Language/English.camera_frame-obj2.aul2"
 
 [artifacts.camera_frame-demo-obj2]
 build = { group = "demo" }
 source = "demo/@カメラフレーム.obj2"
 destination = "Script/@カメラフレーム.obj2"
 
+[artifacts.shorts_guide-obj2]
+build.group = "aulua"
+source = "scripts/縦動画ガイド.obj2"
+destination = "Script/縦動画ガイド.obj2"
+
+[artifacts.shorts_guide-obj2-i18n-en]
+source = "scripts/縦動画ガイド/i18n/English.shorts_guide-obj2.aul2"
+destination = "Language/English.shorts_guide-obj2.aul2"
+
 [artifacts.shorts_guide-demo-obj2]
 build = { group = "demo" }
 source = "demo/@縦動画ガイド.obj2"
 destination = "Script/@縦動画ガイド.obj2"
+
+[artifacts.crt_display-anm2]
+build.group = "aulua"
+source = "scripts/CRTディスプレイ風.anm2"
+destination = "Script/CRTディスプレイ風.anm2"
+
+[artifacts.crt_display-anm2-i18n-en]
+source = "scripts/CRTディスプレイ風/i18n/English.crt_display-anm2.aul2"
+destination = "Language/English.crt_display-anm2.aul2"
 
 [artifacts.crt_display-demo-anm2]
 build = { group = "demo" }
 source = "demo/@CRTディスプレイ風.anm2"
 destination = "Script/@CRTディスプレイ風.anm2"
 
+[artifacts.gpu_pixelsort-anm2]
+build.group = "aulua"
+source = "scripts/GPUピクセルソート.anm2"
+destination = "Script/GPUピクセルソート.anm2"
+
+[artifacts.gpu_pixelsort-anm2-i18n-en]
+source = "scripts/GPUピクセルソート/i18n/English.gpu_pixelsort-anm2.aul2"
+destination = "Language/English.gpu_pixelsort-anm2.aul2"
+
 [artifacts.gpu_pixelsort-demo-anm2]
 build = { group = "demo" }
 source = "demo/@GPUピクセルソート.anm2"
 destination = "Script/@GPUピクセルソート.anm2"
+
+[artifacts.hide_on_export-anm2]
+build.group = "aulua"
+source = "scripts/出力時に非表示.anm2"
+destination = "Script/出力時に非表示.anm2"
+
+[artifacts.hide_on_export-anm2-i18n-en]
+source = "scripts/出力時に非表示/i18n/English.hide_on_export-anm2.aul2"
+destination = "Language/English.hide_on_export-anm2.aul2"
 
 [artifacts.hide_on_export-demo-anm2]
 build.group = "aulua"
