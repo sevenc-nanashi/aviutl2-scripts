@@ -21,6 +21,10 @@ Displays guides for areas hidden by the Niconico Shorts UI.
 
 # Changelog
 
+## v1.5 (2026/8/18)
+
+- Added Tips
+
 ## v1.4 (2026/7/6)
 
 - Added the English language file

@@ -17,6 +17,10 @@ Performs pixel sorting on the GPU.
 
 # Changelog
 
+## v1.3 (2026/8/18)
+
+- Added Tips
+
 ## v1.2 (2026/7/6)
 
 - Added the English language file

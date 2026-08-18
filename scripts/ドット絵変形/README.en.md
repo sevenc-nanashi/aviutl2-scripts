@@ -64,6 +64,10 @@ This feature is based on cleanEdge. See this page for details about cleanEdge: <
 
 # Changelog
 
+## v3.5 (2026/8/18)
+
+- Added Tips
+
 ## v3.4 (2026/7/6)
 
 - Added the English language file

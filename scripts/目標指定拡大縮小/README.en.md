@@ -18,6 +18,10 @@ Scales an object to a target pixel size while preserving its aspect ratio.
 
 # Changelog
 
+## v1.2 (2026/8/18)
+
+- Added Tips
+
 ## v1.1 (2026/7/6)
 
 - Added the English language file
