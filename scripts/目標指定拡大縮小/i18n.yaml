@@ -1,0 +1,40 @@
+Default:
+  Tips.目標指定拡大縮小:
+    effect.name: |
+      目標のピクセル数を指定し、アスペクト比を維持したまま拡大縮小を行うスクリプト。
+    モード: |
+      - 下限指定：指定した範囲が埋まるように拡大縮小します。（CSSにおけるcoverに相当）
+      - 上限指定：指定した範囲に収まるように拡大縮小します。（CSSにおけるcontainに相当）
+      - 幅指定：幅が指定したピクセル数になるように拡大縮小します。
+      - 高さ指定：高さが指定したピクセル数になるように拡大縮小します。
+    PI: |
+      - `target_width`：目標幅（ピクセル単位）
+      - `target_height`：目標高さ（ピクセル単位）
+      - `mode`：モード（0 = 最小指定、1 = 最大指定、2 = 幅指定、3 = 高さ指定）
+      - `debug`：デバッグモード
+English:
+  Tips.目標指定拡大縮小:
+    effect.name: |
+      Scales an object to a target pixel size while preserving its aspect ratio.
+    モード: |
+      - Cover: Scales the object so the specified area is filled. (Equivalent to CSS `cover`.)
+      - Contain: Scales the object so it fits inside the specified area. (Equivalent to CSS `contain`.)
+      - Width: Scales the object so its width becomes the specified number of pixels.
+      - Height: Scales the object so its height becomes the specified number of pixels.
+    PI: |
+      - `target_width`: Target width in pixels
+      - `target_height`: Target height in pixels
+      - `mode`: Mode (0 = cover, 1 = contain, 2 = width, 3 = height)
+      - `debug`: Debug mode
+  目標指定拡大縮小:
+    目標指定拡大縮小: Targeted Scale
+    目標幅: Target Width
+    目標高さ: Target Height
+    モード: Mode
+    下限指定: Cover
+    上限指定: Contain
+    幅指定: Width
+    高さ指定: Height
+    高度な設定: Advanced Settings
+    デバッグモード: Debug Mode
+    PI: PI

@@ -1,3 +1,9 @@
+[Language]
+Information=English Language for sevenc-nanashi/aviutl2-scripts / https://github.com/sevenc-nanashi/aviutl2-scripts
+[Tips.GPUピクセルソート]
+effect.name=Performs pixel sorting on the GPU.\n\n┌ ⚠️ Warning\n│ The size along the sort direction must be 4096 pixels or less.\n└────────\n
+PI=- `direction`: Direction (0 = horizontal, 1 = vertical, 2 = horizontal (reversed), 3 = vertical (reversed))\n- `threshold_min`: Minimum threshold\n- `threshold_max`: Maximum threshold\n- `visualize_sort_range`: Whether to preview the sort range\n- `visualize_color`: Sort range preview color (`0xRRGGBB`)\n- `visualize_fill_opacity`: Fill opacity for the sort range preview\n- `visualize_source_opacity`: Source image opacity while previewing the sort range\n
+
 [GPUピクセルソート]
 GPUピクセルソート=GPU Pixel Sort
 方向=Direction

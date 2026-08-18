@@ -1,0 +1,48 @@
+Default:
+  Tips.GPUピクセルソート:
+    effect.name: |
+      GPUを使用してピクセルソートを行うスクリプト。
+
+      > [!WARNING]
+      > ソート方向のサイズが4096ピクセル以下である必要があります。
+    PI: |
+      - `direction`：方向（0=横方向、1=縦方向、2=横方向（反転）、3=縦方向（反転））
+      - `threshold_min`：しきい値の最小値
+      - `threshold_max`：しきい値の最大値
+      - `visualize_sort_range`：ソート範囲を可視化するか
+      - `visualize_color`：ソート範囲可視化の色（`0xRRGGBB`）
+      - `visualize_fill_opacity`：ソート範囲可視化の塗りの不透明度
+      - `visualize_source_opacity`：ソート範囲可視化時の元画像の不透明度
+English:
+  Tips.GPUピクセルソート:
+    effect.name: |
+      Performs pixel sorting on the GPU.
+
+      > [!WARNING]
+      > The size along the sort direction must be 4096 pixels or less.
+    PI: |
+      - `direction`: Direction (0 = horizontal, 1 = vertical, 2 = horizontal (reversed), 3 = vertical (reversed))
+      - `threshold_min`: Minimum threshold
+      - `threshold_max`: Maximum threshold
+      - `visualize_sort_range`: Whether to preview the sort range
+      - `visualize_color`: Sort range preview color (`0xRRGGBB`)
+      - `visualize_fill_opacity`: Fill opacity for the sort range preview
+      - `visualize_source_opacity`: Source image opacity while previewing the sort range
+  GPUピクセルソート:
+    GPUピクセルソート: GPU Pixel Sort
+    方向: Direction
+    横方向: Horizontal
+    縦方向: Vertical
+    横方向（反転）: Horizontal (Reversed)
+    縦方向（反転）: Vertical (Reversed)
+    しきい値: Threshold
+    最小: Minimum
+    最大: Maximum
+    ソート範囲可視化: Sort Range Preview
+    可視化: Preview
+    色: Color
+    不透明度: Opacity
+    塗り: Fill
+    元画像: Source Image
+    その他: Other
+    PI: PI

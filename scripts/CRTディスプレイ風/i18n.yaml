@@ -1,0 +1,41 @@
+Default:
+  Tips.CRTディスプレイ風:
+    effect.name: |
+      CRTディスプレイ風のエフェクト。
+
+      # 謝辞
+
+      このスクリプトは[CRTディスプレイの再現 - ideoaves](https://ideoaves.github.io/blog/2025-12-10.html)を参考にして作成されました。
+      また、hazuqu様から移植の許可をいただきました。ありがとうございます。
+    PI: |
+      - `horizontal_blur`：水平ブラー
+      - `rgb_percent`：RGB効果の強さ（%）
+      - `pixel_size`：ピクセルサイズ
+      - `decay`：減衰
+      - `slowmotion`：スローモーション
+      - `use_progressive`：プログレッシブ走査を使用するか
+English:
+  CRTディスプレイ風:
+    CRTディスプレイ風: CRT Display like
+    水平ブラー: Horizontal Blur
+    RGB%: RGB%
+    ピクセルサイズ: Pixel Size
+    減衰: Decay
+    スローモーション: Slow Motion
+    プログレッシブ: Progressive
+    PI: PI
+  Tips.CRTディスプレイ風:
+    effect.name: |
+      Apply a CRT display-like effect to a video.
+
+      ## Acknowledgements
+
+      This script is based on [CRTディスプレイの再現 - ideoaves](https://ideoaves.github.io/blog/2025-12-10.html).
+      Thank you to hazuqu for granting permission for the port.
+    PI: |
+      - `horizontal_blur`: Horizontal blur
+      - `rgb_percent`: RGB effect strength (%)
+      - `pixel_size`: Pixel size
+      - `decay`: Decay
+      - `slowmotion`: Slow motion
+      - `use_progressive`: Whether to use progressive scanning

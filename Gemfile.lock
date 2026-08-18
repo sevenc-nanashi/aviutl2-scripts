@@ -1,9 +1,14 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    citrus (3.0.2)
     prettier_print (1.2.1)
+    racc (1.8.1)
     syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
+    toml-rb (4.2.1)
+      citrus (~> 3.0, > 3.0)
+      racc (~> 1.7)
 
 PLATFORMS
   x64-mingw-ucrt
@@ -11,6 +16,7 @@ PLATFORMS
 
 DEPENDENCIES
   syntax_tree (~> 6.3)
+  toml-rb (~> 4.1)
 
 BUNDLED WITH
    2.6.9

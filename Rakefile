@@ -3,13 +3,14 @@
 require "syntax_tree/rake_tasks"
 
 task default: %i[build]
-task build: %i[prepare_description aulua_build]
+task build: [:prepare_description, "build:i18n", :aulua_build]
 
 $check_mode = false
 
 task "build:dry" do
   $check_mode = :not_updated
   Rake::Task[:prepare_description].invoke
+  Rake::Task["build:i18n"].invoke
   Rake::Task["aulua_build:dry"].invoke
   if $check_mode == :not_updated
     puts "All files are up to date."
@@ -33,6 +34,19 @@ def update_file(path, new_content)
     puts "No changes for #{path}"
   end
 end
+
+def remove_generated_file(path)
+  return unless File.exist?(path)
+
+  if $check_mode == false
+    File.delete(path)
+    puts "Removed #{path}"
+  else
+    puts "File #{path} needs to be removed"
+    $check_mode = :updated
+  end
+end
+
 def text_width(text)
   text.each_char.sum do |ch|
     case ch.ord
@@ -48,7 +62,117 @@ def text_width(text)
   end
 end
 
+def alert_label(type)
+  case type
+  when "NOTE"
+    "ℹ️ Note"
+  when "TIP"
+    "💡 Tips"
+  when "WARNING"
+    "⚠️ Warning"
+  when "IMPORTANT"
+    "❗ Important"
+  when "CAUTION"
+    "🛑 Caution"
+  else
+    type.capitalize
+  end
+end
+
+def render_alert_blocks(text)
+  rendered_lines = []
+  alert_width = nil
+
+  text.each_line(chomp: true) do |line|
+    if alert_width
+      if line.match(/\A> ?(?<quote_text>.*)\z/) in { quote_text: }
+        rendered_lines << "│ #{quote_text.rstrip.delete_suffix("\\")}"
+        next
+      end
+
+      rendered_lines << "└#{"─" * (alert_width / 2 + 1)}"
+      alert_width = nil
+    end
+
+    if line.match(/\A> \[!(?<type>[A-Z]+)\]\s*\z/) in { type: }
+      label = alert_label(type)
+      rendered_lines << "┌ #{label}"
+      alert_width = text_width(label) + 2
+    else
+      rendered_lines << line
+    end
+  end
+
+  rendered_lines << "└#{"─" * (alert_width / 2 + 1)}" if alert_width
+  rendered_text = rendered_lines.join("\n")
+  rendered_text << "\n" if text.end_with?("\n")
+  rendered_text
+end
+
 script_dirs = Dir.glob("scripts/*").select { |f| File.directory?(f) }
+
+namespace :build do
+  desc "i18n.yamlから言語ファイルを生成する"
+  task :i18n do
+    require "fileutils"
+    require "toml-rb"
+    require "yaml"
+
+    artifacts = TomlRB.load_file("aviutl2.toml").fetch("artifacts")
+
+    script_dirs.each do |script_dir|
+      yaml_path = File.join(script_dir, "i18n.yaml")
+      next unless File.exist?(yaml_path)
+
+      script_paths =
+        Dir.glob("#{script_dir}.*").select { |path| File.file?(path) }
+      artifact_ids =
+        artifacts.filter_map do |artifact_id, artifact|
+          artifact_id if script_paths.include?(artifact["source"])
+        end
+      unless artifact_ids.size == 1
+        raise "Expected exactly one artifact for #{script_dir}, found #{artifact_ids.size}"
+      end
+      artifact_id = artifact_ids.first
+
+      translations =
+        YAML.safe_load(
+          File.read(yaml_path),
+          permitted_classes: [],
+          permitted_symbols: [],
+          aliases: false,
+          filename: yaml_path
+        )
+      output_dir = File.join(script_dir, "i18n")
+      FileUtils.mkdir_p(output_dir) if $check_mode == false
+      expected_paths =
+        translations.map do |language, sections|
+          content =
+            <<~INI +
+            [Language]
+            Information=#{language} Language for sevenc-nanashi/aviutl2-scripts / https://github.com/sevenc-nanashi/aviutl2-scripts
+            INI
+              sections
+                .map do |section, values|
+                  [
+                    "[#{section}]",
+                    *values.map do |key, value|
+                      "#{key}=#{render_alert_blocks(value).gsub("\n", "\\n")}"
+                    end
+                  ].join("\n")
+                end
+                .join("\n\n") + "\n"
+          output_path = File.join(output_dir, "#{language}.#{artifact_id}.aul2")
+          update_file(output_path, content)
+          output_path
+        end
+
+      (
+        Dir.glob(File.join(output_dir, "*.aul2")) - expected_paths
+      ).each { |path| remove_generated_file(path) }
+    end
+  end
+end
 
 task :prepare_description do
   require "uri"
@@ -117,21 +241,7 @@ task :prepare_description do
           if line.start_with?("> ")
             quote_line = line.sub(/\A> /, "")
             if quote_line.match(/\[!(?<type>[A-Z]+)\]/) in { type: }
-              label =
-                case type
-                when "NOTE"
-                  "ℹ️ Note"
-                when "TIP"
-                  "💡 Tips"
-                when "WARNING"
-                  "⚠️ Warning"
-                when "IMPORTANT"
-                  "❗ Important"
-                when "CAUTION"
-                  "🛑 Caution"
-                else
-                  type.capitalize
-                end
+              label = alert_label(type)
               new_line = "#{indent}┌ #{label}"
               quote_header_width = text_width(label) + 2
               description_lines << new_line
@@ -352,6 +462,7 @@ task "new_script" do
     exit 1
   end
   i18n_english_id = script_id.sub(/\-[a-z]{3}2\z/, "\\0-i18n-en")
+  i18n_default_id = script_id.sub(/\-[a-z]{3}2\z/, "\\0-i18n-ja")
   script_dir_name = File.basename(script_name, ".*")
   script_dir = File.join("scripts", script_dir_name)
   if Dir.exist?(script_dir)
@@ -388,6 +499,10 @@ task "new_script" do
     build.group = "aulua"
     source = "demo/@#{script_name}"
     destination = "Script/@#{script_name}"
+
+    [artifacts.#{i18n_default_id}]
+    source = "#{script_dir}/i18n/Default.#{script_id}.aul2"
+    destination = "Language/Default.#{script_id}.aul2"
 
     [artifacts.#{i18n_english_id}]
     source = "#{script_dir}/i18n/English.#{script_id}.aul2"

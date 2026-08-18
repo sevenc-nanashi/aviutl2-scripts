@@ -1,13 +1,5 @@
-project:
-  variables:
-    VERSION: v0.0.0
-    AUTHOR: sevenc-nanashi
-
 build:
   out_dir: scripts
-
-install:
-  out_dir: C:\ProgramData\aviutl2\Script\[sevenc-nanashi/aviutl2-scripts]
 
 scripts:
   - name: カメラフレーム.obj2

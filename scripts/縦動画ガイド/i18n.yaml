@@ -1,0 +1,50 @@
+Default:
+  Tips.縦動画ガイド:
+    effect.name: |
+      ニコニコショートのUIで隠れる部分を表示するためのスクリプト。
+
+      > [!NOTE]
+      > デフォルトでは出力時に非表示になります。
+      > 出力時にも表示したい場合は、「出力時にも表示」を有効にしてください。
+    PI: |
+      - `device`：デバイス
+        - `1`：iPhone 16（iOS 26）
+        - `2`：iPad mini（iPadOS 26）
+      - `color`：色（`0xRRGGBB`）
+      - `show_forward`：ピン留め動画を表示するか
+      - `show_tags`：タグを表示するか
+      - `author_name_width`：投稿者名の幅（ピクセル単位）
+      - `side_line_width`：左右線の幅（ピクセル単位）
+      - `show_on_output`：出力時にも表示するか
+      - `layout`：レイアウト設定。`width`、`height`、`footer_height` などの値をテーブルで上書きできます。
+English:
+  Tips.縦動画ガイド:
+    effect.name: |
+      Displays guides for areas hidden by the Niconico Shorts UI.
+
+      > [!NOTE]
+      > By default, this object is hidden during export.
+      > Enable "Show on Export" if you also want it to appear in exported output.
+    PI: |
+      - `device`: Device
+        - `1`: iPhone 16 (iOS 26)
+        - `2`: iPad mini (iPadOS 26)
+      - `color`: Color (`0xRRGGBB`)
+      - `show_forward`: Whether to show the pinned video area
+      - `show_tags`: Whether to show tags
+      - `author_name_width`: Author name width in pixels
+      - `side_line_width`: Side line width in pixels
+      - `show_on_output`: Whether to show during export
+      - `layout`: Layout settings. Values such as `width`, `height`, and `footer_height` can be overridden with a table.
+  縦動画ガイド:
+    縦動画ガイド: Shorts Guide
+    デバイス: Device
+    iPhone 16（iOS 26）: iPhone 16 (iOS 26)
+    iPad mini（iPadOS 26）: iPad mini (iPadOS 26)
+    色: Color
+    ピン留め動画: Pinned Video
+    タグ: Tags
+    投稿者名の幅: Author Name Width
+    左右線の幅: Side Line Width
+    出力時にも表示: Show on Export
+    PI: PI

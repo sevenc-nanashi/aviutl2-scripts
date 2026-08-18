@@ -1,0 +1,8 @@
+Default:
+  Tips.出力時に非表示:
+    effect.name: 出力時に非表示にするエフェクト。
+English:
+  Tips.出力時に非表示:
+    effect.name: Hides the object during export.
+  出力時に非表示:
+    出力時に非表示: Hide on Export

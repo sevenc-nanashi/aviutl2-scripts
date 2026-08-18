@@ -1,0 +1,36 @@
+Default:
+  Tips.カメラフレーム:
+    effect.name: |
+      カメラフレームっぽい図形を描画するスクリプト。
+    PI: |
+      - `width`：幅（ピクセル単位）
+      - `height`：高さ（ピクセル単位）
+      - `line_length`：線の長さ（ピクセル単位）
+      - `line_thickness`：線の太さ（ピクセル単位）
+      - `line_color`：線の色（`0xRRGGBB`）
+      - `size_specifier`：サイズ指定（1=余白指定、2=絶対指定）
+      - `debug`：デバッグモード
+English:
+  Tips.カメラフレーム:
+    effect.name: |
+      Draws a camera frame-like shape.
+    PI: |
+      - `width`: Width in pixels
+      - `height`: Height in pixels
+      - `line_length`: Line length in pixels
+      - `line_thickness`: Line thickness in pixels
+      - `line_color`: Line color (`0xRRGGBB`)
+      - `size_specifier`: Size mode (1 = margin, 2 = absolute)
+      - `debug`: Debug mode
+  カメラフレーム:
+    カメラフレーム: Camera Frame
+    幅: Width
+    高さ: Height
+    線の長さ: Line Length
+    線の太さ: Line Thickness
+    線の色: Line Color
+    サイズ指定: Size Mode
+    余白指定: Margin
+    絶対指定: Absolute
+    デバッグモード: Debug Mode
+    PI: PI
