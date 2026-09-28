@@ -39,12 +39,18 @@ const scriptQueries = v.object({
     v.picklist(["script", "releases", "au2pkg"] as const),
     "script" as const,
   ),
+  scriptIdOverride: v.optional(
+    v.pipe(v.string(), v.nonEmpty(), v.excludes("\r"), v.excludes("\n")),
+  ),
 });
 
 app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
   const { scriptName } = c.req.param();
-  const { version: versionSpecifier, type: requestedType } =
-    c.req.valid("query");
+  const {
+    version: versionSpecifier,
+    type: requestedType,
+    scriptIdOverride,
+  } = c.req.valid("query");
 
   if (!(await doesScriptExist(scriptName))) {
     return c.text(`Script "${scriptName}" not found`, 404);
@@ -58,7 +64,10 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
       });
     }
     case "au2pkg": {
-      const scriptId = await getScriptId(scriptName);
+      const scriptId =
+        scriptIdOverride === undefined
+          ? await getScriptId(scriptName)
+          : scriptIdOverride;
       if (!scriptId) {
         return c.text(
           `Script "${scriptName}" not found in catalog, please wait for it to be indexed.`,
