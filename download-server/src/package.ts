@@ -20,12 +20,10 @@ export async function getPlainReadme(
   const baseName = scriptName.split(".")[0];
   const readmeUrl = `${githubRawBaseUrl}/${repository}/${commit}/scripts/${encodeURIComponent(baseName)}/readme.lua`;
   const readme = await fetchText(readmeUrl);
-  return (
-    readme
-      .replace(/^--( |$)/gm, "")
-      .replaceAll("=".repeat(120), "")
-      .trim() + "\n"
-  );
+  return `${readme
+    .replace(/^--( |$)/gm, "")
+    .replaceAll("=".repeat(120), "")
+    .trim()}\n`;
 }
 
 export async function getScriptId(

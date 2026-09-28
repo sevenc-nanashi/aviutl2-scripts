@@ -2,17 +2,17 @@ import { sValidator } from "@hono/standard-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
 import {
-  doesScriptExist,
-  resolveVersionEntries,
-  selectVersionEntry,
-} from "./resolve";
-import { fetchScriptContent } from "./utils";
-import {
   getI18nFiles,
   getPlainReadme,
   getScriptId,
   packageScript,
 } from "./package";
+import {
+  doesScriptExist,
+  resolveVersionEntries,
+  selectVersionEntry,
+} from "./resolve";
+import { fetchScriptContent } from "./utils";
 
 const app = new Hono();
 

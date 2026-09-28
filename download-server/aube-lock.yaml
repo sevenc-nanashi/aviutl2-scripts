@@ -11,15 +11,6 @@ importers:
       '@hono/standard-validator':
         specifier: ^0.2.2
         version: 0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.14)
-      '@standard-schema/spec':
-        specifier: ^1.0.0
-        version: 1.1.0
-      '@vitest/runner':
-        specifier: 2.0.x - 3.2.x
-        version: 3.2.4
-      '@vitest/snapshot':
-        specifier: 2.0.x - 3.2.x
-        version: 3.2.4
       hono:
         specifier: ^4.10.7
         version: 4.12.14
@@ -29,21 +20,9 @@ importers:
       pathcat:
         specifier: ^1.5.1
         version: 1.5.1
-      picomatch:
-        specifier: ^3 || ^4
-        version: 4.0.4
-      unenv:
-        specifier: 2.0.0-rc.24
-        version: 2.0.0-rc.24
       valibot:
         specifier: ^1.3.1
         version: 1.3.1(typescript@5.9.3)
-      vite:
-        specifier: ^5.0.0 || ^6.0.0 || ^7.0.0-0
-        version: 7.3.2
-      workerd:
-        specifier: 1.20260301.1 || ~1.20260302.1 || ~1.20260303.1 || ~1.20260304.1 || >1.20260305.0 <2.0.0-0
-        version: 1.20260415.1
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.3.8
@@ -71,12 +50,9 @@ packages:
   '@biomejs/cli-linux-x64@2.4.12':
     resolution: {integrity: sha512-8pFeAnLU9QdW9jCIslB/v82bI0lhBmz2ZAKc8pVMFPO0t0wAHsoEkrUQUbMkIorTRIjbqyNZHA3lEXavsPWYSw==}
     engines: {node: '>=14.21.3'}
-    os:
-    - linux
-    cpu:
-    - x64
-    libc:
-    - glibc
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
 
   '@cloudflare/kv-asset-handler@0.4.0':
     resolution: {integrity: sha512-+tv3z+SPp+gqTIcImN9o0hqE9xyfQjI1XD9pL6NuKjua9B1y7mNYv0S9cP+QEbA4ppVgGZEmKOvHX5G5Ei1CVA==}
@@ -114,18 +90,14 @@ packages:
   '@cloudflare/workerd-linux-64@1.20250906.0':
     resolution: {integrity: sha512-rlKzWgsLnlQ5Nt9W69YBJKcmTmZbOGu0edUsenXPmc6wzULUxoQpi7ZE9k3TfTonJx4WoQsQlzCUamRYFsX+0Q==}
     engines: {node: '>=16'}
-    os:
-    - linux
-    cpu:
-    - x64
+    cpu: [x64]
+    os: [linux]
 
   '@cloudflare/workerd-linux-64@1.20260415.1':
     resolution: {integrity: sha512-tU+9pwsqCy8afOVlGtiWrWQc/fedQK4SRm4KPIAt+zOiQWDxWASm6YGBUJis5c648WN80yz47qnmdDi8DQNOcA==}
     engines: {node: '>=16'}
-    os:
-    - linux
-    cpu:
-    - x64
+    cpu: [x64]
+    os: [linux]
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -134,18 +106,14 @@ packages:
   '@esbuild/linux-x64@0.25.4':
     resolution: {integrity: sha512-6e0cvXwzOnVWJHq+mskP8DNSrKBr1bULBvnFLpc1KY+d+irZSgZ02TGse5FsafKS5jg2e4pbvK6TPXaF/A6+CA==}
     engines: {node: '>=18'}
-    os:
-    - linux
-    cpu:
-    - x64
+    cpu: [x64]
+    os: [linux]
 
   '@esbuild/linux-x64@0.27.3':
     resolution: {integrity: sha512-Czi8yzXUWIQYAtL/2y6vogER8pvcsOsk5cpwL4Gk5nJqH5UZiVByIY8Eorm5R13gq+DQKYg0+JyQoytLQas4dA==}
     engines: {node: '>=18'}
-    os:
-    - linux
-    cpu:
-    - x64
+    cpu: [x64]
+    os: [linux]
 
   '@hono/standard-validator@0.2.2':
     resolution: {integrity: sha512-mJ7W84Bt/rSvoIl63Ynew+UZOHAzzRAoAXb3JaWuxAkM/Lzg+ZHTCUiz77KOtn2e623WNN8LkD57Dk0szqUrIw==}
@@ -159,41 +127,29 @@ packages:
 
   '@img/sharp-libvips-linux-x64@1.0.4':
     resolution: {integrity: sha512-MmWmQ3iPFZr0Iev+BAgVMb3ZyC4KeFc3jFxnNbEPas60e1cIfevbtuyf9nDGIzOaW9PdnDciJm+wFFaTlj5xYw==}
-    os:
-    - linux
-    cpu:
-    - x64
-    libc:
-    - glibc
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
 
   '@img/sharp-libvips-linux-x64@1.2.4':
     resolution: {integrity: sha512-tJxiiLsmHc9Ax1bz3oaOYBURTXGIRDODBqhveVHonrHJ9/+k89qbLl0bcJns+e4t4rvaNBxaEZsFtSfAdquPrw==}
-    os:
-    - linux
-    cpu:
-    - x64
-    libc:
-    - glibc
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
 
   '@img/sharp-linux-x64@0.33.5':
     resolution: {integrity: sha512-opC+Ok5pRNAzuvq1AG0ar+1owsu842/Ab+4qvU879ippJBHvyY5n2mxF1izXqkPYlGuP/M556uh53jRLJmzTWA==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
-    os:
-    - linux
-    cpu:
-    - x64
-    libc:
-    - glibc
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
 
   '@img/sharp-linux-x64@0.34.5':
     resolution: {integrity: sha512-MEzd8HPKxVxVenwAa+JRPwEC7QFjoPWuS5NZnBt6B3pu7EG2Ge0id1oLHZpPJdn3OQK+BQDiw9zStiHBTJQQQQ==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
-    os:
-    - linux
-    cpu:
-    - x64
-    libc:
-    - glibc
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
 
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
@@ -216,12 +172,9 @@ packages:
 
   '@rollup/rollup-linux-x64-gnu@4.60.2':
     resolution: {integrity: sha512-UQjrkIdWrKI626Du8lCQ6MJp/6V1LAo2bOK9OTu4mSn8GGXIkPXk/Vsp4bLHCd9Z9Iz2OTEaokUE90VweJgIYQ==}
-    os:
-    - linux
-    cpu:
-    - x64
-    libc:
-    - glibc
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
 
   '@sindresorhus/is@7.2.0':
     resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
@@ -329,6 +282,8 @@ packages:
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
     engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
     peerDependenciesMeta:
       supports-color:
         optional: true
@@ -730,7 +685,8 @@ snapshots:
     optionalDependencies:
       '@biomejs/cli-linux-x64': 2.4.12
 
-  '@biomejs/cli-linux-x64@2.4.12': {}
+  '@biomejs/cli-linux-x64@2.4.12':
+    optional: true
 
   '@cloudflare/kv-asset-handler@0.4.0':
     dependencies:
@@ -760,18 +716,26 @@ snapshots:
       vitest: 3.2.4
       wrangler: 4.35.0
       zod: 3.25.76
+    transitivePeerDependencies:
+      - '@cloudflare/workers-types'
+      - bufferutil
+      - utf-8-validate
 
-  '@cloudflare/workerd-linux-64@1.20250906.0': {}
+  '@cloudflare/workerd-linux-64@1.20250906.0':
+    optional: true
 
-  '@cloudflare/workerd-linux-64@1.20260415.1': {}
+  '@cloudflare/workerd-linux-64@1.20260415.1':
+    optional: true
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@esbuild/linux-x64@0.25.4': {}
+  '@esbuild/linux-x64@0.25.4':
+    optional: true
 
-  '@esbuild/linux-x64@0.27.3': {}
+  '@esbuild/linux-x64@0.27.3':
+    optional: true
 
   '@hono/standard-validator@0.2.2(@standard-schema/spec@1.1.0)(hono@4.12.14)':
     dependencies:
@@ -780,17 +744,21 @@ snapshots:
 
   '@img/colour@1.1.0': {}
 
-  '@img/sharp-libvips-linux-x64@1.0.4': {}
+  '@img/sharp-libvips-linux-x64@1.0.4':
+    optional: true
 
-  '@img/sharp-libvips-linux-x64@1.2.4': {}
+  '@img/sharp-libvips-linux-x64@1.2.4':
+    optional: true
 
   '@img/sharp-linux-x64@0.33.5':
     optionalDependencies:
       '@img/sharp-libvips-linux-x64': 1.0.4
+    optional: true
 
   '@img/sharp-linux-x64@0.34.5':
     optionalDependencies:
       '@img/sharp-libvips-linux-x64': 1.2.4
+    optional: true
 
   '@jridgewell/resolve-uri@3.1.2': {}
 
@@ -813,7 +781,8 @@ snapshots:
 
   '@poppinss/exception@1.2.3': {}
 
-  '@rollup/rollup-linux-x64-gnu@4.60.2': {}
+  '@rollup/rollup-linux-x64-gnu@4.60.2':
+    optional: true
 
   '@sindresorhus/is@7.2.0': {}
 
@@ -1002,6 +971,9 @@ snapshots:
       ws: 8.18.0
       youch: 4.1.0-beta.10
       zod: 3.22.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   miniflare@4.20260415.0:
     dependencies:
@@ -1011,6 +983,9 @@ snapshots:
       workerd: 1.20260415.1
       ws: 8.18.0
       youch: 4.1.0-beta.10
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   ms@2.1.3: {}
 
@@ -1152,6 +1127,19 @@ snapshots:
       es-module-lexer: 1.7.0
       pathe: 2.0.3
       vite: 7.3.2
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
 
   vite@7.3.2:
     dependencies:
@@ -1187,6 +1175,20 @@ snapshots:
       vite: 7.3.2
       vite-node: 3.2.4
       why-is-node-running: 2.3.0
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - yaml
 
   why-is-node-running@2.3.0:
     dependencies:
@@ -1211,6 +1213,9 @@ snapshots:
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.21
       workerd: 1.20250906.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   wrangler@4.83.0:
     dependencies:
@@ -1222,6 +1227,9 @@ snapshots:
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20260415.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   ws@8.18.0: {}
 
