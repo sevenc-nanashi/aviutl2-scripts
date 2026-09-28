@@ -1,3 +1,6 @@
+[settings]
+lockfile = false
+
 [tools]
 "github:karoterra/aviutl2-aulua" = "latest"
 "github:sevenc-nanashi/aviutl2-cli" = "latest"
