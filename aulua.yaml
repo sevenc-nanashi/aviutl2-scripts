@@ -23,3 +23,6 @@ scripts:
   - name: 出力時に非表示.anm2
     sources:
       - path: scripts/出力時に非表示/main.lua
+  - name: ベベルとエンボス.anm2
+    sources:
+      - path: scripts/ベベルとエンボス/main.lua
