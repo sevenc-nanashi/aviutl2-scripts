@@ -14,7 +14,7 @@ import {
 
 const versionEntriesCacheBaseUrl =
   "https://aviutl2-scripts-download.local/version-entries";
-const versionEntriesCacheVersion = "2";
+const versionEntriesCacheVersion = "3";
 
 export async function doesScriptExist(scriptName: string): Promise<boolean> {
   try {
