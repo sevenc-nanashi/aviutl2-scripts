@@ -1,0 +1,31 @@
+Default:
+  Tips.旧発光:
+    effect.name: |
+      AviUtl1の発光を再現します。
+    PI: |
+      - `strength`：強さ
+      - `diffusion`：拡散
+      - `threshold`：しきい値
+      - `speed`：拡散速度
+      - `light_color`：光色（`0xRRGGBB`、`false`で元の色差を使用）
+      - `fixed_size`：サイズ固定（`true` / `false`）
+English:
+  旧発光:
+    旧発光: Legacy Glow
+    強さ: Strength
+    拡散: Diffusion
+    しきい値: Threshold
+    拡散速度: Diffusion speed
+    光色: Light color
+    サイズ固定: Fixed size
+    PI: PI
+  Tips.旧発光:
+    effect.name: |
+      Recreates AviUtl1 glow.
+    PI: |
+      - `strength`: Strength
+      - `diffusion`: Diffusion
+      - `threshold`: Threshold
+      - `speed`: Diffusion speed
+      - `light_color`: Light color (`0xRRGGBB`, or `false` to use source chroma)
+      - `fixed_size`: Fixed size (`true` / `false`)

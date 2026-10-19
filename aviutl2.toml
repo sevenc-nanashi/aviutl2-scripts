@@ -12,7 +12,7 @@ catalog_dependencies = [
   "sigma-axis.Basic_S",
   "sigma-axis.PixelSnap_S",
   "sevenc-nanashi.aviutl2-rs.rusty_pixelsort",
-  "korarei.PixelSorter_K"
+  "korarei.PixelSorter_K",
 ]
 
 [build_group]
@@ -162,3 +162,16 @@ destination = "language/Default.bevel_and_emboss-anm2.aul2"
 [artifacts.bevel_and_emboss-anm2-i18n-en]
 source = "scripts/ベベルとエンボス/i18n/English.bevel_and_emboss-anm2.aul2"
 destination = "language/English.bevel_and_emboss-anm2.aul2"
+
+[artifacts.legacy_glow-anm2]
+build.group = "aulua"
+source = "scripts/旧発光.anm2"
+destination = "Script/旧発光.anm2"
+
+[artifacts.legacy_glow-anm2-i18n-ja]
+source = "scripts/旧発光/i18n/Default.legacy_glow-anm2.aul2"
+destination = "Language/Default.legacy_glow-anm2.aul2"
+
+[artifacts.legacy_glow-anm2-i18n-en]
+source = "scripts/旧発光/i18n/English.legacy_glow-anm2.aul2"
+destination = "Language/English.legacy_glow-anm2.aul2"

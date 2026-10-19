@@ -26,3 +26,6 @@ scripts:
   - name: ベベルとエンボス.anm2
     sources:
       - path: scripts/ベベルとエンボス/main.lua
+  - name: 旧発光.anm2
+    sources:
+      - path: scripts/旧発光/main.lua
