@@ -13,6 +13,10 @@ Recreates AviUtl1 glow.
 
 # Changelog
 
+## v1.1 (2026/10/25)
+
+- Lowered the maximum value of diffusion
+
 ## v1.0 (2026/10/19)
 
 - Initial release

@@ -10,7 +10,7 @@
 local strength = 100
 ---$track:拡散
 ---min=10
----max=2000
+---max=800
 local diffusion = 250
 ---$track:しきい値
 ---min=0
