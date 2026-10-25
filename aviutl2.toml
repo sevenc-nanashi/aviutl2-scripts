@@ -175,3 +175,21 @@ destination = "Language/Default.legacy_glow-anm2.aul2"
 [artifacts.legacy_glow-anm2-i18n-en]
 source = "scripts/旧発光/i18n/English.legacy_glow-anm2.aul2"
 destination = "Language/English.legacy_glow-anm2.aul2"
+
+[artifacts.dokaben-anm2]
+build.group = "aulua"
+source = "scripts/ドカベン.anm2"
+destination = "Script/ドカベン.anm2"
+
+[artifacts.dokaben-demo-anm2]
+build.group = "aulua"
+source = "demo/@ドカベン.anm2"
+destination = "Script/@ドカベン.anm2"
+
+[artifacts.dokaben-anm2-i18n-ja]
+source = "scripts/ドカベン/i18n/Default.dokaben-anm2.aul2"
+destination = "Language/Default.dokaben-anm2.aul2"
+
+[artifacts.dokaben-anm2-i18n-en]
+source = "scripts/ドカベン/i18n/English.dokaben-anm2.aul2"
+destination = "Language/English.dokaben-anm2.aul2"

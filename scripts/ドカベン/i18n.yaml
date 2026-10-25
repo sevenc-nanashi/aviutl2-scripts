@@ -1,0 +1,29 @@
+Default:
+  Tips.ドカベン:
+    effect.name: ドカベン風に起き上がって倒れるアニメーション。
+    PI: |
+      - `speed`：再生速度（%、0で固定）
+      - `auto_fall`：自動で倒れる（true / false）
+      - `upright`：直立時間（0以上のフレーム数、再生速度の影響を受けます）
+      - `y_offset`：Yオフセット
+      - `drop_frame`：コマ落ち（true / false）
+      - `divisions_override`：横方向の分割数（1以上の整数、省略時は幅に応じて1～32分割）
+English:
+  ドカベン:
+    ドカベン: Dokaben
+    再生速度: Playback speed
+    固定: Fixed
+    自動で倒れる: Auto fall
+    直立時間: Upright duration
+    Yオフセット: Y offset
+    コマ落ち: Frame dropping
+    PI: PI
+  Tips.ドカベン:
+    effect.name: A Dokaben-style rising and falling animation.
+    PI: |
+      - `speed`: Playback speed (%, 0 freezes the animation)
+      - `auto_fall`: Auto fall (true / false)
+      - `upright`: Upright duration (non-negative frame count, affected by playback speed)
+      - `y_offset`: Y offset
+      - `drop_frame`: Frame dropping (true / false)
+      - `divisions_override`: Horizontal subdivisions (integer, at least 1; defaults to 1–32 based on width)
