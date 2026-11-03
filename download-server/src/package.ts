@@ -1,5 +1,6 @@
 import JSZip from "jszip";
 import {
+  fetchBinary,
   fetchJson,
   fetchRepositoryTree,
   fetchText,
@@ -8,9 +9,9 @@ import {
   repository,
 } from "./utils";
 
-export type I18nFile = {
+export type ExtraFile = {
   name: string;
-  content: string;
+  content: ArrayBuffer;
 };
 
 export async function getPlainReadme(
@@ -47,28 +48,25 @@ export async function getScriptId(
   return entry.id;
 }
 
-export async function getI18nFiles(
+export async function getExtraFiles(
   scriptName: string,
   commit: string,
-): Promise<I18nFile[]> {
+): Promise<ExtraFile[]> {
   const baseName = scriptName.split(".")[0];
-  const i18nDir = `scripts/${baseName}/i18n/`;
+  const extraDir = `scripts/${baseName}/extra/`;
   const tree = await fetchRepositoryTree(commit);
-  const i18nPaths = tree
+  const extraPaths = tree
     .filter((entry) => entry.type === "blob")
     .map((entry) => entry.path)
-    .filter((path) => path.startsWith(i18nDir) && path.endsWith(".aul2"))
+    .filter((path) => path.startsWith(extraDir))
     .sort();
 
   return Promise.all(
-    i18nPaths.map(async (path) => {
-      const name = path.slice(i18nDir.length);
-      if (name.includes("/")) {
-        throw new Error(`Nested i18n file is not supported: ${path}`);
-      }
+    extraPaths.map(async (path) => {
+      const name = path.slice(extraDir.length);
       return {
         name,
-        content: await fetchText(rawUrlForPath(path, commit)),
+        content: await fetchBinary(rawUrlForPath(path, commit)),
       };
     }),
   );
@@ -79,12 +77,12 @@ export async function packageScript(
   scriptName: string,
   scriptContent: string,
   readmeContent: string,
-  i18nFiles: I18nFile[],
+  extraFiles: ExtraFile[],
 ): Promise<Uint8Array<ArrayBuffer>> {
   const zip = new JSZip();
   zip.file(`Script/${scriptName}`, scriptContent);
-  for (const i18nFile of i18nFiles) {
-    zip.file(`Language/${i18nFile.name}`, i18nFile.content);
+  for (const extraFile of extraFiles) {
+    zip.file(extraFile.name, extraFile.content);
   }
   zip.file("package.txt", readmeContent.replaceAll("\n", "\r\n"));
   const basename = scriptName.split(".")[0];

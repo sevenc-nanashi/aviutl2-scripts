@@ -32,3 +32,6 @@ scripts:
   - name: ドカベン.anm2
     sources:
       - path: scripts/ドカベン/main.lua
+  - name: 自演コメント.anm2
+    sources:
+      - path: scripts/自演コメント/main.lua

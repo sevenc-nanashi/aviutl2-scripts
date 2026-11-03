@@ -2,7 +2,7 @@ import { sValidator } from "@hono/standard-validator";
 import { Hono } from "hono";
 import * as v from "valibot";
 import {
-  getI18nFiles,
+  getExtraFiles,
   getPlainReadme,
   getScriptId,
   packageScript,
@@ -78,7 +78,7 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
       const entry = selectVersionEntry(entries, scriptName, versionSpecifier);
       const scriptContent = await fetchScriptContent(scriptName, entry);
       const plainReadme = await getPlainReadme(scriptName, entry.commit);
-      const i18nFiles = await getI18nFiles(scriptName, entry.commit);
+      const extraFiles = await getExtraFiles(scriptName, entry.commit);
       const escapedZipName = encodeURIComponent(
         `${scriptName.replace(".", `-v${entry.version}.`)}.au2pkg.zip`,
       );
@@ -87,7 +87,7 @@ app.get("/:scriptName", sValidator("query", scriptQueries), async (c) => {
         scriptName,
         scriptContent,
         plainReadme,
-        i18nFiles,
+        extraFiles,
       );
       return c.body(packaged, 200, {
         "Content-Disposition": `attachment; filename="${escapedZipName}"`,

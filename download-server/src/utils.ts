@@ -109,6 +109,17 @@ export async function fetchText(
   return res.text();
 }
 
+export async function fetchBinary(
+  url: string,
+  options: GitHubFetchOptions = {},
+): Promise<ArrayBuffer> {
+  const res = await fetch(url, githubRequestInit(options));
+  if (!res.ok) {
+    throw new Error(`Failed to fetch ${url}: ${res.status}`);
+  }
+  return res.arrayBuffer();
+}
+
 export async function fetchJson<T>(
   url: string,
   options: GitHubFetchOptions = {},

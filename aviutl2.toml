@@ -25,11 +25,11 @@ source = "scripts/ドット絵変形.anm2"
 destination = "Script/ドット絵変形.anm2"
 
 [artifacts.pixel_transform-anm2-i18n-ja]
-source = "scripts/ドット絵変形/i18n/Default.pixel_transform-anm2.aul2"
+source = "scripts/ドット絵変形/extra/Language/Default.pixel_transform-anm2.aul2"
 destination = "Language/Default.pixel_transform-anm2.aul2"
 
 [artifacts.pixel_transform-anm2-i18n-en]
-source = "scripts/ドット絵変形/i18n/English.pixel_transform-anm2.aul2"
+source = "scripts/ドット絵変形/extra/Language/English.pixel_transform-anm2.aul2"
 destination = "Language/English.pixel_transform-anm2.aul2"
 
 [artifacts.pixel_transform-demo-anm2]
@@ -43,11 +43,11 @@ source = "scripts/目標指定拡大縮小.anm2"
 destination = "Script/目標指定拡大縮小.anm2"
 
 [artifacts.targeted_scale-anm2-i18n-ja]
-source = "scripts/目標指定拡大縮小/i18n/Default.targeted_scale-anm2.aul2"
+source = "scripts/目標指定拡大縮小/extra/Language/Default.targeted_scale-anm2.aul2"
 destination = "Language/Default.targeted_scale-anm2.aul2"
 
 [artifacts.targeted_scale-anm2-i18n-en]
-source = "scripts/目標指定拡大縮小/i18n/English.targeted_scale-anm2.aul2"
+source = "scripts/目標指定拡大縮小/extra/Language/English.targeted_scale-anm2.aul2"
 destination = "Language/English.targeted_scale-anm2.aul2"
 
 [artifacts.targeted_scale-demo-anm2]
@@ -61,11 +61,11 @@ source = "scripts/カメラフレーム.obj2"
 destination = "Script/カメラフレーム.obj2"
 
 [artifacts.camera_frame-obj2-i18n-ja]
-source = "scripts/カメラフレーム/i18n/Default.camera_frame-obj2.aul2"
+source = "scripts/カメラフレーム/extra/Language/Default.camera_frame-obj2.aul2"
 destination = "Language/Default.camera_frame-obj2.aul2"
 
 [artifacts.camera_frame-obj2-i18n-en]
-source = "scripts/カメラフレーム/i18n/English.camera_frame-obj2.aul2"
+source = "scripts/カメラフレーム/extra/Language/English.camera_frame-obj2.aul2"
 destination = "Language/English.camera_frame-obj2.aul2"
 
 [artifacts.camera_frame-demo-obj2]
@@ -79,11 +79,11 @@ source = "scripts/縦動画ガイド.obj2"
 destination = "Script/縦動画ガイド.obj2"
 
 [artifacts.shorts_guide-obj2-i18n-ja]
-source = "scripts/縦動画ガイド/i18n/Default.shorts_guide-obj2.aul2"
+source = "scripts/縦動画ガイド/extra/Language/Default.shorts_guide-obj2.aul2"
 destination = "Language/Default.shorts_guide-obj2.aul2"
 
 [artifacts.shorts_guide-obj2-i18n-en]
-source = "scripts/縦動画ガイド/i18n/English.shorts_guide-obj2.aul2"
+source = "scripts/縦動画ガイド/extra/Language/English.shorts_guide-obj2.aul2"
 destination = "Language/English.shorts_guide-obj2.aul2"
 
 [artifacts.shorts_guide-demo-obj2]
@@ -97,11 +97,11 @@ source = "scripts/CRTディスプレイ風.anm2"
 destination = "Script/CRTディスプレイ風.anm2"
 
 [artifacts.crt_display-anm2-i18n-ja]
-source = "scripts/CRTディスプレイ風/i18n/Default.crt_display-anm2.aul2"
+source = "scripts/CRTディスプレイ風/extra/Language/Default.crt_display-anm2.aul2"
 destination = "Language/Default.crt_display-anm2.aul2"
 
 [artifacts.crt_display-anm2-i18n-en]
-source = "scripts/CRTディスプレイ風/i18n/English.crt_display-anm2.aul2"
+source = "scripts/CRTディスプレイ風/extra/Language/English.crt_display-anm2.aul2"
 destination = "Language/English.crt_display-anm2.aul2"
 
 [artifacts.crt_display-demo-anm2]
@@ -115,11 +115,11 @@ source = "scripts/GPUピクセルソート.anm2"
 destination = "Script/GPUピクセルソート.anm2"
 
 [artifacts.gpu_pixelsort-anm2-i18n-ja]
-source = "scripts/GPUピクセルソート/i18n/Default.gpu_pixelsort-anm2.aul2"
+source = "scripts/GPUピクセルソート/extra/Language/Default.gpu_pixelsort-anm2.aul2"
 destination = "Language/Default.gpu_pixelsort-anm2.aul2"
 
 [artifacts.gpu_pixelsort-anm2-i18n-en]
-source = "scripts/GPUピクセルソート/i18n/English.gpu_pixelsort-anm2.aul2"
+source = "scripts/GPUピクセルソート/extra/Language/English.gpu_pixelsort-anm2.aul2"
 destination = "Language/English.gpu_pixelsort-anm2.aul2"
 
 [artifacts.gpu_pixelsort-demo-anm2]
@@ -133,11 +133,11 @@ source = "scripts/出力時に非表示.anm2"
 destination = "Script/出力時に非表示.anm2"
 
 [artifacts.hide_on_export-anm2-i18n-ja]
-source = "scripts/出力時に非表示/i18n/Default.hide_on_export-anm2.aul2"
+source = "scripts/出力時に非表示/extra/Language/Default.hide_on_export-anm2.aul2"
 destination = "Language/Default.hide_on_export-anm2.aul2"
 
 [artifacts.hide_on_export-anm2-i18n-en]
-source = "scripts/出力時に非表示/i18n/English.hide_on_export-anm2.aul2"
+source = "scripts/出力時に非表示/extra/Language/English.hide_on_export-anm2.aul2"
 destination = "Language/English.hide_on_export-anm2.aul2"
 
 [artifacts.hide_on_export-demo-anm2]
@@ -156,11 +156,11 @@ source = "demo/@ベベルとエンボス.anm2"
 destination = "script/@ベベルとエンボス.anm2"
 
 [artifacts.bevel_and_emboss-anm2-i18n-ja]
-source = "scripts/ベベルとエンボス/i18n/Default.bevel_and_emboss-anm2.aul2"
+source = "scripts/ベベルとエンボス/extra/Language/Default.bevel_and_emboss-anm2.aul2"
 destination = "language/Default.bevel_and_emboss-anm2.aul2"
 
 [artifacts.bevel_and_emboss-anm2-i18n-en]
-source = "scripts/ベベルとエンボス/i18n/English.bevel_and_emboss-anm2.aul2"
+source = "scripts/ベベルとエンボス/extra/Language/English.bevel_and_emboss-anm2.aul2"
 destination = "language/English.bevel_and_emboss-anm2.aul2"
 
 [artifacts.legacy_glow-anm2]
@@ -169,11 +169,11 @@ source = "scripts/旧発光.anm2"
 destination = "Script/旧発光.anm2"
 
 [artifacts.legacy_glow-anm2-i18n-ja]
-source = "scripts/旧発光/i18n/Default.legacy_glow-anm2.aul2"
+source = "scripts/旧発光/extra/Language/Default.legacy_glow-anm2.aul2"
 destination = "Language/Default.legacy_glow-anm2.aul2"
 
 [artifacts.legacy_glow-anm2-i18n-en]
-source = "scripts/旧発光/i18n/English.legacy_glow-anm2.aul2"
+source = "scripts/旧発光/extra/Language/English.legacy_glow-anm2.aul2"
 destination = "Language/English.legacy_glow-anm2.aul2"
 
 [artifacts.dokaben-anm2]
@@ -187,9 +187,27 @@ source = "demo/@ドカベン.anm2"
 destination = "Script/@ドカベン.anm2"
 
 [artifacts.dokaben-anm2-i18n-ja]
-source = "scripts/ドカベン/i18n/Default.dokaben-anm2.aul2"
+source = "scripts/ドカベン/extra/Language/Default.dokaben-anm2.aul2"
 destination = "Language/Default.dokaben-anm2.aul2"
 
 [artifacts.dokaben-anm2-i18n-en]
-source = "scripts/ドカベン/i18n/English.dokaben-anm2.aul2"
+source = "scripts/ドカベン/extra/Language/English.dokaben-anm2.aul2"
 destination = "Language/English.dokaben-anm2.aul2"
+
+[artifacts.niconico_comment-anm2]
+build.group = "aulua"
+source = "scripts/自演コメント.anm2"
+destination = "Script/自演コメント.anm2"
+
+[artifacts.niconico_comment-demo-anm2]
+build.group = "aulua"
+source = "demo/@自演コメント.anm2"
+destination = "Script/@自演コメント.anm2"
+
+[artifacts.niconico_comment-anm2-i18n-ja]
+source = "scripts/自演コメント/extra/Language/Default.niconico_comment-anm2.aul2"
+destination = "Language/Default.niconico_comment-anm2.aul2"
+
+[artifacts.niconico_comment-anm2-i18n-en]
+source = "scripts/自演コメント/extra/Language/English.niconico_comment-anm2.aul2"
+destination = "Language/English.niconico_comment-anm2.aul2"

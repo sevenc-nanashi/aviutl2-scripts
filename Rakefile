@@ -143,7 +143,7 @@ namespace :build do
           aliases: false,
           filename: yaml_path
         )
-      output_dir = File.join(script_dir, "i18n")
+      output_dir = File.join(script_dir, "extra", "Language")
       FileUtils.mkdir_p(output_dir) if $check_mode == false
       expected_paths =
         translations.map do |language, sections|
@@ -168,7 +168,8 @@ namespace :build do
         end
 
       (
-        Dir.glob(File.join(output_dir, "*.aul2")) - expected_paths
+        Dir.glob(File.join(output_dir, "*.#{artifact_id}.aul2")) -
+          expected_paths
       ).each { |path| remove_generated_file(path) }
     end
   end
@@ -196,6 +197,10 @@ task :prepare_description do
         "https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/#{
           URI.encode_www_form_component(File.basename(script_dir))
         }/README.md"
+      readme_en_url =
+        "https://github.com/sevenc-nanashi/aviutl2-scripts/blob/main/scripts/#{
+          URI.encode_www_form_component(File.basename(script_dir))
+        }/README.en.md"
 
       description_lines = []
       description_lines << "=" * header_width
@@ -277,6 +282,7 @@ task :prepare_description do
         title_en: en_title_line,
         url:,
         readme_url:,
+        readme_en_url:,
         description:,
         description_en: en_description
       }
@@ -298,7 +304,7 @@ task :prepare_description do
   base_en = File.read("README.en.md")
   replacement_en =
     scripts.map do |script|
-      "- #{script[:title_en]} ([au2pkg](#{script[:url]}?type=au2pkg), [script](#{script[:url]}?type=script), [readme](#{script[:readme_url]})): #{script[:description_en]}"
+      "- #{script[:title_en]} ([au2pkg](#{script[:url]}?type=au2pkg), [script](#{script[:url]}?type=script), [readme](#{script[:readme_en_url]})): #{script[:description_en]}"
     end
   unless base_en.gsub!(
            /(?<=<!-- script-marker-start -->\n).*(?=\n<!-- script-marker-end -->)/m,
@@ -501,11 +507,11 @@ task "new_script" do
     destination = "Script/@#{script_name}"
 
     [artifacts.#{i18n_default_id}]
-    source = "#{script_dir}/i18n/Default.#{script_id}.aul2"
+    source = "#{script_dir}/extra/Language/Default.#{script_id}.aul2"
     destination = "Language/Default.#{script_id}.aul2"
 
     [artifacts.#{i18n_english_id}]
-    source = "#{script_dir}/i18n/English.#{script_id}.aul2"
+    source = "#{script_dir}/extra/Language/English.#{script_id}.aul2"
     destination = "Language/English.#{script_id}.aul2"
   TOML
   File.write("aviutl2.toml", aviutl2_toml)
