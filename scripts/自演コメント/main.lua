@@ -12,6 +12,9 @@ local position = 2
 ---big=3
 local size = 2
 
+---$string:コマンド
+local commands = ""
+
 ---$select:画面サイズ指定
 ---スクリーン=1
 ---アンカー=2
@@ -21,6 +24,13 @@ local screen = 1
 local pos = { -160, -120, 160, 120 }
 
 --hide@pos:screen==1
+
+---$track:表示秒数
+---min=0
+---max=20
+---step=0.01
+---zero_label=自動
+local duration = 0
 
 ---$track:段
 ---min=1
@@ -36,9 +46,6 @@ local show_frame = false
 ---max=100
 ---step=1
 local frame_add = 0
-
----$string:コマンド
-local cmd = ""
 
 ---$track:テキスト行数
 ---min=0
@@ -74,8 +81,11 @@ end
 if type(PI.frame_add) == "number" then
   frame_add = PI.frame_add
 end
-if type(PI.cmd) == "string" then
-  cmd = PI.cmd
+if type(PI.commands) == "string" then
+  commands = PI.commands
+end
+if type(PI.duration) == "number" then
+  duration = PI.duration
 end
 if type(PI.line) == "number" then
   line = PI.line
@@ -89,16 +99,16 @@ local w, h = obj.getpixel()
 local cache_namespace = "cache:niconico_comment"
 
 -- 表示時間オーバー
-if position == 1 or position == 3 then
-  if obj.time > 3 then
-    obj.setoption("draw_state", true)
-    return
+if duration == 0 then
+  if position == 1 or position == 3 then
+    duration = 3
+  else
+    duration = 5
   end
-else
-  if obj.time > 5 then
-    obj.setoption("draw_state", true)
-    return
-  end
+end
+if obj.time > duration then
+  obj.setoption("draw_state", true)
+  return
 end
 
 -- コマンド判定
@@ -136,7 +146,7 @@ local cmd_col = {
   black2 = 0x666666,
 }
 local cmd_other = { full = 0, ender = 0 }
-for word in string.gmatch(cmd, "%S+") do
+for word in string.gmatch(commands, "%S+") do
   if comment_pos == nil then
     comment_pos = cmd_pos[word]
   end
@@ -206,10 +216,8 @@ elseif comment_siz == 3 then
   row_size = (line < 3 or cmd_other.ender == 1) and 82 or 44.6
 end
 row_size = row_size * line * screen_y / 720
-if
-  (comment_pos == 1 or comment_pos == 3)
-  and screen_y * (cmd_other.full == 0 and 4 / 3 or 16 / 9) * h < w * row_size * line
-then
+
+if comment_pos ~= 2 and screen_y * (cmd_other.full == 0 and 4 / 3 or 16 / 9) * h < w * row_size * line then
   row_size = screen_y * (cmd_other.full == 0 and 4 / 3 or 16 / 9) * h / w
 end
 
@@ -372,7 +380,7 @@ if comment_pos == 1 then
   obj.ox = obj.ox - ofsx
   obj.oy = obj.oy + (frame / 2 - screen_y + h) / 2 + h * math.floor(row - 1) / line - ofsy
 elseif comment_pos == 2 then
-  obj.ox = screen_x / 2 + w / 2 + obj.ox - ofsx - (w + screen_x) * obj.time / 5
+  obj.ox = screen_x / 2 + w / 2 + obj.ox - ofsx - (w + screen_x) * obj.time / duration
   obj.oy = obj.oy + (frame / 2 - screen_y + h) / 2 + h * math.floor(row - 1) / line - ofsy
   if clip then
     obj.effect(

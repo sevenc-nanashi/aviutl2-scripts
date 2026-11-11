@@ -9,16 +9,20 @@
 -- [ PI ]
 --   - `position`：位置（1 = ue、2 = naka、3 = shita）
 --   - `size`：大きさ（1 = small、2 = medium、3 = big）
+--   - `commands`：コマンド（文字列）
 --   - `screen`：画面サイズ指定（1 = スクリーン、2 = アンカー）
 --   - `pos`：画面サイズ（{左, 上, 右, 下}）
+--   - `duration`：表示時間（0で自動）
 --   - `row`：段（1～16）
 --   - `show_frame`：黄枠表示（true / false）
 --   - `frame_add`：枠線補正px（0～100）
---   - `cmd`：コマンド（文字列）
 --   - `line`：テキスト行数（0～64、0で自動）
 --   - `clip`：画面内クリッピング（true / false）
 --
 -- --< 更新履歴 >----------------------------------------------------------------------------------------------------------
+--
+-- [ v1.1（2026/11/11） ]
+--   - 表示時間を調整できるように
 --
 -- [ v1.0（2026/11/11） ]
 --   - 初版リリース
@@ -27,14 +31,15 @@
 
 --select@position:位置=2,ue=1,naka=2,shita=3
 --select@size:大きさ=2,small=1,medium=2,big=3
+--string@commands:コマンド,
 --select@screen:画面サイズ指定=1,スクリーン=1,アンカー=2
 --value@pos:画面サイズ,{ -160, -120, 160, 120 }
 --hide@pos:screen==1
 
+--track@duration:表示秒数,0,20,0,0.01,自動
 --track@row:段,1,16,1,1
 --check@show_frame:黄枠表示,false
 --track@frame_add:枠線補正px,0,100,0,1
---string@cmd:コマンド,
 --track@line:テキスト行数,0,64,0,1,自動
 --check@clip:画面内クリッピング,false
 --value@PI:PI,{}
@@ -59,8 +64,11 @@ end
 if type(PI.frame_add) == "number" then
   frame_add = PI.frame_add
 end
-if type(PI.cmd) == "string" then
-  cmd = PI.cmd
+if type(PI.commands) == "string" then
+  commands = PI.commands
+end
+if type(PI.duration) == "number" then
+  duration = PI.duration
 end
 if type(PI.line) == "number" then
   line = PI.line
@@ -74,16 +82,16 @@ local w, h = obj.getpixel()
 local cache_namespace = "cache:niconico_comment"
 
 -- 表示時間オーバー
-if position == 1 or position == 3 then
-  if obj.time > 3 then
-    obj.setoption("draw_state", true)
-    return
+if duration == 0 then
+  if position == 1 or position == 3 then
+    duration = 3
+  else
+    duration = 5
   end
-else
-  if obj.time > 5 then
-    obj.setoption("draw_state", true)
-    return
-  end
+end
+if obj.time > duration then
+  obj.setoption("draw_state", true)
+  return
 end
 
 -- コマンド判定
@@ -121,7 +129,7 @@ local cmd_col = {
   black2 = 0x666666,
 }
 local cmd_other = { full = 0, ender = 0 }
-for word in string.gmatch(cmd, "%S+") do
+for word in string.gmatch(commands, "%S+") do
   if comment_pos == nil then
     comment_pos = cmd_pos[word]
   end
@@ -191,10 +199,8 @@ elseif comment_siz == 3 then
   row_size = (line < 3 or cmd_other.ender == 1) and 82 or 44.6
 end
 row_size = row_size * line * screen_y / 720
-if
-  (comment_pos == 1 or comment_pos == 3)
-  and screen_y * (cmd_other.full == 0 and 4 / 3 or 16 / 9) * h < w * row_size * line
-then
+
+if comment_pos ~= 2 and screen_y * (cmd_other.full == 0 and 4 / 3 or 16 / 9) * h < w * row_size * line then
   row_size = screen_y * (cmd_other.full == 0 and 4 / 3 or 16 / 9) * h / w
 end
 
@@ -357,7 +363,7 @@ if comment_pos == 1 then
   obj.ox = obj.ox - ofsx
   obj.oy = obj.oy + (frame / 2 - screen_y + h) / 2 + h * math.floor(row - 1) / line - ofsy
 elseif comment_pos == 2 then
-  obj.ox = screen_x / 2 + w / 2 + obj.ox - ofsx - (w + screen_x) * obj.time / 5
+  obj.ox = screen_x / 2 + w / 2 + obj.ox - ofsx - (w + screen_x) * obj.time / duration
   obj.oy = obj.oy + (frame / 2 - screen_y + h) / 2 + h * math.floor(row - 1) / line - ofsy
   if clip then
     obj.effect(
