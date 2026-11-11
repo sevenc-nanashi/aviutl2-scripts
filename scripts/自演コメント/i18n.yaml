@@ -1,0 +1,44 @@
+Default:
+  Tips.自演コメント:
+    effect.name: ニコニコ動画風のコメントを表示します。
+    PI: |
+      - `position`：位置（1 = ue、2 = naka、3 = shita）
+      - `size`：大きさ（1 = small、2 = medium、3 = big）
+      - `screen`：画面サイズ指定（1 = スクリーン、2 = アンカー）
+      - `pos`：画面サイズ（{左, 上, 右, 下}）
+      - `row`：段（1～16）
+      - `show_frame`：黄枠表示（true / false）
+      - `frame_add`：枠線補正px（0～100）
+      - `cmd`：コマンド（文字列）
+      - `line`：テキスト行数（0～64、0で自動）
+      - `clip`：画面内クリッピング（true / false）
+English:
+  自演コメント:
+    自演コメント: Niconico Comment
+    位置: Position
+    大きさ: Size
+    画面サイズ指定: Screen size source
+    スクリーン: Screen
+    アンカー: Anchors
+    画面サイズ: Screen bounds
+    段: Row
+    黄枠表示: Show yellow frame
+    枠線補正px: Frame adjustment (px)
+    コマンド: Commands
+    テキスト行数: Text lines
+    自動: Auto
+    画面内クリッピング: Clip to screen
+    PI: PI
+  Tips.自演コメント:
+    effect.name: Displays Niconico-style comments.
+    PI: |
+      - `position`: Position (1 = ue, 2 = naka, 3 = shita)
+      - `size`: Size (1 = small, 2 = medium, 3 = big)
+      - `screen`: Screen size source (1 = screen, 2 = anchors)
+      - `pos`: Screen bounds ({left, top, right, bottom})
+      - `row`: Row (1–16)
+      - `show_frame`: Show yellow frame (true / false)
+      - `frame_add`: Frame width adjustment in pixels (0–100)
+      - `cmd`: Commands (string)
+      - `line`: Text lines (0–64, 0 for automatic detection)
+      - `clip`: Clip to screen (true / false)

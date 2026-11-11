@@ -1,0 +1,22 @@
+[Language]
+Information=English Language for sevenc-nanashi/aviutl2-scripts / https://github.com/sevenc-nanashi/aviutl2-scripts
+[自演コメント]
+自演コメント=Niconico Comment
+位置=Position
+大きさ=Size
+画面サイズ指定=Screen size source
+スクリーン=Screen
+アンカー=Anchors
+画面サイズ=Screen bounds
+段=Row
+黄枠表示=Show yellow frame
+枠線補正px=Frame adjustment (px)
+コマンド=Commands
+テキスト行数=Text lines
+自動=Auto
+画面内クリッピング=Clip to screen
+PI=PI
+
+[Tips.自演コメント]
+effect.name=Displays Niconico-style comments.
+PI=- `position`: Position (1 = ue, 2 = naka, 3 = shita)\n- `size`: Size (1 = small, 2 = medium, 3 = big)\n- `screen`: Screen size source (1 = screen, 2 = anchors)\n- `pos`: Screen bounds ({left, top, right, bottom})\n- `row`: Row (1–16)\n- `show_frame`: Show yellow frame (true / false)\n- `frame_add`: Frame width adjustment in pixels (0–100)\n- `cmd`: Commands (string)\n- `line`: Text lines (0–64, 0 for automatic detection)\n- `clip`: Clip to screen (true / false)\n

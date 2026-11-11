@@ -1,0 +1,5 @@
+[Language]
+Information=Default Language for sevenc-nanashi/aviutl2-scripts / https://github.com/sevenc-nanashi/aviutl2-scripts
+[Tips.自演コメント]
+effect.name=ニコニコ動画風のコメントを表示します。
+PI=- `position`：位置（1 = ue、2 = naka、3 = shita）\n- `size`：大きさ（1 = small、2 = medium、3 = big）\n- `screen`：画面サイズ指定（1 = スクリーン、2 = アンカー）\n- `pos`：画面サイズ（{左, 上, 右, 下}）\n- `row`：段（1～16）\n- `show_frame`：黄枠表示（true / false）\n- `frame_add`：枠線補正px（0～100）\n- `cmd`：コマンド（文字列）\n- `line`：テキスト行数（0～64、0で自動）\n- `clip`：画面内クリッピング（true / false）\n
