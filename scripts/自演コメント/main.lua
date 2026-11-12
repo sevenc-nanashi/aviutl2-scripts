@@ -173,12 +173,13 @@ end
 
 if line == 0 then
   local text = obj.getvalue("テキスト", "テキスト")
-  if not text then
-    error("テキストが取得できませんでした")
-  end
-  line = 1
-  for _ in string.gmatch(text, "\\n") do
-    line = line + 1
+  if type(text) ~= "string" then
+    line = 1
+  else
+    line = 1
+    for _ in string.gmatch(text, "\\n") do
+      line = line + 1
+    end
   end
 end
 

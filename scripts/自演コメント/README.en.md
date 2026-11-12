@@ -18,6 +18,10 @@ Port of [コメント自演スクリプト+使用例.aviutl](http://www.nicovide
 
 # Changelog
 
+## v1.2（2026/11/12）
+
+- Added fallback for automatic line count calculation
+
 ## v1.1（2026/11/11）
 
 - Added ability to adjust display duration
